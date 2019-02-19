@@ -1,3 +1,8 @@
 
+from PyQt5 import QtWidgets as widgets
+
 if __name__ == "__main__":
-    print("Hello World")
+    app = widgets.QApplication([])
+    label = widgets.QLabel('Hello World')
+    label.show()
+    app.exec()
