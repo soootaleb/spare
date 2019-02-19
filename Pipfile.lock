@@ -1,0 +1,48 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "c99901272deed29bfb208affa6678d854ca0d726a56bdc9da6992a1b153c9a0b"
+        },
+        "pipfile-spec": 6,
+        "requires": {
+            "python_version": "3.7"
+        },
+        "sources": [
+            {
+                "name": "pypi",
+                "url": "https://pypi.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "pyqt5": {
+            "hashes": [
+                "sha256:1402f1613698ca64e3cec0ee27a60b5454e782c16fbd1bdee4a270a058947939",
+                "sha256:8872c78f204bf8b660164d6dfae87e1be5a9dbc3e20fd2823bd4e851b3647eba",
+                "sha256:912ead29f8ed86be178faeb2be83793fb633c11059ae54c3bd8e81c1e224e339",
+                "sha256:acbefac6c780f04709441aa7d8a147c0801f01f8db93f8f000e4a4391db27345"
+            ],
+            "index": "pypi",
+            "version": "==5.12"
+        },
+        "pyqt5-sip": {
+            "hashes": [
+                "sha256:04bd0bb8b6f8fa03c2dfbdfff0c8c9bfb3f46a21dd4cac73983dae93bf949523",
+                "sha256:058d450c26be92193605f4628ff690d77080f599ffe381a1029cea8eeb71ab8e",
+                "sha256:0b838ef8a55461785e78b4e347cf52ce228a5d4392c57e07cc46de51433dc8ac",
+                "sha256:40504f96ecb834e54491ead558589bfd773056dba7f2df76599a06fdd8ed1ead",
+                "sha256:49b2151bd0a0e439efc9d4c22c33a048d8e8ede5c7296851c221fa0988887edb",
+                "sha256:6540b510f9436fe2d65801af55ecbf8c43bdda47294e994ed3851403a93e4a8b",
+                "sha256:6b3063b12e700944172d57cdbeafb363229669af933f873d01c7a6d8a91c4c87",
+                "sha256:6b65d2b14084eb583bf4cf68b97ade295fabae5f5bf2aae0ab00ab30533f1c60",
+                "sha256:6ca796071b21761917ee486e57bfa2fc694580e65c462e4173cf849ed8fe201c",
+                "sha256:6d3013a6820ea614f46fdc73cc16dd57c36a0c74bcbd38bd0b9f2d46b6e6dd16",
+                "sha256:84f7401afdd5f31e961de75e9c6b1610849e8883fbe0ed675bbb7d7d97286347",
+                "sha256:bb81cfc4d35ca59f1c419b6abeb6ca6a726a63b712cf979f2b5ab24b81c36f49"
+            ],
+            "version": "==4.19.14"
+        }
+    },
+    "develop": {}
+}
