@@ -8,6 +8,7 @@ pylint = "*"
 
 [packages]
 pyqt5 = "*"
+matplotlib = "*"
 
 [requires]
 python_version = "3.7"
