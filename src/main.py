@@ -1,29 +1,29 @@
-
-# We need to change the used backend to not rely on the system one
+"""
+SpaRe
+Projet de TER Taleb Sofiane et Doisneau Gabriel : Spacial Recognition
+"""
 import matplotlib
-matplotlib.use('Qt5Agg')
-
- 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget, QPushButton
-from PyQt5.QtGui import QIcon
-
+import cv2 as cv
+import random, sys
+import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-import matplotlib.pyplot as plt
- 
-import random, sys
- 
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget, QPushButton
+from PyQt5.QtGui import QIcon
+# We need to change the used backend to not rely on the system one
+matplotlib.use('Qt5Agg')
+
 class App(QMainWindow):
  
     def __init__(self):
         super().__init__()
-        self.left = 10
-        self.top = 10
-        self.title = 'PyQt5 matplotlib example - pythonspot.com'
+        self.left = 100
+        self.top = 100
+        self.title = 'SpaRe'
         self.width = 640
         self.height = 400
         self.initUI()
- 
+    
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
@@ -61,7 +61,29 @@ class PlotCanvas(FigureCanvas):
         ax.plot(data, 'r-')
         ax.set_title('PyQt Matplotlib Example')
         self.draw()
- 
+
+class Spare():
+    """
+    reconnaissance de relation spatiale entre les images binaires A et B
+    """
+    def __init__(self, imgA, imgB):
+        A = cv.imread(imgA, cv.IMREAD_GRAYSCALE)
+        B = cv.imread(imgB, cv.IMREAD_GRAYSCALE)
+
+    def brensenham():
+        """
+        tracé de segment d'apres l'algorithme de bresenham
+        """
+        print("TODO")
+        #TODO
+
+    def histogram(cardinal=16):
+        """
+        creation de l'histograme selon le nombres de directions données en entrée
+        """
+        #TODO    
+        print("todo")
+    
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = App()

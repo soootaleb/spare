@@ -9,3 +9,4 @@ pylint = "*"
 [packages]
 pyqt5 = "*"
 matplotlib = "*"
+opencv-python = "*"
