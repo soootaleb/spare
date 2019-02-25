@@ -17,9 +17,9 @@ class App(QMainWindow):
         self.height = 400
         self.spares = []
         self.index = -1
-        self.initUI()
+        self.init_ui()
 
-    def initUI(self):
+    def init_ui(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
  
