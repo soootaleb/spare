@@ -2,6 +2,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+import functions
+
 import os, sys, cv2 as cv
 
 from canvas import *
@@ -15,7 +17,7 @@ class App(QMainWindow):
         self.title = 'SpaRe'
         self.width = 640
         self.height = 400
-        self.spares = []
+        self.images = []
         self.index = -1
         self.init_ui()
 
@@ -26,12 +28,21 @@ class App(QMainWindow):
         m = PlotCanvas(self, width=5, height=4)
         m.move(0,0)
  
-        self.button = QPushButton('Ajouter une image', self)
-        self.button.setToolTip('cliquer pour ajouter la premiere image')
-        self.button.move(500, 0)
-        self.button.resize(140, 100)
-        self.button.clicked.connect(self.load_clicked)
-        self.label = QLabel(self)
+        self.btn_add_image = QPushButton('Ajouter une image', self)
+        self.btn_add_image.setToolTip('cliquer pour ajouter une premiere image')
+        self.btn_add_image.move(500, 0)
+        self.btn_add_image.resize(140, 100)
+        self.btn_add_image.clicked.connect(self.load_clicked)
+
+        self.btn_process = QPushButton('Go', self)
+        self.btn_process.setToolTip('cliquer pour effectuer un tracé de bresenham')
+        self.btn_process.move(500, 110)
+        self.btn_process.resize(140, 100)
+        self.btn_process.clicked.connect(self.process_test)
+
+
+        self.image1 = QLabel(self)
+        self.image2 = QLabel(self)
         self.show()
 
     @pyqtSlot()
@@ -44,15 +55,36 @@ class App(QMainWindow):
             raise FileNotFoundError('The image ' + image + ' does not exist')
     
     def load_image(self, fname):
-        self.image = cv.imread(fname, cv.IMREAD_GRAYSCALE)
+        self.images.append(cv.imread(fname, cv.IMREAD_GRAYSCALE))
+        self.index += 1
         self.display_image()
 
     def display_image(self):
         qformat = QImage.Format_Grayscale8
-        self.label.resize(self.image.shape[1], self.image.shape[0])
 
-        img = QImage(self.image, self.image.shape[1], self.image.shape[0], qformat)
-        self.spares.append(img)
-        self.index += 1
-        self.label.setPixmap(QPixmap.fromImage(img))
-        self.label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        img = QImage(self.images[self.index], self.images[self.index].shape[1], self.images[self.index].shape[0], qformat)
+        #image1 and 2 are for visualisation, for the openCV matrix, look at self.images
+        if self.index % 2 == 0:
+            self.image1.resize(self.images[self.index].shape[1], self.images[self.index].shape[0])
+            self.image1.move(0,0)
+            self.image1.setPixmap(QPixmap.fromImage(img))
+        else:
+            self.image2.resize(self.images[self.index].shape[1], self.images[self.index].shape[0])
+            self.image2.move(self.images[self.index-1].shape[0]+1, 0)
+            self.image2.setPixmap(QPixmap.fromImage(img))
+
+    def merge_images(self):
+        """
+        this function merge two images into one, and affect colors to each image (instead of binary)
+        for visualisation purpose
+        """
+        raise NotImplementedError('this function is not implemented')
+    
+    @pyqtSlot()
+    def process_test(self):
+        """
+        create segment
+        """
+        height, width = self.images[0].shape
+        direction_number = 8 #TODO
+        print(functions.get_segment(0, 0, width, 0))

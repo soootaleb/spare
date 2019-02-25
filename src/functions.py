@@ -10,22 +10,14 @@ We prefer to use module level functions, easier to use & call.
 We'll eventually refactor into potential classes later.
 """
 
-
-def histogram(cardinal=16):
-    """
-    We want this function to produce a data structure representing a histogram
-    of [what does it represent ?] depeding on the number of directions passed in arguments.
-    """
-    raise NotImplementedError('The histogram function is not implemented yet')
-
-def bresenham(x1, y1, x2, y2):
+def get_segment(x1, y1, x2, y2):
     """
     Tracé de segment d'apres l'algorithme de bresenham
     (x1 y1) : le point de départ en haut a gauche, (x2 y2) point d'arrivé en bas a droite.
     retourne une liste contenant les double (x, y) de chacun des points.
     """
 
-    raise NotImplementedError('This function is not tested yet')
+    #raise NotImplementedError('This function is not tested yet')
 
     segment = [] # Contient tout les pixels du segment.
 
@@ -47,3 +39,17 @@ def bresenham(x1, y1, x2, y2):
             y += 1
             error += err_y
     return segment
+
+def get_segments(segment, width, height):
+    """
+    This function get all the parrallels segments in an image from a segment
+    """            
+    raise NotImplementedError('The segments function is not implemented yet')
+
+
+def histogram(cardinal=16):
+    """
+    We want this function to produce a data structure representing a histogram
+    of [what does it represent ?] depeding on the number of directions passed in arguments.
+    """
+    raise NotImplementedError('The histogram function is not implemented yet')
