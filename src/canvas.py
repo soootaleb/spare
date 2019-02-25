@@ -1,3 +1,15 @@
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
+
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+
+import matplotlib, random
+
+# We need to change the used backend to not rely on the system one
+matplotlib.use('Qt5Agg')
+
 class PlotCanvas(FigureCanvas):
  
     def __init__(self, parent=None, width=5, height=4, dpi=100):
@@ -7,9 +19,7 @@ class PlotCanvas(FigureCanvas):
         FigureCanvas.__init__(self, fig)
         self.setParent(parent)
  
-        FigureCanvas.setSizePolicy(self,
-                QSizePolicy.Expanding,
-                QSizePolicy.Expanding)
+        FigureCanvas.setSizePolicy(self, QSizePolicy.Expanding, QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
         self.plot()
  
