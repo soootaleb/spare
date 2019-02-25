@@ -13,6 +13,7 @@ from matplotlib.figure import Figure
 from PyQt5.QtWidgets import(QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy,
     QMessageBox, QWidget, QPushButton, QFileDialog, QLabel)
 from PyQt5.QtGui import QIcon
+
 # We need to change the used backend to not rely on the system one
 matplotlib.use('Qt5Agg')
 
@@ -74,32 +75,6 @@ class App(QMainWindow):
             self.index += 1
             self.label.setPixmap(QPixmap.fromImage(img))
             #self.label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-
-
-
-class PlotCanvas(FigureCanvas):
- 
-    def __init__(self, parent=None, width=5, height=4, dpi=100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
- 
-        FigureCanvas.__init__(self, fig)
-        self.setParent(parent)
- 
-        FigureCanvas.setSizePolicy(self,
-                QSizePolicy.Expanding,
-                QSizePolicy.Expanding)
-        FigureCanvas.updateGeometry(self)
-        self.plot()
- 
- 
-    def plot(self):
-        data = [random.random() for i in range(25)]
-        ax = self.figure.add_subplot(111)
-        ax.plot(data, 'r-')
-        ax.set_title('PyQt Matplotlib Example')
-        self.draw()
-
     
 if __name__ == '__main__':
     app = QApplication(sys.argv)
