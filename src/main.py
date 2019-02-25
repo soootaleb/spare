@@ -65,10 +65,8 @@ class App(QMainWindow):
         if len(self.image.shape) == 3:
             if(self.image.shape[2]) == 4:
                 qformat = QImage.Format_RGBA8888
-                print("rgba")
             else:
                 qformat = QImage.Format_RGB888
-                print("rgb")
             img = QImage(self.image, self.image.shape[1], self.image.shape[0], qformat)
             img = img.rgbSwapped()
             print(self.image.shape[1], self.image.shape[0], self.image.strides[0])
