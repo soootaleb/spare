@@ -9,13 +9,13 @@ that allows the user to load two binary images with objects and display the asso
 
 ## Basic functions
 
-  * ~Implement the `bresenham` function~
+  * ~~Implement the `bresenham` function~~
   * Implement the `scan_linear` function to execute Bresenham on all parallels
   * Implement the `scan_polar` function to execute Bresenham on all angles
 
 ## GUI functions
 
-  * ~Implement the image loading from a button~ (may be twice for two images)
+  * ~~Implement the image loading from a button~~ (may be twice for two images)
   * Implement the histogram display - classic
   * Implement the histogram display - radial
 
