@@ -44,20 +44,15 @@ class App(QMainWindow):
             raise FileNotFoundError('The image ' + image + ' does not exist')
     
     def load_image(self, fname):
-        self.image = cv.imread(fname, cv.IMREAD_COLOR)
+        self.image = cv.imread(fname, cv.IMREAD_GRAYSCALE)
         self.display_image()
 
     def display_image(self):
-        qformat = QImage.Format_Indexed8
+        qformat = QImage.Format_Grayscale8
+        self.label.resize(self.image.shape[1], self.image.shape[0])
 
-        if len(self.image.shape) == 3:
-            if(self.image.shape[2]) == 4:
-                qformat = QImage.Format_RGBA8888
-            else:
-                qformat = QImage.Format_RGB888
-            img = QImage(self.image, self.image.shape[1], self.image.shape[0], qformat)
-            img = img.rgbSwapped()
-            self.spares.append(img)
-            self.index += 1
-            self.label.setPixmap(QPixmap.fromImage(img))
-            self.label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        img = QImage(self.image, self.image.shape[1], self.image.shape[0], qformat)
+        self.spares.append(img)
+        self.index += 1
+        self.label.setPixmap(QPixmap.fromImage(img))
+        self.label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
