@@ -56,7 +56,7 @@ class App(QMainWindow):
             print('invalid image')
     
     def loadImage(self,fname):
-        self.image = cv.imread(fname, cv.IMREAD_COLOR)
+        self.image = cv.imread(fname, cv.IMREAD_GRAYSCALE)
         self.displayImage()
         
     def displayImage(self):
