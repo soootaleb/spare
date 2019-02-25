@@ -135,12 +135,7 @@ class Spare():
                 error += err_y
         return segment
 
-    def histogram(self, cardinal=16):
-        """
-        creation de l'histograme selon le nombres de directions données en entrée
-        """
-        #TODO    
-        print("TODO")
+
     
 if __name__ == '__main__':
     app = QApplication(sys.argv)
