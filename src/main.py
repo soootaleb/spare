@@ -5,16 +5,19 @@ Projet de TER Taleb Sofiane et Doisneau Gabriel : Spacial Recognition
 import matplotlib
 import cv2 as cv
 import random, sys
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget, QPushButton
+from PyQt5.QtWidgets import(QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy,
+    QMessageBox, QWidget, QPushButton, QFileDialog, QLabel)
 from PyQt5.QtGui import QIcon
 # We need to change the used backend to not rely on the system one
 matplotlib.use('Qt5Agg')
 
 class App(QMainWindow):
- 
+
     def __init__(self):
         super().__init__()
         self.left = 100
@@ -22,8 +25,10 @@ class App(QMainWindow):
         self.title = 'SpaRe'
         self.width = 640
         self.height = 400
+        self.spares = []
+        self.index = -1
         self.initUI()
-    
+
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
@@ -31,14 +36,49 @@ class App(QMainWindow):
         m = PlotCanvas(self, width=5, height=4)
         m.move(0,0)
  
-        button = QPushButton('PyQt5 button', self)
-        button.setToolTip('This s an example button')
-        button.move(500,0)
-        button.resize(140,100)
- 
+        self.button = QPushButton('Ajouter une image', self)
+        self.button.setToolTip('cliquer pour ajouter la premiere image')
+        self.button.move(500, 0)
+        self.button.resize(140, 100)
+        self.button.clicked.connect(self.loadClicked)
+        self.label = QLabel(self)
         self.show()
- 
- 
+
+    @pyqtSlot()
+    def loadClicked(self):
+        base_path=".\misc"
+        #fname, filter = QFileDialog.getOpenFileName(self, 'Open File', base_path, "Image Files(*.jpg, *.png)")
+        fname = "./misc/black_50_50.png"
+        if fname:
+            self.loadImage(fname)
+        else:
+            print('invalid image')
+    
+    def loadImage(self,fname):
+        self.image = cv.imread(fname, cv.IMREAD_COLOR)
+        self.displayImage()
+        
+    def displayImage(self):
+        qformat = QImage.Format_Indexed8
+        print(self.image.shape)
+        print(self.image.strides)
+        if len(self.image.shape) == 3:
+            if(self.image.shape[2]) == 4:
+                qformat = QImage.Format_RGBA8888
+                print("rgba")
+            else:
+                qformat = QImage.Format_RGB888
+                print("rgb")
+            img = QImage(self.image, self.image.shape[1], self.image.shape[0], qformat)
+            img = img.rgbSwapped()
+            print(self.image.shape[1], self.image.shape[0], self.image.strides[0])
+            self.spares.append(img)
+            self.index += 1
+            self.label.setPixmap(QPixmap.fromImage(img))
+            #self.label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+
+
+
 class PlotCanvas(FigureCanvas):
  
     def __init__(self, parent=None, width=5, height=4, dpi=100):
@@ -70,19 +110,39 @@ class Spare():
         A = cv.imread(imgA, cv.IMREAD_GRAYSCALE)
         B = cv.imread(imgB, cv.IMREAD_GRAYSCALE)
 
-    def brensenham():
+    def get_segments(self, x1, y1, x2, y2):
         """
         tracé de segment d'apres l'algorithme de bresenham
+        (x1 y1) : le point de départ en haut a gauche, (x2 y2) point d'arrivé en bas a droite.
+        retourne une liste contenant les double (x, y) de chacun des points.
         """
+        segment = [] #Contient tout les pixels du segment.
         print("TODO")
-        #TODO
+        delta_x = x2 - x1
+        delta_y = y2 - y1
+        y = y1 #rangée de départ
+        error = 0.0
+        if(delta_x != 0):
+            err_x = delta_y / delta_x
+        else:
+           err_x = 0
 
-    def histogram(cardinal=16):
+        err_y = -1
+
+        for x in range(x1, x2):
+            segment.append([x, y])
+            error += err_x
+            if (error >= 0.5):
+                y += 1
+                error += err_y
+        return segment
+
+    def histogram(self, cardinal=16):
         """
         creation de l'histograme selon le nombres de directions données en entrée
         """
         #TODO    
-        print("todo")
+        print("TODO")
     
 if __name__ == '__main__':
     app = QApplication(sys.argv)
