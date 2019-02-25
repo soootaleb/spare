@@ -100,42 +100,6 @@ class PlotCanvas(FigureCanvas):
         ax.set_title('PyQt Matplotlib Example')
         self.draw()
 
-class Spare():
-    """
-    reconnaissance de relation spatiale entre les images binaires A et B
-    """
-    def __init__(self, imgA, imgB):
-        A = cv.imread(imgA, cv.IMREAD_GRAYSCALE)
-        B = cv.imread(imgB, cv.IMREAD_GRAYSCALE)
-
-    def get_segments(self, x1, y1, x2, y2):
-        """
-        tracé de segment d'apres l'algorithme de bresenham
-        (x1 y1) : le point de départ en haut a gauche, (x2 y2) point d'arrivé en bas a droite.
-        retourne une liste contenant les double (x, y) de chacun des points.
-        """
-        segment = [] #Contient tout les pixels du segment.
-        print("TODO")
-        delta_x = x2 - x1
-        delta_y = y2 - y1
-        y = y1 #rangée de départ
-        error = 0.0
-        if(delta_x != 0):
-            err_x = delta_y / delta_x
-        else:
-           err_x = 0
-
-        err_y = -1
-
-        for x in range(x1, x2):
-            segment.append([x, y])
-            error += err_x
-            if (error >= 0.5):
-                y += 1
-                error += err_y
-        return segment
-
-
     
 if __name__ == '__main__':
     app = QApplication(sys.argv)
