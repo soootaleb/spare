@@ -19,10 +19,7 @@ def get_segment(x1, y1, x2, y2):
     retourne une liste contenant les double (x, y) de chacun des points.
     """
 
-    #raise NotImplementedError('This function is not tested yet')
-
     segment = [] # Contient tout les pixels du segment.
-
 
     error = x2 - x1
     delta_x = error*2
@@ -37,26 +34,6 @@ def get_segment(x1, y1, x2, y2):
             error += delta_x
     return segment
 
-def scan_parrallel(segment, height):
-    """
-    This function get all the parrallels segments in an image from a segment
-    """
-
-    segments = []
-    for actual_segment in range(height):
-        segments.append([])
-        for actual_point in range(height):
-            if segment[actual_point][0]+actual_segment < height:
-                segments[actual_segment].append([segment[actual_point][0]+actual_segment, segment[actual_point][1]])
-
-    for actual_segment in range(1,height):
-        segments.append([])
-        for actual_point in range(height):
-            if segment[actual_point][1]+actual_segment < height:
-                segments[actual_segment].append([segment[actual_point][0], segment[actual_point][1]+actual_segment])
-        #for actual in range(height-1,-1, -1):
-    #raise NotImplementedError('The segments function is not implemented yet')
-    print(segments)
 def scan_parrallel(segment, height):
     """
     This function get all the parrallels segments in an image from a single segment
@@ -78,17 +55,6 @@ def scan_parrallel(segment, height):
             else: 
                 break
     return segments
-
-def test_all_segments(height):
-    for x in range(height):
-        seg_temp = get_segment(0, 0, x, height)
-        print_segment(seg_temp)
-        print("\n")
-        for y in range(height):
-            seg_temp = get_segment(0, 0, height, y)
-            print_segment(seg_temp)
-            print("\n")
-
 
 def histogram(cardinal=16):
     """

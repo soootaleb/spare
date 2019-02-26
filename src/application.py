@@ -87,7 +87,7 @@ class App(QMainWindow):
         test if each pixel is contained in one of the segments, only once
         """
         height, width = self.images[0].shape
-        seg = functions.get_segment(0, 0, height, 5)
+        seg = functions.get_segment(0, 0, height, height)
         functions.print_segment(seg, height)
         segs = functions.scan_parrallel(seg, height)
         print(functions.test_segments(segs, height, True))
