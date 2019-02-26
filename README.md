@@ -26,3 +26,15 @@ that allows the user to load two binary images with objects and display the asso
 # Resources
 
 https://stackoverflow.com/questions/52869400/how-to-show-image-to-pyqt-with-opencv
+
+
+#Bresenham functions specification
+
+One of the idea we have:
+
+* only to use starting point at (0, 0) in the image
+  using only end point on the other side of the image (x = height, or y = height)
+
+  by doing so, we ensure to have always  a segment that have the max lenght of the image, ensuring we can scan the whole image.
+
+  for the other angles, we apply a rotation of a multiple of 90° on the image.

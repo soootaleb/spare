@@ -40,11 +40,37 @@ def get_segment(x1, y1, x2, y2):
             error += err_y
     return segment
 
-def get_segments(segment, width, height):
+def scan_parrallel(segment, height):
     """
     This function get all the parrallels segments in an image from a segment
-    """            
-    raise NotImplementedError('The segments function is not implemented yet')
+    """
+    x0 = segment[0][0]
+    y0 = segment[0][1]
+    segments = []
+    for actual_segment in range(height):
+        segments.append([])
+        for actual_point in range(height):
+            if segment[actual_point][0]+actual_segment < height:
+                segments[actual_segment].append([segment[actual_point][0]+actual_segment, segment[actual_point][1]])
+
+    for actual_segment in range(1,height):
+        segments.append([])
+        for actual_point in range(height):
+            if segment[actual_point][1]+actual_segment < height:
+                segments[actual_segment].append([segment[actual_point][0], segment[actual_point][1]+actual_segment])
+        #for actual in range(height-1,-1, -1):
+    #raise NotImplementedError('The segments function is not implemented yet')
+    print(segments)
+    return segments
+
+def test_all_segments(height):
+    for x in range(height):
+        seg_temp = get_segment(0, 0, x, height)
+        print("\n actual segment : ",seg_temp)
+
+        for y in range(height):
+            seg_temp = get_segment(0, 0, height, y)
+            print("\n",seg_temp)
 
 
 def histogram(cardinal=16):
@@ -53,3 +79,5 @@ def histogram(cardinal=16):
     of [what does it represent ?] depeding on the number of directions passed in arguments.
     """
     raise NotImplementedError('The histogram function is not implemented yet')
+
+

@@ -1,7 +1,7 @@
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-
+import numpy as np
 import functions
 
 import os, sys, cv2 as cv
@@ -83,8 +83,22 @@ class App(QMainWindow):
     @pyqtSlot()
     def process_test(self):
         """
-        create segment
+        create all the segments possible for the image, then get the parrallels segments
+        test if each pixel is contained in one of the segments, only once
         """
         height, width = self.images[0].shape
-        direction_number = 8 #TODO
-        print(functions.get_segment(0, 0, width, 0))
+        seg = functions.get_segment(0, 0, height, height)
+        segs = functions.scan_parrallel(seg, height)
+        blank = np.zeros((height, height))
+        print(blank)
+        for segment in segs:
+            for point in segment:
+                blank[point[0], point[1]] +=1
+
+        print(blank)
+
+#        for x in range(height):
+#           print("\n",functions.get_segment(0, 0, x, 50))
+#          for y in range(height):
+#             print("\n",functions.get_segment(0, 0, 50, y))
+
