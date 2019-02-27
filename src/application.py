@@ -83,11 +83,11 @@ class App(QMainWindow):
     @pyqtSlot()
     def process_test(self):
         """
-        create all the segments possible for the image, then get the parrallels segments
+        create all the segments giving and test scan parralels
         test if each pixel is contained in one of the segments, only once
         """
         height, width = self.images[0].shape
-        seg = functions.get_segment(0, 0, height, height)
+        seg = functions.get_segment(0, 0, 13, height, height)
         functions.print_segment(seg, height)
         segs = functions.scan_parrallel(seg, height)
-        print(functions.test_segments(segs, height, True))
+        print(functions.test_segments(segs, height))
