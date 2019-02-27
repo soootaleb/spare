@@ -18,9 +18,18 @@ def get_segment(x1, y1, x2, y2, max_lenght = 10000):
     (x1 y1) : le point de départ en haut a gauche, (x2 y2) point d'arrivé en bas a droite.
     retourne une liste contenant les double (x, y) de chacun des points.
     """
-    print("entrée bresenham")
     segment = [] # Contient tout les pixels du segment.
  
+    if x2-x1>0:
+        x_sign = 1
+    else:
+        x_sign = -1
+
+    if y2 - y1 > 0:
+        y_sign = 1
+    else:
+        y_sign = -1
+
     delta_x = x2 - x1
     delta_y = y2 - y1
     
@@ -40,14 +49,16 @@ def get_segment(x1, y1, x2, y2, max_lenght = 10000):
     x = x1
     y = y1
    
-    while (x < max_lenght or y < max_lenght) and iteration < 2 * max_lenght:
+    iter_max = math.sqrt(2) * max_lenght
+    
+    while ( (x < max_lenght and x >= 0) or (y >= 0 and y < max_lenght)) and iteration < iter_max:
         
-        if (err_x >= 0.5):
-            x+=1
-            err_x-=1
-        if (err_y >= 0.5):
-            y+=1
-            err_y-=1
+        if (abs(err_x) >= 0.5):
+            x += 1
+            err_x-= x_sign
+        if (abs(err_y) >= 0.5):
+            y += 1
+            err_y-= y_sign
 
         if x < max_lenght and y < max_lenght:
             segment.append([x, y])
@@ -67,9 +78,8 @@ def scan_parrallel(segment, height):
         angle_cst = (segment[0][1] - segment[-1][1]) / (segment[0][0] - segment[-1][0])
     else:
         angle_cst = height
-        
+
     angle= angle_cst
-    print(angle)
     segments = []
     #adding all the segments below the first segment
     for actual_segment in range(1, height):
@@ -102,7 +112,6 @@ def histogram(cardinal=16):
     """
     raise NotImplementedError('The histogram function is not implemented yet')
 
-
 def print_segment(segment, height):
     print(segment, "\n")
     result = np.zeros((height, height))
@@ -121,3 +130,112 @@ def test_segments(segments, height, affiche=False):
     return np.array_equal(np.ones((height, height)), result)
 
 
+
+def test_all_segments(height):
+    total = 0
+    fails = 0
+    passed_all = True
+    not_working = []
+    for x in range(height):
+        total+=2
+        #from (0, 0)
+        seg_tmp = get_segment(0, 0, x, height, height)
+        if len(seg_tmp) >= height-1 :
+            tmp = test_segments(scan_parrallel(seg_tmp, height), height)
+        else :
+            not_working.append([0, 0, x, height])
+            print("pas de segment pour", not_working[-1])
+            fails+=1
+            print(seg_tmp)
+            tmp = False
+        passed_all = passed_all and tmp
+
+        seg_tmp = get_segment(0, 0, height, x, height)
+        if len(seg_tmp) >= height-1:
+            tmp = test_segments(scan_parrallel(seg_tmp, height), height)
+        else :
+            not_working.append([0, 0, height, x, height])
+            print("pas de segment pour", not_working[-1])
+            print(seg_temp)
+            fails+=1
+            tmp = False
+        passed_all = passed_all and tmp
+    for x in range(height):
+        total+=2
+        #from (max, 0)
+        seg_tmp = get_segment(height-1, 0, 0, x, height)
+        if len(seg_tmp) >= height-1 :
+            tmp = test_segments(scan_parrallel(seg_tmp, height), height)
+        else :
+            not_working.append([height, 0, 0, x])
+            print("pas de segment pour", not_working[-1])
+            fails+=1
+            print(seg_tmp)
+            tmp = False
+        passed_all = passed_all and tmp
+
+        seg_tmp = get_segment(height-1, 0, x, 0, height)
+        if len(seg_tmp) >= height-1:
+            tmp = test_segments(scan_parrallel(seg_tmp, height), height)
+        else :
+            not_working.append([height-1, 0, x, 0])
+            print("pas de segment pour", not_working[-1])
+            fails+=1
+            print(seg_tmp)
+            tmp = False
+        passed_all = passed_all and tmp
+
+    for x in range(height):
+        total+=2
+        #from (max, max)
+        seg_tmp = get_segment(height, height, x, 0, height)
+        if len(seg_tmp) >= height-1 :
+            tmp = test_segments(scan_parrallel(seg_tmp, height), height)
+        else :
+            not_working.append([height, height, x, 0])
+            print("pas de segment pour", not_working[-1])
+            fails+=1
+            print(seg_tmp)
+            tmp = False
+        passed_all = passed_all and tmp
+
+
+        seg_tmp = get_segment(height, height, 0, x, height)
+        if len(seg_tmp) >= height-1:
+            tmp = test_segments(scan_parrallel(seg_tmp, height), height)
+        else :
+            not_working.append([height, height, 0, x])
+            print("pas de segment pour", not_working[-1])
+            fails+=1
+            print(seg_tmp)
+            tmp = False
+        passed_all = passed_all and tmp
+
+
+    for x in range(height):
+        total+=2
+        #from (0, max)
+        seg_tmp = get_segment(0, height, x, 0, height)
+        if len(seg_tmp) > height-1:
+            tmp = test_segments(scan_parrallel(seg_tmp, height), height)
+        else :
+            not_working.append([0, height, x, 0])
+            fails+=1
+            print("pas de segment pour", not_working[-1])
+            print(seg_tmp)
+            tmp = False
+        passed_all = passed_all and tmp
+
+
+        seg_tmp = get_segment(0, height, 0, x, height)
+        if len(seg_tmp) > height-1:
+            tmp = test_segments(scan_parrallel(seg_tmp, height), height)
+        else :
+            not_working.append([0, height, 0, x])
+            print("pas de segment pour", not_working[-1])
+            fails+=1
+            print(seg_tmp)
+            tmp = False
+        passed_all = passed_all and tmp
+    print("nombre total : ", total, ", nombre raté :", fails)
+    return passed_all
