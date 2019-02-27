@@ -10,7 +10,7 @@ We prefer to use module level functions, easier to use & call.
 We'll eventually refactor into potential classes later.
 """
 import numpy as np
-import sys
+import sys, math
 
 def get_segment(x1, y1, x2, y2, max_lenght = 10000):
     """
@@ -18,29 +18,29 @@ def get_segment(x1, y1, x2, y2, max_lenght = 10000):
     (x1 y1) : le point de départ en haut a gauche, (x2 y2) point d'arrivé en bas a droite.
     retourne une liste contenant les double (x, y) de chacun des points.
     """
-
+    print("entrée bresenham")
     segment = [] # Contient tout les pixels du segment.
  
     delta_x = x2 - x1
     delta_y = y2 - y1
     
     if delta_x == 0:
-        err_x_inc = 0
+        err_x_inc = max_lenght
     else:
         err_x_inc = delta_y / delta_x
     
     if delta_y == 0:
-        err_y_inc = 0
+        err_y_inc = max_lenght
     else:
         err_y_inc = delta_x / delta_y
     
     err_x = 0.0
     err_y = 0.0
-
+    iteration = 0
     x = x1
     y = y1
    
-    while x < max_lenght or y < max_lenght:
+    while (x < max_lenght or y < max_lenght) and iteration < 2 * max_lenght:
         
         if (err_x >= 0.5):
             x+=1
@@ -54,6 +54,7 @@ def get_segment(x1, y1, x2, y2, max_lenght = 10000):
     
         err_x += err_x_inc
         err_y += err_y_inc
+        iteration+=1
     return segment
 
 def scan_parrallel(segment, height):
@@ -61,7 +62,12 @@ def scan_parrallel(segment, height):
     This function get all the parrallels segments in an image from a single segment
     the segments returned 
     """
-    angle_cst = (segment[0][1] - segment[-1][1]) / (segment[0][0] - segment[-1][0])
+
+    if segment[0][0] - segment[-1][0] != 0:
+        angle_cst = (segment[0][1] - segment[-1][1]) / (segment[0][0] - segment[-1][0])
+    else:
+        angle_cst = height
+        
     angle= angle_cst
     print(angle)
     segments = []
