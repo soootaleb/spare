@@ -65,7 +65,7 @@ class App(QMainWindow):
             raise FileNotFoundError('The image ' + image + ' does not exist')
     
     def load_image(self, fname):
-        self.images.append(cv.imread(fname, cv.IMREAD_GRAYSCALE))
+        self.images.append(cv.imread(fname, cv.IMREAD_COLOR))
         self.index += 1
         self.display_image()
         
