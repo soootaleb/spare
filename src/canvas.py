@@ -4,12 +4,9 @@ from PyQt5.QtWidgets import *
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-import matplotlib.pyplot as plt
 
-import matplotlib, random
+import random, matplotlib.pyplot as plt
 
-# We need to change the used backend to not rely on the system one
-matplotlib.use('Qt5Agg')
 
 class PlotCanvas(FigureCanvas):
  
