@@ -21,7 +21,7 @@ that allows the user to load two binary images with objects and display the asso
 
 ## Process functions
 
-  * Complete this section
+  * Move image to binary
 
 # Resources
 

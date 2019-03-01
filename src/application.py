@@ -1,34 +1,38 @@
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-import numpy as np
-import math
-import functions
-
-import os, sys, cv2 as cv
 
 from canvas import *
 
+import math, functions, os, sys, cv2 as cv, numpy as np
+
 class App(QMainWindow):
 
+    image = None
+    image_canvas = None
+
+    index = -1 # For multiple images
+    images = [] # For multiple images
+
+    position = {
+        'TOP': 100,
+        'LEFT': 100
+    }
+
+    size = {
+        'WIDTH': 640,
+        'HEIGHT': 400,
+    }
+
+    TITLE = 'SpaRe'
+
     def __init__(self):
-        super().__init__()
-        self.left = 100
-        self.top = 100
-        self.title = 'SpaRe'
-        self.width = 640
-        self.height = 400
-        self.images = []
-        self.index = -1
+        super().__init__()        
         self.init_ui()
 
     def init_ui(self):
-        self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
- 
-        #m = PlotCanvas(self, width=5, height=4)
-        #m.move(0,0)
-        
+        self.setWindowTitle(self.TITLE)
+        self.setGeometry(self.position['LEFT'], self.position['TOP'], self.size['WIDTH'], self.size['HEIGHT'])
 
         self.btn_add_image = QPushButton('Ajouter une image', self)
         self.btn_add_image.setToolTip('cliquer pour ajouter une premiere image')
@@ -51,38 +55,30 @@ class App(QMainWindow):
 
         self.slider.valueChanged.connect(self.process_test)
 
-        #self.image1 = QLabel(self)
-        #self.image2 = QLabel(self)
         self.show()
 
+    '''
+    Loads & display image "black_50_50.png"
+    '''
     @pyqtSlot()
     def load_clicked(self):
+        '''
+        Reads and image with OpenCV & displays it with self.display_image()
+        '''
         base_path= os.path.dirname(os.path.dirname(__file__))
         fname = 'black_50_50.png'
         if fname:
-            self.load_image(os.path.join(base_path, 'misc', fname))
+            self.image = cv.imread(os.path.join(base_path, 'misc', fname), cv.IMREAD_COLOR)
+            self.image_canvas = ImageCanvas(self, width = 2, height = 2)
+            self.image_canvas.move(0, 0)
         else:
             raise FileNotFoundError('The image ' + image + ' does not exist')
-    
-    '''
-    Reads and image with OpenCV & displays it with self.display_image()
-    '''
-    def load_image(self, fname):
-        self.images.append(cv.imread(fname, cv.IMREAD_COLOR))
-        self.index += 1
-        self.display_image()
         
-    '''
-    Creates an ImageCanvas & moves it to the origin (0,0)
-    '''
-    def display_image(self):
-        self.image1 = ImageCanvas(self, width = 2, height = 2)
-        self.image1.move(0, 0)
 
     @pyqtSlot()
     def process_test(self):
         """
-        create all the segments giving and test scan parralels
+        Create all the segments giving and test scan parralels
         test if each pixel is contained in one of the segments, only once
         """
         
