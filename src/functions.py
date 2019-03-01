@@ -85,39 +85,39 @@ def bresenham_angle(x1, y1, degres, diagonal):
 
     return bresenham(x1, y1, x2, y2, diagonal)
 
-def scan_parrallel(segment, height):
+def scan_parrallel(segment, max_size):
     """
     This function get all the parrallels segments in an image from a single segment
     the segments returned 
     """
 
     if segment[0][0] - segment[-1][0] != 0:
-        angle_cst = (segment[0][1] - segment[-1][1]) / (segment[0][0] - segment[-1][0])
+        angle = (segment[0][1] - segment[-1][1]) / (segment[0][0] - segment[-1][0])
     else:
-        angle_cst = height
+        angle = max_size
 
-    angle= angle_cst
     segments = []
-    #adding all the segments below the first segment
-    for actual_segment in range(1, height):
+    
+    # Adding all the segments below the first segment
+    for actual_segment in range(1, max_size):
         segments.append([])
-        for actual_point in range(height):
+        for actual_point in range(max_size):
             if angle >= 1:
-                if segment[actual_point][0]-actual_segment >= 0:
+                if segment[actual_point][0]-actual_segment >= 0: # Check pixel exists
                     segments[-1].append([segment[actual_point][0] - actual_segment, segment[actual_point][1]])
-            elif segment[actual_point][1]-actual_segment >= 0:
+            elif segment[actual_point][1]-actual_segment >= 0: # Check pixel exists
                     segments[-1].append([segment[actual_point][0],segment[actual_point][1]-actual_segment])
 
     segments.append(segment)
 
-    #adding all the segments above the first segment
-    for actual_segment in range(1, height):
+    # Adding all the segments above the first segment
+    for actual_segment in range(1, max_size):
         segments.append([])
-        for actual_point in range(height):
+        for actual_point in range(max_size):
             if angle >= 1:
-                if segment[actual_point][0]+actual_segment < height:
+                if segment[actual_point][0]+actual_segment < max_size: # Check pixel exists
                     segments[-1].append([segment[actual_point][0]+actual_segment, segment[actual_point][1]])
-            elif segment[actual_point][1]+actual_segment < height:
+            elif segment[actual_point][1]+actual_segment < max_size: # Check pixel exists
                     segments[-1].append([segment[actual_point][0], segment[actual_point][1]+actual_segment])
 
     return segments
@@ -129,23 +129,6 @@ def histogram(cardinal=16):
     """
     raise NotImplementedError('The histogram function is not implemented yet')
 
-def print_segment(segment, height):
+def print_segment(segment, max_size):
     print(segment, "\n")
-    result = np.zeros((height, height))
-    for point in segment:
-        result[point[0], point[1]] +=1
-    print("segment [\n", result)
-    return result
-
-
-
-def merge_images(img1, img2):
-    """
-    Merges two images into one, and affect colors to each image (instead of binary)
-    for visualisation purpose
-    """
-    raise NotImplementedError('this function is not implemented')
-
-    
-def generate_square_image(size):
-    return np.zeros((size, size, 3), dtype="uint8")
+    result = np.zeros((max_size, max_size))
