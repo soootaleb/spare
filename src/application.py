@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 
 from canvas import *
 
-import math, functions, os, sys, cv2 as cv, numpy as np
+import math, functions, os, sys, cv2 as cv, numpy as np, random
 
 class App(QMainWindow):
 
@@ -92,11 +92,18 @@ class App(QMainWindow):
         height = self.image.shape[0]
         
         diagonal = math.sqrt(height**2 + width**2)
-        segments = functions.bresenham_angle(0, 0, degree, diagonal)
+        segment = functions.bresenham_angle(0, 0, degree, width)
+        
+        segments = functions.scan_parrallel(segment, width)
 
-        for (x, y) in segments:
-            if x < width and y < height:
-                self.image[x, y] = [238,130,238]
+
+        for se in segments:
+
+            color = [random.randint(0, 255),random.randint(0, 255),random.randint(0, 255)]
+
+            for (x, y) in se:
+                if x < width and y < height:
+                    self.image[x, y] = color
 
         self.image_canvas.plot()
         self.image_canvas.draw()
