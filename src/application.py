@@ -50,7 +50,7 @@ class App(QMainWindow):
 
         self.slider = QSlider(Qt.Horizontal, self)
         self.slider.setMinimum(0)
-        self.slider.setMaximum(90)
+        self.slider.setMaximum(360)
         self.slider.setSingleStep(1)
         self.slider.move(0, 300)
         self.slider.resize(300, 20)
@@ -92,18 +92,28 @@ class App(QMainWindow):
         height = self.image.shape[0]
         
         diagonal = math.sqrt(height**2 + width**2)
-        segment = functions.bresenham_angle(0, 0, degree, width)
-        
-        segments = functions.scan_parrallel(segment, width)
 
+        if 0 >= degree <= 90 or 180 >= degree <= 270:
+            segment = functions.bresenham_angle(0, 0, degree, width)
+        else:
+            segment = functions.bresenham_angle(0, height, degree, height)
 
-        for se in segments:
+        SCAN_LIN = False
 
-            color = [random.randint(0, 255),random.randint(0, 255),random.randint(0, 255)]
+        if SCAN_LIN:
+            segments = functions.scan_parrallel(segment, width)
 
-            for (x, y) in se:
+            for se in segments:
+
+                color = [random.randint(0, 255),random.randint(0, 255),random.randint(0, 255)]
+
+                for (x, y) in segment:
+                    if x < width and y < height:
+                        self.image[x, y] = [138, 0, 255]
+        else:
+            for (x, y) in segment:
                 if x < width and y < height:
-                    self.image[x, y] = color
+                    self.image[x, y] = [random.randint(0, 255),random.randint(0, 255),random.randint(0, 255)]
 
         self.image_canvas.plot()
         self.image_canvas.draw()

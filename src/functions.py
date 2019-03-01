@@ -36,12 +36,12 @@ def bresenham(x1, y1, x2, y2, max_lenght = 10000):
     if delta_x == 0:
         err_x_inc = 1 # To ensure vertical ray is drawn
     else:
-        err_x_inc = delta_y / delta_x
+        err_x_inc = abs(delta_y / delta_x)
     
     if delta_y == 0:
         err_y_inc = 1 # To ensure horizontal ray is drawn
     else:
-        err_y_inc = delta_x / delta_y
+        err_y_inc = abs(delta_x / delta_y)
     
     err_x = 0.0
     err_y = 0.0
@@ -78,7 +78,7 @@ def bresenham(x1, y1, x2, y2, max_lenght = 10000):
 #
 def bresenham_angle(x1, y1, degres, diagonal):
 
-    angle = math.pi * (degres / 180)
+    angle = degres * math.pi / 180
     
     x2 = diagonal * math.cos(angle)
     y2 = diagonal * math.sin(angle)
