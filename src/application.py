@@ -98,7 +98,7 @@ class App(QMainWindow):
         else:
             segment = functions.bresenham_angle(0, height, degree, height)
 
-        SCAN_LIN = False
+        SCAN_LIN = True
 
         if SCAN_LIN:
             segments = functions.scan_parrallel(segment, width)
@@ -107,9 +107,9 @@ class App(QMainWindow):
 
                 color = [random.randint(0, 255),random.randint(0, 255),random.randint(0, 255)]
 
-                for (x, y) in segment:
+                for (x, y) in se:
                     if x < width and y < height:
-                        self.image[x, y] = [138, 0, 255]
+                        self.image[x, y] = color
         else:
             for (x, y) in segment:
                 if x < width and y < height:
