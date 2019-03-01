@@ -73,14 +73,7 @@ class App(QMainWindow):
 
         self.image1 = ImageCanvas(self, width = 2, height = 2)
         self.image1.move(0, 0)
-        
-    def merge_images(self):
-        """
-        this function merge two images into one, and affect colors to each image (instead of binary)
-        for visualisation purpose
-        """
-        raise NotImplementedError('this function is not implemented')
-    
+
     @pyqtSlot()
     def process_test(self):
         """

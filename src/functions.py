@@ -255,3 +255,12 @@ def test_all_segments(height):
         passed_all = passed_all and tmp
     print("nombre total : ", total, ", nombre raté :", fails)
     return passed_all
+
+
+def merge_images(img1, img2):
+    """
+    Merges two images into one, and affect colors to each image (instead of binary)
+    for visualisation purpose
+    """
+    raise NotImplementedError('this function is not implemented')
+    
