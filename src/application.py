@@ -53,7 +53,7 @@ class App(QMainWindow):
         self.slider.move(0, 300)
         self.slider.resize(360, 20)
 
-        self.slider.valueChanged.connect(self.process_test)
+        self.slider.valueChanged.connect(self.draw_bresenham)
 
         self.show()
 
@@ -74,25 +74,19 @@ class App(QMainWindow):
         else:
             raise FileNotFoundError('The image ' + image + ' does not exist')
         
-
     @pyqtSlot()
-    def process_test(self):
-        """
-        Create all the segments giving and test scan parralels
-        test if each pixel is contained in one of the segments, only once
-        """
-        
+    def draw_bresenham(self):
         degree = self.slider.value()
-        angle = (degree /180)* math.pi
-        if len(self.images) >0:
-            height, width = self.images[0].shape
-            diag = math.sqrt(2 * height^2)
-            x = diag * math.cos(angle)
-            y = diag * math.sin(angle)
-            print(x, y)
-            #seg = functions.get_segment(0, 0, x, y, height)
-            #functions.print_segment(seg, height)
-            #segs = functions.scan_parrallel(seg, height)
-        #print(functions.test_segments(segs, height))
-        #passed_all = functions.test_all_segments(height)
-        #print("worked with all segment :", passed_all)
+
+        width = self.image.shape[1]
+        height = self.image.shape[0]
+        
+        diagonal = math.sqrt(height**2 + width**2)
+        segments = functions.bresenham_angle(0, 0, 36, diagonal)
+
+        for (x, y) in segments:
+            if x < width and y < height:
+                self.image[x, y] = [0, 0, 0]
+                self.image_canvas.draw()
+
+
