@@ -34,12 +34,12 @@ def bresenham(x1, y1, x2, y2, max_lenght = 10000):
         y_sign = -1
 
     if delta_x == 0:
-        err_x_inc = 0
+        err_x_inc = 1 # To ensure vertical ray is drawn
     else:
         err_x_inc = delta_y / delta_x
     
     if delta_y == 0:
-        err_y_inc = 0
+        err_y_inc = 1 # To ensure horizontal ray is drawn
     else:
         err_y_inc = delta_x / delta_y
     
@@ -49,13 +49,11 @@ def bresenham(x1, y1, x2, y2, max_lenght = 10000):
     x = x1
     y = y1
    
-    iter_max = math.sqrt(2) * max_lenght
-    
-    while ( (x <= max_lenght and x >= 0) or (y >= 0 and y <= max_lenght)) and iteration < iter_max:
+    while ( (x <= max_lenght and x >= 0) or (y >= 0 and y <= max_lenght)) and iteration < max_lenght:
         
         if (abs(err_x) >= 0.5):
             x += x_sign
-            err_x-= x_sign
+            err_x -= x_sign
             
         if (abs(err_y) >= 0.5):
             y += y_sign
@@ -66,7 +64,9 @@ def bresenham(x1, y1, x2, y2, max_lenght = 10000):
     
         err_x += err_x_inc
         err_y += err_y_inc
-        iteration+=1
+        
+        iteration += 1
+
     return segment
 
 #
