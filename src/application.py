@@ -47,15 +47,19 @@ class App(QMainWindow):
         self.btn_process.resize(140, 100)
         #self.btn_process.clicked.connect(self.process_test)
 
+
         self.slider = QSlider(Qt.Horizontal, self)
         self.slider.setMinimum(0)
-        self.slider.setMaximum(359)
+        self.slider.setMaximum(90)
         self.slider.setSingleStep(1)
         self.slider.move(0, 300)
-        self.slider.resize(360, 20)
+        self.slider.resize(300, 20)
 
         self.slider.valueChanged.connect(self.draw_bresenham)
-
+        
+        self.label_angle = QLabel("0 °",self)
+        self.label_angle.move(0, 320)
+        
         self.show()
 
     '''
@@ -82,6 +86,8 @@ class App(QMainWindow):
         
         degree = self.slider.value()
 
+        self.label_angle.setText('{} °'.format(degree))
+
         width = self.image.shape[1]
         height = self.image.shape[0]
         
@@ -92,5 +98,5 @@ class App(QMainWindow):
             if x < width and y < height:
                 self.image[x, y] = [238,130,238]
 
-        self.image_canvas.draw()
         self.image_canvas.plot()
+        self.image_canvas.draw()
