@@ -64,13 +64,18 @@ class App(QMainWindow):
         else:
             raise FileNotFoundError('The image ' + image + ' does not exist')
     
+    '''
+    Reads and image with OpenCV & displays it with self.display_image()
+    '''
     def load_image(self, fname):
         self.images.append(cv.imread(fname, cv.IMREAD_COLOR))
         self.index += 1
         self.display_image()
         
+    '''
+    Creates an ImageCanvas & moves it to the origin (0,0)
+    '''
     def display_image(self):
-
         self.image1 = ImageCanvas(self, width = 2, height = 2)
         self.image1.move(0, 0)
 
