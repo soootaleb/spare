@@ -263,4 +263,7 @@ def merge_images(img1, img2):
     for visualisation purpose
     """
     raise NotImplementedError('this function is not implemented')
+
     
+def generate_square_image(size):
+    return np.zeros((size, size, 3), dtype="uint8")

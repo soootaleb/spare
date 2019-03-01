@@ -100,6 +100,3 @@ class App(QMainWindow):
         #print(functions.test_segments(segs, height))
         #passed_all = functions.test_all_segments(height)
         #print("worked with all segment :", passed_all)
-    
-    def generate_image(self, size):
-        self.image1 = np.zeros((size, size, 3), dtype="uint8")
