@@ -83,7 +83,7 @@ def bresenham_angle(x1, y1, degres, diagonal):
     x2 = diagonal * math.cos(angle)
     y2 = diagonal * math.sin(angle)
 
-    return bresenham(x1, y1, x2, y2)
+    return bresenham(x1, y1, x2, y2, diagonal)
 
 def scan_parrallel(segment, height):
     """

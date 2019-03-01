@@ -9,6 +9,7 @@ import math, functions, os, sys, cv2 as cv, numpy as np
 class App(QMainWindow):
 
     image = None
+    image_base = None
     image_canvas = None
 
     index = -1 # For multiple images
@@ -69,6 +70,7 @@ class App(QMainWindow):
         fname = 'black_50_50.png'
         if fname:
             self.image = cv.imread(os.path.join(base_path, 'misc', fname), cv.IMREAD_COLOR)
+            self.image_base = cv.imread(os.path.join(base_path, 'misc', fname), cv.IMREAD_COLOR)
             self.image_canvas = ImageCanvas(self, width = 2, height = 2)
             self.image_canvas.move(0, 0)
         else:
@@ -76,17 +78,19 @@ class App(QMainWindow):
         
     @pyqtSlot()
     def draw_bresenham(self):
+        self.image = self.image_base.copy()
+        
         degree = self.slider.value()
 
         width = self.image.shape[1]
         height = self.image.shape[0]
         
         diagonal = math.sqrt(height**2 + width**2)
-        segments = functions.bresenham_angle(0, 0, 36, diagonal)
+        segments = functions.bresenham_angle(0, 0, degree, diagonal)
 
         for (x, y) in segments:
             if x < width and y < height:
-                self.image[x, y] = [0, 0, 0]
-                self.image_canvas.draw()
+                self.image[x, y] = [238,130,238]
 
-
+        self.image_canvas.draw()
+        self.image_canvas.plot()
