@@ -2,6 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 import numpy as np
+import math
 import functions
 
 import os, sys, cv2 as cv
@@ -25,9 +26,10 @@ class App(QMainWindow):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
  
-        m = PlotCanvas(self, width=5, height=4)
-        m.move(0,0)
- 
+        #m = PlotCanvas(self, width=5, height=4)
+        #m.move(0,0)
+        
+
         self.btn_add_image = QPushButton('Ajouter une image', self)
         self.btn_add_image.setToolTip('cliquer pour ajouter une premiere image')
         self.btn_add_image.move(500, 0)
@@ -38,11 +40,19 @@ class App(QMainWindow):
         self.btn_process.setToolTip('cliquer pour effectuer un tracé de bresenham')
         self.btn_process.move(500, 110)
         self.btn_process.resize(140, 100)
-        self.btn_process.clicked.connect(self.process_test)
+        #self.btn_process.clicked.connect(self.process_test)
 
+        self.slider = QSlider(Qt.Horizontal, self)
+        self.slider.setMinimum(0)
+        self.slider.setMaximum(359)
+        self.slider.setSingleStep(1)
+        self.slider.move(0, 300)
+        self.slider.resize(360, 20)
 
-        self.image1 = QLabel(self)
-        self.image2 = QLabel(self)
+        self.slider.valueChanged.connect(self.process_test)
+
+        #self.image1 = QLabel(self)
+        #self.image2 = QLabel(self)
         self.show()
 
     @pyqtSlot()
@@ -58,21 +68,12 @@ class App(QMainWindow):
         self.images.append(cv.imread(fname, cv.IMREAD_GRAYSCALE))
         self.index += 1
         self.display_image()
-
+        
     def display_image(self):
-        qformat = QImage.Format_Grayscale8
 
-        img = QImage(self.images[self.index], self.images[self.index].shape[1], self.images[self.index].shape[0], qformat)
-        #image1 and 2 are for visualisation, for the openCV matrix, look at self.images
-        if self.index % 2 == 0:
-            self.image1.resize(self.images[self.index].shape[1], self.images[self.index].shape[0])
-            self.image1.move(0,0)
-            self.image1.setPixmap(QPixmap.fromImage(img))
-        else:
-            self.image2.resize(self.images[self.index].shape[1], self.images[self.index].shape[0])
-            self.image2.move(self.images[self.index-1].shape[0]+1, 0)
-            self.image2.setPixmap(QPixmap.fromImage(img))
-
+        self.image1 = ImageCanvas(self, width = 2, height = 2)
+        self.image1.move(0, 0)
+        
     def merge_images(self):
         """
         this function merge two images into one, and affect colors to each image (instead of binary)
@@ -86,10 +87,21 @@ class App(QMainWindow):
         create all the segments giving and test scan parralels
         test if each pixel is contained in one of the segments, only once
         """
-        height, width = self.images[0].shape
-        seg = functions.get_segment(0, 0, 44, height, height)
-        functions.print_segment(seg, height)
-        segs = functions.scan_parrallel(seg, height)
+        
+        degree = self.slider.value()
+        angle = (degree /180)* math.pi
+        if len(self.images) >0:
+            height, width = self.images[0].shape
+            diag = math.sqrt(2 * height^2)
+            x = diag * math.cos(angle)
+            y = diag * math.sin(angle)
+            print(x, y)
+            #seg = functions.get_segment(0, 0, x, y, height)
+            #functions.print_segment(seg, height)
+            #segs = functions.scan_parrallel(seg, height)
         #print(functions.test_segments(segs, height))
         #passed_all = functions.test_all_segments(height)
         #print("worked with all segment :", passed_all)
+    
+    def generate_image(self, size):
+        self.image1 = np.zeros((size, size, 3), dtype="uint8")
