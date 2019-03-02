@@ -12,60 +12,53 @@ We'll eventually refactor into potential classes later.
 import numpy as np
 import sys, math
 
-def bresenham(x1, y1, x2, y2, max_lenght = 10000):
+def bresenham(x, y, x_dst, y_dst):
     """
-    Tracé de segment d'apres l'algorithme de bresenham
-    (x1 y1) : le point de départ en haut a gauche, (x2 y2) point d'arrivé en bas a droite.
-    retourne une liste contenant les double (x, y) de chacun des points.
+    creation of a segment using bresenham algorithm
+    x, y source point
+    x_dst, y_dst destination point
     """
-    segment = [] # Contient tout les pixels du segment.
+    segment = [] #contains all pixels in the segment
  
-    delta_x = x2 - x1
-    delta_y = y2 - y1
-    
-    if delta_x >= 0:
-        x_sign = 1
-    else:
-        x_sign = -1
+    #metematical simplifications
+    error_x = abs(x_dst - x)
+    error_y = abs(y_dst - y)
 
-    if delta_y >= 0:
-        y_sign = 1
-    else:
-        y_sign = -1
+    delta_x = 2 * error_x
+    delta_y = 2 * error_y
 
-    if delta_x == 0:
-        err_x_inc = 1 # To ensure vertical ray is drawn
+    #for the case we go backward in the direction
+    if x <= x_dst:
+        x_inc = 1
     else:
-        err_x_inc = abs(delta_y / delta_x)
-    
-    if delta_y == 0:
-        err_y_inc = 1 # To ensure horizontal ray is drawn
+        x_inc = -1
+    if y <= y_dst:
+        y_inc = 1
     else:
-        err_y_inc = abs(delta_x / delta_y)
+        y_inc = -1
     
-    err_x = 0.0
-    err_y = 0.0
-    iteration = 0
-    x = x1
-    y = y1
-   
-    while ( (x <= max_lenght and x >= 0) or (y >= 0 and y <= max_lenght)) and iteration < max_lenght:
-        
-        if (abs(err_x) >= 0.5):
-            x += x_sign
-            err_x -= x_sign
-            
-        if (abs(err_y) >= 0.5):
-            y += y_sign
-            err_y-= y_sign
+    index = 0
 
-        if x < max_lenght and y < max_lenght:
+    if delta_x > delta_y:
+
+        while index <= delta_x:
             segment.append([x, y])
-    
-        err_x += err_x_inc
-        err_y += err_y_inc
-        
-        iteration += 1
+            x += x_inc
+            index+=2 #because delta = 2 * error
+            error_x -= delta_y
+            if error_x < 0:
+                y += y_inc
+                error_x += delta_x
+
+    else : 
+        while index <= delta_y:
+            segment.append([x, y])
+            index+=2 #because delta = 2 * error
+            y += y_inc
+            error_y -= delta_x
+            if error_y < 0:
+                x += x_inc
+                error_y += delta_y
 
     return segment
 
@@ -76,14 +69,14 @@ def bresenham(x1, y1, x2, y2, max_lenght = 10000):
 # @param {*} y1 Y position of the starting point
 # @param {*} angle The direction of the ray
 #
-def bresenham_angle(x1, y1, degres, diagonal):
+def bresenham_angle(degres, max_lenght):
 
     angle = degres * math.pi / 180
     
     x2 = diagonal * math.cos(angle)
     y2 = diagonal * math.sin(angle)
 
-    return bresenham(x1, y1, x2, y2, diagonal)
+    return bresenham(x1, y1, x2, y2)
 
 def scan_parrallel(segment, max_size):
     """

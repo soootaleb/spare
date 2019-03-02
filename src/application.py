@@ -75,7 +75,7 @@ class App(QMainWindow):
         if fname:
             self.image = cv.imread(os.path.join(base_path, 'misc', fname), cv.IMREAD_COLOR)
             self.image_base = cv.imread(os.path.join(base_path, 'misc', fname), cv.IMREAD_COLOR)
-            self.image_canvas = ImageCanvas(self, width = 2, height = 2)
+            self.image_canvas = ImageCanvas(self, width = 3, height = 3)
             self.image_canvas.move(0, 0)
         else:
             raise FileNotFoundError('The image ' + image + ' does not exist')
@@ -92,28 +92,32 @@ class App(QMainWindow):
         height = self.image.shape[0]
         
         diagonal = math.sqrt(height**2 + width**2)
-
-        if 0 >= degree <= 90 or 180 >= degree <= 270:
-            segment = functions.bresenham_angle(0, 0, degree, width)
-        else:
-            segment = functions.bresenham_angle(0, height, degree, height)
-
+ 
+        segment = functions.bresenham_angle(degree, diagonal)
+       
         SCAN_LIN = True
+        #TODO : add radio button to select mode
+        #TODO : add a menu function and dissociate functions
+        try:    
+            if SCAN_LIN:
+                segments = functions.scan_parrallel(segment, width)
+                for se in segments:
+                    
+                    color = [random.randint(0, 255),random.randint(0, 255),random.randint(0, 255)]
 
-        if SCAN_LIN:
-            segments = functions.scan_parrallel(segment, width)
-
-            for se in segments:
-
-                color = [random.randint(0, 255),random.randint(0, 255),random.randint(0, 255)]
-
-                for (x, y) in se:
+                    for (x, y) in se:
+                        if x < width and y < height:
+                            self.image[x, y] = color
+            else:
+                color = [255, 0, 0]
+                for (x, y) in segment:
+                    color[0] = color[0] -3
                     if x < width and y < height:
                         self.image[x, y] = color
-        else:
-            for (x, y) in segment:
-                if x < width and y < height:
-                    self.image[x, y] = [random.randint(0, 255),random.randint(0, 255),random.randint(0, 255)]
+        except:
+            pass
 
+        if 180 > degree > 90:
+            print("seg \n", segment)
         self.image_canvas.plot()
         self.image_canvas.draw()
