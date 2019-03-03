@@ -107,6 +107,17 @@ def bresenham_angle(degres, max_lenght):
         y2 = min(max_lenght-1, y2)
     return bresenham(x1, y1, x2, y2)
 
+    
+def x_exist(segment, point, shift):
+    return segment[point][0]-shift >= 0
+def y_exist(segment, point, shift):
+    return segment[point][1]-shift >= 0
+
+def x_in_bound(segment, point, shift, max_size):
+    return segment[point][0]+shift < max_size
+
+def y_in_bound(segment, point, shift, max_size):
+    return segment[point][1]+shift < max_size
 
 def scan_parrallel(segment, max_size):
     """
@@ -127,24 +138,20 @@ def scan_parrallel(segment, max_size):
     # Adding all the segments below the first segment
     for actual_segment in range(1, max_size):
         segments.append([])
-        for actual_point in range(max_size):
-            if angle >= 1:
-                if segment[actual_point][0]-actual_segment >= 0: # Check pixel exists
-                    segments[-1].append([segment[actual_point][0] - actual_segment, segment[actual_point][1]])
-            elif segment[actual_point][1]-actual_segment >= 0: # Check pixel exists
-                    segments[-1].append([segment[actual_point][0],segment[actual_point][1]-actual_segment])
-
-    segments.append(segment)
-
-    # Adding all the segments above the first segment
-    for actual_segment in range(1, max_size):
         segments.append([])
         for actual_point in range(max_size):
             if angle >= 1:
-                if segment[actual_point][0]+actual_segment < max_size: # Check pixel exists
-                    segments[-1].append([segment[actual_point][0]+actual_segment, segment[actual_point][1]])
-            elif segment[actual_point][1]+actual_segment < max_size: # Check pixel exists
-                    segments[-1].append([segment[actual_point][0], segment[actual_point][1]+actual_segment])
+                if x_exist(segment, actual_point, actual_segment): 
+                    segments[-1].append([segment[actual_point][0] - actual_segment, segment[actual_point][1]])
+                if x_in_bound(segment, actual_point, actual_segment, max_size):
+                    segments[-2].append([segment[actual_point][0]+actual_segment, segment[actual_point][1]])
+            else:
+                if y_exist(segment, actual_point, actual_segment):
+                    segments[-1].append([segment[actual_point][0],segment[actual_point][1]-actual_segment])   
+                if y_in_bound(segment, actual_point, actual_segment, max_size):
+                    segments[-2].append([segment[actual_point][0], segment[actual_point][1]+actual_segment])
+
+    segments.append(segment)
 
     return segments
 

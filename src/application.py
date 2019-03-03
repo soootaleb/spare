@@ -41,12 +41,12 @@ class App(QMainWindow):
         self.btn_add_image.resize(140, 100)
         self.btn_add_image.clicked.connect(self.load_clicked)
 
-        self.btn_process = QPushButton('Go', self)
-        self.btn_process.setToolTip('cliquer pour effectuer un tracé de bresenham')
-        self.btn_process.move(500, 110)
-        self.btn_process.resize(140, 100)
-        #self.btn_process.clicked.connect(self.process_test)
+        self.radio_segment = QRadioButton("segment",self)
+        self.radio_segment.setChecked(True)
+        self.radio_segment.move(0, 350)
 
+        self.radio_scan_lin = QRadioButton("parralleles", self)
+        self.radio_scan_lin.move(200, 350)
 
         self.slider = QSlider(Qt.Horizontal, self)
         self.slider.setMinimum(0)
@@ -82,6 +82,9 @@ class App(QMainWindow):
         
     @pyqtSlot()
     def draw_bresenham(self):
+        if self.image_base is None:
+            self.load_clicked()
+
         self.image = self.image_base.copy()
         
         degree = self.slider.value()
@@ -95,26 +98,25 @@ class App(QMainWindow):
 
         segment = functions.bresenham_angle(degree, max_lenght)
        
-        SCAN_LIN = True
         #TODO : add radio button to select mode
         #TODO : add a menu function and dissociate functions
-        try:    
-            if SCAN_LIN:
-                segments = functions.scan_parrallel(segment, width)
-                for se in segments:
-                    
-                    color = [random.randint(0, 255),random.randint(0, 255),random.randint(0, 255)]
 
-                    for (x, y) in se:
-                        if x < width and y < height:
-                            self.image[x, y] = color
-            else:
-                color = [255, 0, 0]
-                for (x, y) in segment:
-                    color[0] = color[0] -3
+        if self.radio_scan_lin.isChecked():
+            segments = functions.scan_parrallel(segment, width)
+            for se in segments:
+                
+                color = [random.randint(0, 255),random.randint(0, 255),random.randint(0, 255)]
+
+                for (x, y) in se:
+                    color = [max(0, color[0]-2), max(0, color[1]-2), max(0, color[2]-2)]
                     if x < width and y < height:
                         self.image[x, y] = color
-        except:
-            pass
+        else:
+            color = [255, 0, 0]
+            for (x, y) in segment:
+                color[0] = color[0] -3
+                if x < width and y < height:
+                    self.image[x, y] = color
+
         self.image_canvas.plot()
         self.image_canvas.draw()
