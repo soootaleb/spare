@@ -12,6 +12,8 @@ We'll eventually refactor into potential classes later.
 import numpy as np
 import sys, math
 
+DEBUG = False
+
 def bresenham(x, y, x_dst, y_dst):
     """
     creation of a segment using bresenham algorithm
@@ -70,27 +72,58 @@ def bresenham(x, y, x_dst, y_dst):
 # @param {*} angle The direction of the ray
 #
 def bresenham_angle(degres, max_lenght):
-
+    """
+    Determinate starting point and destination point depending of the angle given as parameter
+    starting point is always a corner of the image.
+    """
     angle = degres * math.pi / 180
     
-    x2 = diagonal * math.cos(angle)
-    y2 = diagonal * math.sin(angle)
-
+    x2 = round(math.sqrt(2) * max_lenght * math.cos(angle))
+    y2 = round(math.sqrt(2) * max_lenght * math.sin(angle))
+    #At this moment, 4 possibilities
+    if x2 >= 0 and y2 >= 0:
+        #starting top left
+        x1 = 0
+        y1 = 0
+        x2 = min(max_lenght-1, x2)
+        y2 = min(max_lenght-1, y2)
+    elif x2 < 0 and y2 < 0:
+        #starting bottom right
+        x1 = min(max_lenght-1, -x2)
+        y1 = min(max_lenght-1, -y2)
+        x2 = 0
+        y2 = 0
+    elif x2 >= 0 and y2 < 0:
+        #starting top right
+        x1 = 0
+        y1 = min(max_lenght-1, -y2)
+        y2 = 0
+        x2 = min(max_lenght-1, x2)
+    else :
+        #starting bottom left
+        x1 = min(max_lenght-1, -x2)
+        x2  = 0
+        y1 = 0
+        y2 = min(max_lenght-1, y2)
     return bresenham(x1, y1, x2, y2)
+
 
 def scan_parrallel(segment, max_size):
     """
     This function get all the parrallels segments in an image from a single segment
     the segments returned 
     """
+    x_src = segment[0][0]
+    y_src = segment[0][1]
+    x_dst = segment[-1][0]
+    y_dst = segment[-1][1]
 
-    if segment[0][0] - segment[-1][0] != 0:
-        angle = (segment[0][1] - segment[-1][1]) / (segment[0][0] - segment[-1][0])
+    if x_src - x_dst != 0:
+        angle = abs((y_src - y_dst) / (x_src - x_dst))
     else:
-        angle = max_size
+        angle = 1
 
     segments = []
-    
     # Adding all the segments below the first segment
     for actual_segment in range(1, max_size):
         segments.append([])

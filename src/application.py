@@ -91,9 +91,9 @@ class App(QMainWindow):
         width = self.image.shape[1]
         height = self.image.shape[0]
         
-        diagonal = math.sqrt(height**2 + width**2)
- 
-        segment = functions.bresenham_angle(degree, diagonal)
+        max_lenght = max(height, width)
+
+        segment = functions.bresenham_angle(degree, max_lenght)
        
         SCAN_LIN = True
         #TODO : add radio button to select mode
@@ -116,8 +116,5 @@ class App(QMainWindow):
                         self.image[x, y] = color
         except:
             pass
-
-        if 180 > degree > 90:
-            print("seg \n", segment)
         self.image_canvas.plot()
         self.image_canvas.draw()
