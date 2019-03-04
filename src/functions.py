@@ -110,6 +110,7 @@ def bresenham_angle(degres, max_lenght):
     
 def x_exist(segment, point, shift):
     return segment[point][0]-shift >= 0
+
 def y_exist(segment, point, shift):
     return segment[point][1]-shift >= 0
 
@@ -161,7 +162,3 @@ def histogram(cardinal=16):
     of [what does it represent ?] depeding on the number of directions passed in arguments.
     """
     raise NotImplementedError('The histogram function is not implemented yet')
-
-def print_segment(segment, max_size):
-    print(segment, "\n")
-    result = np.zeros((max_size, max_size))
