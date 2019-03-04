@@ -98,7 +98,6 @@ class App(QMainWindow):
 
         segment = functions.bresenham_angle(degree, max_lenght)
        
-        #TODO : add radio button to select mode
         #TODO : add a menu function and dissociate functions
 
         if self.radio_scan_lin.isChecked():
