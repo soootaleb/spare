@@ -41,7 +41,7 @@ class ImageCanvas(FigureCanvas):
         self.plot()
     
     def plot(self):
-        self.axes.imshow(self.parent().image)
+        self.axes.imshow(self.parent().image.image)
         self.axes.axis('off')
         self.show()
 

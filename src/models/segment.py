@@ -1,39 +1,36 @@
 
-import math
+from models.point import Point
+from models.point import Point
 
-class Segment(object):
+import math, random
 
-    points = []
+class Segment(list):
+
+    color = None
 
     def __init__(self, points):
-        if not isinstance(points, list): raise ValueError('[ERROR] The given points is not a segment')
-        if len(points): raise ValueError('[WARNING] Instanciated an empty segment')
-
-        self.points = points
-
-    def __contains__(self, point) -> bool:
-        return point in points
+        # if len(points) == 0: raise ValueError('[WARNING] Instanciated an empty segment')
+        self.color = [random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)]
+        super().__init__(points)
 
     @property
     def start(self) -> Point:
-        return self.points[0]
+        return self[0]
 
     @property
     def end(self) -> Point:
-        return self.points[-1]
+        return self[-1]
 
-    def append(self, point) -> Segment:
+    def append(self, point):
 
-        last_point = self.points[-1]
+        if len(self) > 0:
+            last_point = self.end
 
-        if abs(point.x - last_point.x) > 1
-            or abs(point.y - last_point.y) > 1:
-            
-            raise ValueError('[ERROR] Cannot append {} because last point was {}'.format(point, last_point))
+            if abs(point.x - last_point.x) > 1 or abs(point.y - last_point.y) > 1:
+                
+                raise ValueError('[ERROR] Cannot append {} because last point was {}'.format(point, last_point))
 
-        self.points.append(point)
-
-        return self
+        super().append(point)
 
     @property
     def vertical(self) -> bool:

@@ -12,6 +12,9 @@ We'll eventually refactor into potential classes later.
 import numpy as np
 import sys, math
 
+from models.point import Point
+from models.segment import Segment
+
 DEBUG = False
 
 def bresenham(x, y, x_dst, y_dst):
@@ -44,7 +47,7 @@ def bresenham(x, y, x_dst, y_dst):
     if delta_x > delta_y:
 
         while index <= delta_x:
-            segment.append([x, y])
+            segment.append(Point(x, y))
             x += x_inc
             index+=2 #because delta = 2 * error
             error_x -= delta_y
@@ -54,7 +57,7 @@ def bresenham(x, y, x_dst, y_dst):
 
     else : 
         while index <= delta_y:
-            segment.append([x, y])
+            segment.append(Point(x, y))
             index+=2 #because delta = 2 * error
             y += y_inc
             error_y -= delta_x
@@ -62,7 +65,7 @@ def bresenham(x, y, x_dst, y_dst):
                 x += x_inc
                 error_y += delta_y
 
-    return segment
+    return Segment(segment)
 
 #
 # Applies the BRESENHAM algorithm from a starting point
@@ -80,6 +83,7 @@ def bresenham_angle(degres, max_lenght):
     
     x2 = round(math.sqrt(2) * max_lenght * math.cos(angle))
     y2 = round(math.sqrt(2) * max_lenght * math.sin(angle))
+    
     #At this moment, 4 possibilities
     if x2 >= 0 and y2 >= 0:
         #starting top left

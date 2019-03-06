@@ -2,14 +2,17 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
+from tests.main import *
+from models.image import Image
+
 from canvas import *
+
 
 import math, functions, os, sys, cv2 as cv, numpy as np, random
 
 class App(QMainWindow):
 
     image = None
-    image_base = None
     image_canvas = None
 
     index = -1 # For multiple images
@@ -73,8 +76,7 @@ class App(QMainWindow):
         base_path= os.path.dirname(os.path.dirname(__file__))
         fname = 'black_50_50.png'
         if fname:
-            self.image = cv.imread(os.path.join(base_path, 'misc', fname), cv.IMREAD_COLOR)
-            self.image_base = cv.imread(os.path.join(base_path, 'misc', fname), cv.IMREAD_COLOR)
+            self.image = Image(cv.imread(os.path.join(base_path, 'misc', fname), cv.IMREAD_COLOR))
             self.image_canvas = ImageCanvas(self, width = 3, height = 3)
             self.image_canvas.move(0, 0)
         else:
@@ -82,40 +84,29 @@ class App(QMainWindow):
         
     @pyqtSlot()
     def draw_bresenham(self):
-        if self.image_base is None:
+        if self.image is None:
             self.load_clicked()
 
-        self.image = self.image_base.copy()
-        
+        self.image.reset()
+
         degree = self.slider.value()
-
-        self.label_angle.setText('{} °'.format(degree))
-
-        width = self.image.shape[1]
-        height = self.image.shape[0]
         
-        max_lenght = max(height, width)
-
-        segment = functions.bresenham_angle(degree, max_lenght)
+        self.label_angle.setText('{} °'.format(degree))
        
         #TODO : add a menu function and dissociate functions
 
         if self.radio_scan_lin.isChecked():
-            segments = functions.scan_parrallel(segment, width)
-            for se in segments:
-                
-                color = [random.randint(0, 255),random.randint(0, 255),random.randint(0, 255)]
+            parallels = self.image.parallels(degree)
+            for segment in parallels:
+                self.image.draw(segment)
 
-                for (x, y) in se:
-                    color = [max(0, color[0]-2), max(0, color[1]-2), max(0, color[2]-2)]
-                    if x < width and y < height:
-                        self.image[x, y] = color
+            if not test_segments(parallels, self.image.max_dimension):
+                raise Exception('Some pixels are visited twice !!')
+            
         else:
-            color = [255, 0, 0]
-            for (x, y) in segment:
-                color[0] = color[0] -3
-                if x < width and y < height:
-                    self.image[x, y] = color
+            segment = self.image.ray(degree)
+            self.image.draw(segment)
+
 
         self.image_canvas.plot()
         self.image_canvas.draw()
