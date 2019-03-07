@@ -45,3 +45,12 @@ Instead, the first implementation relies on a more flexible Bresenham algorithm 
 > We think that our client will see more value if a visual rendering is displayed. This rendering must allow simple interactions in order to allow us to see what happens and eventualy ensure it's working.
 
 As a first implementation, we decided to implement a simple window that allow user to load a fixed image, and use a slider to indicate the scanning direction. The visual output is the image, on which we colored the pixels visited by the scan. By moving the solider and eventually activate the linear scanning, we can observe how our algorithm can walk on all pixels by a defined direction.
+
+We want to show our result in differents ways :
+  * using histogram, representing polar result for each relation :
+      * Showing histogram
+      * histogram contain one relation
+      * further relations added to the histogram
+  
+  * using natural langage
+

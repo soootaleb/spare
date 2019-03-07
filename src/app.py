@@ -63,6 +63,7 @@ class App(QMainWindow):
         self.label_angle = QLabel("0 °",self)
         self.label_angle.move(0, 320)
         
+        
         self.show()
 
     '''
