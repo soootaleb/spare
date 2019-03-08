@@ -11,6 +11,19 @@ This project aims to work on the fuzzy spacial relations.
 Those lists are the atomic steps to accomplish in order to produce a graphical application
 that allows the user to load two binary images with objects and display the associated F-histogram
 
+change line generation order according to angle in bresenham_angle (in image.py)
+
+merge two images into one for GUI
+
+test if it's working on rectangular images
+
+## Improvement idea
+
+keep an image in RGB only for visual, have a grayscale / boolean matrix for interating on it
+resize images to have less empty border in each image
+reshape image in order to iterate on smaller images depending on size
+create histogram based on 180 degrees
+
 ## Basic functions
 
   * ~~Implement the `bresenham` function~~
@@ -54,3 +67,6 @@ We want to show our result in differents ways :
   
   * using natural langage
 
+## Histogram generation
+
+Angular histogram
