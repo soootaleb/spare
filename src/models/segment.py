@@ -20,6 +20,9 @@ class Segment(list):
     @property
     def end(self) -> Point:
         return self[-1]
+        
+    def __getitem__(self, key) -> Point:
+        return super().__getitem__(key)
 
     def append(self, point):
 
