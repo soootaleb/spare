@@ -52,23 +52,26 @@ class ImageCanvas(FigureCanvas):
 
 
 class HistogramCanvas(FigureCanvas):
-    def __init__(self, parent = None, width =4, height = 4, dpi = 100, cardinal = 16):
+    def __init__(self, computed_values, parent = None, width =4, height = 4, dpi = 100, cardinal = 16):
         fig = Figure(figsize=(width, height), dpi=dpi)
         FigureCanvas.__init__(self, fig)
         self.setParent(parent)
 
-        self.r = 2 * np.linspace(1, cardinal)#TODO : Add the real values for the histogram
+        self.r = []
 
-        self.theta = 2* np.pi * self.r #TODO : Add the real values for the histogram
+        self.theta = []
+        
+        for key, value in computed_values.items():
+            self.r.append(float(key) / 180 * np.pi) #Converting to radians
+            self.theta.append(float(value))
         
         self.axes = fig.add_subplot(111, projection='polar')
-        self.axes.set_rmax(2)
-        self.axes.set_rlabel_position(-22.5)  # get radial labels away from plotted line
+        #self.axes.set_rmax(2)
+        #self.axes.set_rlabel_position(-22.5)  # get radial labels away from plotted line
         self.axes.grid(True)
         self.axes.set_title("spatial relations between A and B", va='bottom')
-
         self.plot()
     
     def plot(self):
-        self.axes.bar(self.theta, self.r)
+        self.axes.scatter(np.asarray(self.r),np.asarray(self.theta))
         self.show()

@@ -4,7 +4,8 @@ from PyQt5.QtWidgets import *
 
 from tests.main import *
 from models.image import Image
-
+from models.histogram import Histogram
+import relations
 from canvas import *
 
 import math, functions, os, sys, cv2 as cv, numpy as np, random
@@ -13,6 +14,8 @@ class App(QMainWindow):
 
     image = None
     image_canvas = None
+
+    hist_obj = None
 
     # adapting for two images
     images = dict()
@@ -41,6 +44,8 @@ class App(QMainWindow):
         
         self.init_ui()
 
+        ##TODO : merge the two images into one, using a RGB image with A in R and B in G, so we can differentiate them and see if they overlap
+        
         # Display all images (2 for now)
         for (fname, image) in self.images_canvas.items():
             image.plot(self.images[fname])
@@ -56,6 +61,12 @@ class App(QMainWindow):
         # self.btn_add_image.resize(140, 100)
         # self.btn_add_image.clicked.connect(self.load_clicked)
 
+        self.btn_process = QPushButton('Process', self)
+        self.btn_process.setToolTip('computation of the histogram.')
+        self.btn_process.move(500,250)
+        self.btn_process.resize(140, 100)
+        self.btn_process.clicked.connect(self.compute_hist)
+
         self.radio_segment = QRadioButton("segment",self)
         self.radio_segment.setChecked(True)
         self.radio_segment.move(30, 350)
@@ -70,13 +81,10 @@ class App(QMainWindow):
         self.slider.move(30, 300)
         self.slider.resize(300, 20)
 
-        # self.slider.valueChanged.connect(self.draw_bresenham)
+        self.slider.valueChanged.connect(self.draw_bresenham)
         
         self.label_angle = QLabel("0 °",self)
         self.label_angle.move(150, 320)
-
-        self.hist = HistogramCanvas(self)
-        self.hist.move(0, 400)
 
         self.show()
 
@@ -84,6 +92,15 @@ class App(QMainWindow):
         self.images[fname] = Image(cv.imread(os.path.join(self.IMAGES_DIR, fname), cv.IMREAD_COLOR))
         self.images_canvas[fname] = ImageCanvas(self, width = 1, height = 1)
         self.images_canvas[fname].move(0 + 256 * list(self.images_canvas.keys()).index(fname), 0)
+
+
+    @pyqtSlot()
+    def compute_hist(self):
+        self.hist_obj = Histogram(self.images["left.png"], self.images["right.png"])
+        self.hist_obj.compute(relations.angle)
+        values = self.hist_obj.get_values()
+        self.hist = HistogramCanvas(values, self)
+        self.hist.move(0, 400)
 
     # '''
     # Loads & display image "black_50_50.png"
@@ -102,31 +119,30 @@ class App(QMainWindow):
     #     else:
     #         raise FileNotFoundError('The image ' + image + ' does not exist')
         
-    # @pyqtSlot()
-    # def draw_bresenham(self):
-    #     if self.image is None:
-    #         self.load_clicked()
+    def merge_images(self, img_a, img_b):
+        height = max(img_a.height, img_b.height)
+        width = max(img_a.width, img_b.width)
 
-    #     self.image.reset()
+        self.image = np.zeros((height, width, 3), np.uint8)
 
-    #     degree = self.slider.value()
-        
-    #     self.label_angle.setText('{} °'.format(degree))
+        self.image[:][0] = img_a[:][0]
+        self.image[:][1] = img_b[:][0]
+    @pyqtSlot()
+    def draw_bresenham(self):
+        self.images["black_50_50.png"].reset()
+        degree = self.slider.value()
        
-    #     #TODO : add a menu function and dissociate functions
-
-    #     if self.radio_scan_lin.isChecked():
-    #         parallels = self.image.parallels(degree)
-    #         for segment in parallels:
-    #             self.image.draw(segment)
-
-    #         if not test_segments(parallels, self.image.max_dimension):
-    #             raise Exception('Some pixels are visited twice !!')
-            
-    #     else:
-    #         segment = self.image.ray(degree)
-    #         self.image.draw(segment)
-
-
-    #    self.image_canvas.plot()
-    #    self.image_canvas.draw()
+        self.label_angle.setText('{} °'.format(degree))
+      
+         #TODO : add a menu function and dissociate functions
+        if self.radio_scan_lin.isChecked():
+            parallels = self.images["black_50_50.png"].parallels(degree)
+            for segment in parallels:
+                self.images["black_50_50.png"].draw(segment)
+            if not test_segments(parallels, self.images["black_50_50.png"].max_dimension):
+                raise Exception('Some pixels are visited twice !!')
+        else:
+            segment = self.images["black_50_50.png"].ray(degree)
+            self.images["black_50_50.png"].draw(segment)
+        self.images_canvas["black_50_50.png"].plot(self.images["black_50_50.png"])
+        self.images_canvas["black_50_50.png"].draw()

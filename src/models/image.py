@@ -64,6 +64,8 @@ class Image(object):
         y2 = round(math.sqrt(2) * max_lenght * math.sin(direction))
         
         #At this moment, 4 possibilities
+
+        #TODO : Generate from angle 0 that goes left to right.
         if x2 >= 0 and y2 >= 0: # Starting top left
             x1 = 0
             y1 = 0
@@ -86,6 +88,9 @@ class Image(object):
             y2 = min(max_lenght - 1, y2)
 
         return Segment([point for point in bresenham(x1, y1, x2, y2) if point in self])
+
+    def __getitem__(self, point):
+        return self.base[point.x, point.y] if self.__contains__(point) else -1
 
     def parallels(self, angle):
         """

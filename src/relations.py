@@ -6,7 +6,18 @@
 
 '''
 
+from models import point
 
+def angle(parallels, image_a, image_b) -> float:
+    score = 0
+    for segment in parallels:
+        pixels_a = 0
+        pixels_b = 0
+        for point in segment:
+            if image_a[point].any() != 0 :
+                pixels_a += 1
+            if image_b[point].any() != 0 :
+                pixels_b +=1
+        score+= pixels_a * pixels_b
 
-def before(parallels, image_a, image_b) ->:
-    pass
+    return score
