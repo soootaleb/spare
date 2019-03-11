@@ -14,8 +14,8 @@ class App(QMainWindow):
 
     TITLE = 'SpaRe'
     MARGIN_LEFT = 30
-    IMAGE_RESIZE_FACTOR = 1/8
-    CARDINAL_MAXIMUM = 16
+    IMAGE_RESIZE_FACTOR = 1
+    CARDINAL_MAXIMUM = 32
 
     images = dict()
     images_canvas = dict()
@@ -115,7 +115,7 @@ class App(QMainWindow):
 
             histogram \
                 .set_cardinal(cardinal) \
-                .compute(relations.angle)
+                .compute(relations.before)
 
             # Reset to avoid older rays to still appear
             histogram.image_a \
@@ -127,9 +127,10 @@ class App(QMainWindow):
                 .resize(self.IMAGE_RESIZE_FACTOR)
 
             for direction in histogram.directions:
+                ray = histogram.image_a.ray(direction)
                 if histogram[direction] > 0:
-                    histogram.image_a.draw(histogram.image_a.ray(direction))
-                    histogram.image_b.draw(histogram.image_b.ray(direction))
+                    histogram.image_a.draw(ray)
+                    histogram.image_b.draw(ray)
                     self.images_canvas[histogram.image_a.fname].plot(self.images[histogram.image_a.fname])
                     self.images_canvas[histogram.image_a.fname].draw()
                     self.images_canvas[histogram.image_b.fname].plot(self.images[histogram.image_b.fname])
