@@ -14,8 +14,8 @@ class App(QMainWindow):
 
     TITLE = 'SpaRe'
     MARGIN_LEFT = 30
-    IMAGE_RESIZE_FACTOR = 1
-    CARDINAL_MAXIMUM = 32
+    IMAGE_RESIZE_FACTOR = 1/8
+    CARDINAL_MAXIMUM = 16
 
     images = dict()
     images_canvas = dict()
