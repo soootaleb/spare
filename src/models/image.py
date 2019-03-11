@@ -112,7 +112,11 @@ class Image(object):
             
             return Segment([o for o in map(duplicate_points, ray) if o is not None])
 
-        return map(map_offset_to_parallels, range(-max_length, max_length))
+        # Force the map to create the results to manipulate later
+        # I don't know why but doing "return list(map(...))" does not give the most efficiency
+        my_map = map(map_offset_to_parallels, range(-max_length, max_length))
+        list(my_map) 
+        return my_map
 
 
     def draw(self, segment):
