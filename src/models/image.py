@@ -43,9 +43,14 @@ class Image(object):
     def height(self):
         return self.image.shape[0]
 
+    @property
+    def center(self) -> Point:
+        return Point(round(self.width / 2), round(self.height / 2))
+
     def reset(self):
         '''
-        Resets the OpenCV image to its original version (as passed in the constructor)
+            Resets the OpenCV image to its original version (as passed in the constructor)
+            /!\ Every change is reset so the use of Image::resize or Image::rotate
         '''
         self.image = self.base.copy()
 
@@ -53,12 +58,27 @@ class Image(object):
 
     def __contains__(self, point) -> bool:
         '''
-        We consider the points to be zero indexed
+            Verifies that the given point has positive coordinates
+            and stays in the dimensions of the image.
+
+            We consider the points to be zero indexed
         '''
         return point.x < self.width and point.y < self.height
 
     def resize(self, factor):
+        '''
+            Uses OpenCV::resize to resize the image by the given factor
+        '''
         self.image = cv.resize(self.image, (round(factor * self.width), round(factor * self.height)))
+        return self
+
+    def rotate(self, angle):
+        '''
+            Uses OpenCV::getRotationMatrix2D to create a rotation and apply it to the
+            underlying instance image
+        '''
+        mat = cv.getRotationMatrix2D((self.center.x, self.center.y), angle, 1.0)
+        self.image = cv.warpAffine(self.image, mat, self.image.shape[1::-1], flags=cv.INTER_LINEAR)
         return self
 
     def merge(self, image):

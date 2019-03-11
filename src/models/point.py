@@ -15,6 +15,3 @@ class Point(object):
     def __str__(self):
         return str([self.x, self.y])
 
-    def __getitem__(self, key):
-        return self.x if key == 0 else self.y
-
