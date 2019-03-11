@@ -9,6 +9,9 @@
 from models import point
 
 def angle(parallels, image_a, image_b) -> float:
+    '''
+        Latest measures are between 0.4 and 0.5 seconds of processing
+    '''
     score = 0
     for segment in parallels:
         pixels_a = 0

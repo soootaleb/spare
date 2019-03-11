@@ -90,12 +90,19 @@ class Image(object):
         return Segment([point for point in bresenham(x1, y1, x2, y2) if point in self])
 
     def __getitem__(self, point):
-        return self.base[point.x, point.y] if self.__contains__(point) else -1
+        '''
+            I removed the verification of "point in self" to gain around 10% performances.
+            I consider the point to be in the image since the produced data structures
+            for rays and parallels are existing points in our images
+        '''
+        return self.image[point.x, point.y]
 
     def parallels(self, angle):
         """
         This function get all the parrallels parallels in an image from a single segment
-        the parallels returned 
+        the parallels returned
+
+        Latest measure are around 0.3 seconds to compute the parallels for a given angle
         """
 
         ray = self.ray(angle)
