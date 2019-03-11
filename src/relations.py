@@ -7,20 +7,26 @@
 '''
 
 from models import point
+from functools import reduce
 
 def angle(parallels, image_a, image_b) -> float:
     '''
         Latest measures are between 0.4 and 0.5 seconds of processing
     '''
-    score = 0
-    for segment in parallels:
-        pixels_a = 0
-        pixels_b = 0
-        for point in segment:
-            if image_a[point].any() != 0 :
-                pixels_a += 1
-            if image_b[point].any() != 0 :
-                pixels_b +=1
-        score+= pixels_a * pixels_b
 
-    return score
+    def reduce_parallels_to_score(acc_total_score, curr_segment):
+
+        def reduce_segment_scores(acc_segment_score, curr_point):
+            
+            if image_a[curr_point].any() != 0 :
+                acc_segment_score[0] += 1
+            if image_b[curr_point].any() != 0 :
+                acc_segment_score[1] +=1
+            
+            return acc_segment_score
+
+        pixels_a, pixels_b = reduce(reduce_segment_scores, curr_segment, [0, 0])
+
+        return acc_total_score + pixels_a * pixels_b
+
+    return reduce(reduce_parallels_to_score, parallels, 0)
