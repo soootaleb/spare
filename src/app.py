@@ -14,6 +14,8 @@ class App(QMainWindow):
 
     TITLE = 'SpaRe'
     MARGIN_LEFT = 30
+    IMAGE_RESIZE_FACTOR = 1
+    CARDINAL_MAXIMUM = 32
 
     images = dict()
     images_canvas = dict()
@@ -54,7 +56,7 @@ class App(QMainWindow):
 
         self.slider_cardinal = QSlider(Qt.Horizontal, self)
         self.slider_cardinal.setMinimum(1)
-        self.slider_cardinal.setMaximum(16)
+        self.slider_cardinal.setMaximum(self.CARDINAL_MAXIMUM)
         self.slider_cardinal.setSingleStep(1)
         self.slider_cardinal.move(self.MARGIN_LEFT, 180)
         self.slider_cardinal.resize(300, 20)
@@ -78,7 +80,7 @@ class App(QMainWindow):
         self.show()
 
     def load_image(self, fname):
-        self.images[fname] = Image(fname).resize(1/8)
+        self.images[fname] = Image(fname).resize(self.IMAGE_RESIZE_FACTOR)
         self.images_canvas[fname] = ImageCanvas(self, width = 1, height = 1)
         self.images_canvas[fname].move(self.MARGIN_LEFT + 150 * list(self.images_canvas.keys()).index(fname), 10)
 
@@ -99,19 +101,41 @@ class App(QMainWindow):
     #     self.image[:][0] = img_a[:][0]
     #     self.image[:][1] = img_b[:][0]
 
-
     @pyqtSlot()
     def slider_cardinal_changed(self):
         self.label_cardinal.setText('{} angle'.format(self.slider_cardinal.value()))
 
         cardinal = self.slider_cardinal.value()
 
+        # This part draws the directions on the images
+        # The directions are only the ones with positive values on the histogram
         for (hname, canvas) in self.histograms_canvas.items():
-            self.histograms[hname] \
+
+            histogram = self.histograms[hname]
+
+            histogram \
                 .set_cardinal(cardinal) \
                 .compute(relations.angle)
 
-            self.histograms_canvas[hname].plot(self.histograms[hname])
+            # Reset to avoid older rays to still appear
+            histogram.image_a \
+                .reset() \
+                .resize(self.IMAGE_RESIZE_FACTOR)
+
+            histogram.image_b \
+                .reset() \
+                .resize(self.IMAGE_RESIZE_FACTOR)
+
+            for direction in histogram.directions:
+                if histogram[direction] > 0:
+                    histogram.image_a.draw(histogram.image_a.ray(direction))
+                    histogram.image_b.draw(histogram.image_b.ray(direction))
+                    self.images_canvas[histogram.image_a.fname].plot(self.images[histogram.image_a.fname])
+                    self.images_canvas[histogram.image_a.fname].draw()
+                    self.images_canvas[histogram.image_b.fname].plot(self.images[histogram.image_b.fname])
+                    self.images_canvas[histogram.image_b.fname].draw()
+
+            self.histograms_canvas[hname].plot(histogram)
         
     
     @pyqtSlot()
