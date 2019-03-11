@@ -37,7 +37,6 @@ def before(parallels, image_a, image_b) -> float:
 
     def reduce_segment_scores(acc_segment_score, curr_point):
         if image_a[curr_point].any() != 0 :
-            print(image_a[curr_point])
             acc_segment_score[0] += 1
         if image_b[curr_point].any() != 0 :
             acc_segment_score[1] += 1
