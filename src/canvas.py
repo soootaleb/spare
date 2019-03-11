@@ -52,15 +52,20 @@ class ImageCanvas(FigureCanvas):
 
 
 class HistogramCanvas(FigureCanvas):
-    def __init__(self, computed_values, parent = None, width = 8, height = 4, dpi = 100):
+
+    def __init__(self, parent = None, width = 8, height = 4, dpi = 100):
         fig = Figure(figsize=(width, height), dpi=dpi)
         FigureCanvas.__init__(self, fig)
-        self.setParent(parent)
         
+        self.setParent(parent)
         self.axes = fig.add_subplot(111)
 
         self.axes.grid(True)
         self.axes.set_title("Spatial relations between A and B", va='bottom')
-        self.axes.plot(list(computed_values.keys()), list(computed_values.values()))
+                
+        FigureCanvas.updateGeometry(self)
 
-        self.show()
+    def plot(self, histogram):
+        self.axes.clear()
+        self.axes.plot(list(histogram.values.keys()), list(histogram.values.values()))
+        self.draw()
