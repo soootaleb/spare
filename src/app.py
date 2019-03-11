@@ -30,10 +30,13 @@ class App(QMainWindow):
     def __init__(self):
         super().__init__()        
 
-        self.load_image('black_50_50.png')
         self.load_image('left.png')
         self.load_image('right.png')
-        
+
+        self.images['merged_images'] = self.images['left.png'].merge(self.images['right.png'])
+        self.images_canvas['merged_images'] = ImageCanvas(self, width = 1, height = 1)
+        self.images_canvas['merged_images'].move(self.MARGIN_LEFT + 150 * list(self.images_canvas.keys()).index('merged_images'), 10)
+
         self.load_hist('left.png', 'right.png')
         
         self.init_ui()
@@ -87,19 +90,9 @@ class App(QMainWindow):
     def load_hist(self, fname_a, fname_b):
         hist = fname_a + fname_b
 
-        self.histograms[hist] = Histogram(self.images["left.png"], self.images["right.png"])
-        
+        self.histograms[hist] = Histogram(self.images["left.png"], self.images["right.png"])        
         self.histograms_canvas[hist] = HistogramCanvas(self)
         self.histograms_canvas[hist].move(self.MARGIN_LEFT, 220)
-        
-    # def merge_images(self, img_a, img_b):
-    #     height = max(img_a.height, img_b.height)
-    #     width = max(img_a.width, img_b.width)
-
-    #     self.image = np.zeros((height, width, 3), np.uint8)
-
-    #     self.image[:][0] = img_a[:][0]
-    #     self.image[:][1] = img_b[:][0]
 
     @pyqtSlot()
     def slider_cardinal_changed(self):
@@ -115,7 +108,7 @@ class App(QMainWindow):
 
             histogram \
                 .set_cardinal(cardinal) \
-                .compute(relations.before)
+                .compute(relations.angle)
 
             # Reset to avoid older rays to still appear
             histogram.image_a \
@@ -141,19 +134,19 @@ class App(QMainWindow):
     
     @pyqtSlot()
     def slider_angle_changed(self):
-        self.images["black_50_50.png"].reset()
+        self.images['merged_images'].reset()
         
         degree = self.slider_angle.value()
        
         self.label_angle.setText('{} °'.format(degree))
       
         if self.radio_scan_lin.isChecked():
-            parallels = self.images["black_50_50.png"].parallels(degree)
+            parallels = self.images['merged_images'].parallels(degree)
             for segment in parallels:
-                self.images["black_50_50.png"].draw(segment)
+                self.images['merged_images'].draw(segment)
         else:
-            segment = self.images["black_50_50.png"].ray(degree)
-            self.images["black_50_50.png"].draw(segment)
+            segment = self.images['merged_images'].ray(degree)
+            self.images['merged_images'].draw(segment)
         
-        self.images_canvas["black_50_50.png"].plot(self.images["black_50_50.png"])
-        self.images_canvas["black_50_50.png"].draw()
+        self.images_canvas['merged_images'].plot(self.images['merged_images'])
+        self.images_canvas['merged_images'].draw()

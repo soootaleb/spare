@@ -21,10 +21,15 @@ class Image(object):
     image = None # Underlying OpenCV image that we can manipulate
 
     def __init__(self, fname):
-        self.fname = fname
 
-        self.base = cv.imread(os.path.join(self.IMAGES_DIR, fname), cv.IMREAD_COLOR)
-        self.image = self.base.copy()
+        if isinstance(fname, str):
+            self.fname = fname
+            self.base = cv.imread(os.path.join(self.IMAGES_DIR, fname), cv.IMREAD_COLOR)
+            self.image = self.base.copy()
+        else:
+            self.fname = 'IN_MEMORY_IMG'
+            self.base = fname
+            self.image = self.base.copy()
 
     @property
     def max_dimension(self):
@@ -55,6 +60,14 @@ class Image(object):
     def resize(self, factor):
         self.image = cv.resize(self.image, (round(factor * self.width), round(factor * self.height)))
         return self
+
+    def merge(self, image):
+        '''
+            Uses OpenCV::add to merge the given image to the original instance.
+
+            Returns a new instance of Image, and the original images are not affected
+        '''
+        return Image(cv.add(self.image, image.image))
 
     def ray(self, angle):
         """
