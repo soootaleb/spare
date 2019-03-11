@@ -1,5 +1,6 @@
 from models.image import Image
 from numpy import linspace
+
 class Histogram(object):
     '''
         Represents a single histogram as a data structure.
@@ -46,7 +47,7 @@ class Histogram(object):
             Computes the histogram of the relation depending on the cardinal (default is 16)
         '''
 
-        for angle in linspace(0, 360, 360 / self.cardinal):
+        for angle in linspace(0, 360, self.cardinal):
             parallels = self.image_a.parallels(angle) # We consider the two image to be the same dimensions
             self.values[str(angle)] = relation(parallels, self.image_a, self.image_b)
 
