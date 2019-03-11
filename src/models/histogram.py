@@ -49,7 +49,7 @@ class Histogram(object):
 
         for angle in linspace(0, 360, self.cardinal):
             parallels = self.image_a.parallels(angle) # Optimized (0.0003 sec)
-            self.values[str(angle)] = relation(parallels, self.image_a, self.image_b) # Optimized (0.00001 sec)
+            self.values[str(int(angle))] = relation(parallels, self.image_a, self.image_b) # Optimized (0.00001 sec)
 
     def get_values(self):
         return self.values
