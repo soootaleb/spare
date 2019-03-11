@@ -44,6 +44,8 @@ class Image(object):
         '''
         self.image = self.base.copy()
 
+        return self
+
     def __contains__(self, point) -> bool:
         '''
         We consider the points to be zero indexed

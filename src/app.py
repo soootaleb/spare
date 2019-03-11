@@ -80,7 +80,7 @@ class App(QMainWindow):
     def load_image(self, fname):
         self.images[fname] = Image(fname).resize(1/8)
         self.images_canvas[fname] = ImageCanvas(self, width = 1, height = 1)
-        self.images_canvas[fname].move(self.MARGIN_LEFT + 150 * list(self.images_canvas.keys()).index(fname), 0)
+        self.images_canvas[fname].move(self.MARGIN_LEFT + 150 * list(self.images_canvas.keys()).index(fname), 10)
 
     def load_hist(self, fname_a, fname_b):
         hist = fname_a + fname_b
