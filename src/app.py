@@ -14,7 +14,7 @@ class App(QMainWindow):
 
     TITLE = 'SpaRe'
     MARGIN_LEFT = 30
-    IMAGE_RESIZE_FACTOR = 1
+    IMAGE_RESIZE_FACTOR = 1/8
     CARDINAL_MAXIMUM = 32
 
     images = dict()
@@ -33,7 +33,7 @@ class App(QMainWindow):
         self.load_image('left.png')
         self.load_image('right.png')
 
-        self.images['merged_images'] = self.images['left.png'].merge(self.images['right.png'].rotate(90))
+        self.images['merged_images'] = self.images['left.png'].merge(self.images['right.png'])
         self.images_canvas['merged_images'] = ImageCanvas(self, width = 1, height = 1)
         self.images_canvas['merged_images'].move(self.MARGIN_LEFT + 150 * list(self.images_canvas.keys()).index('merged_images'), 10)
 
@@ -52,10 +52,10 @@ class App(QMainWindow):
 
         self.radio_segment = QRadioButton("segment",self)
         self.radio_segment.setChecked(True)
-        self.radio_segment.move(self.MARGIN_LEFT, 140)
+        self.radio_segment.move(self.MARGIN_LEFT + 50, 140)
 
         self.radio_scan_lin = QRadioButton("parralleles", self)
-        self.radio_scan_lin.move(200, 140)
+        self.radio_scan_lin.move(250, 140)
 
         self.slider_cardinal = QSlider(Qt.Horizontal, self)
         self.slider_cardinal.setMinimum(1)
@@ -71,14 +71,25 @@ class App(QMainWindow):
         self.slider_angle.move(self.MARGIN_LEFT, 120)
         self.slider_angle.resize(300, 20)
 
+        self.slider_rotate = QSlider(Qt.Horizontal, self)
+        self.slider_rotate.setMinimum(-90)
+        self.slider_rotate.setMaximum(90)
+        self.slider_rotate.setSingleStep(10)
+        self.slider_rotate.move(self.MARGIN_LEFT + 150 * len(self.images_canvas.keys()), 50)
+        self.slider_rotate.resize(200, 20)
+
         self.slider_angle.valueChanged.connect(self.slider_angle_changed)
+        self.slider_rotate.valueChanged.connect(self.slider_rotate_changed)
         self.slider_cardinal.valueChanged.connect(self.slider_cardinal_changed)
         
-        self.label_angle = QLabel("0 °", self)
+        self.label_angle = QLabel("0 ° rays", self)
         self.label_angle.move(350, 120)
         
         self.label_cardinal = QLabel("1 angle", self)
         self.label_cardinal.move(350, 180)
+        
+        self.label_rotate = QLabel("0° rotation", self)
+        self.label_rotate.move(self.MARGIN_LEFT + 150 * len(self.images_canvas.keys()) + 100, 20)
 
         self.show()
 
@@ -89,49 +100,41 @@ class App(QMainWindow):
 
     def load_hist(self, fname_a, fname_b):
         hist = fname_a + fname_b
-
         self.histograms[hist] = Histogram(self.images["left.png"], self.images["right.png"])        
         self.histograms_canvas[hist] = HistogramCanvas(self)
         self.histograms_canvas[hist].move(self.MARGIN_LEFT, 220)
 
     @pyqtSlot()
-    def slider_cardinal_changed(self):
-        self.label_cardinal.setText('{} angle'.format(self.slider_cardinal.value()))
+    def slider_rotate_changed(self):
+        self.images['right.png'] \
+            .reset() \
+            .resize(self.IMAGE_RESIZE_FACTOR)
 
+        self.images['merged_images'] \
+            .reset() \
+            .resize(self.IMAGE_RESIZE_FACTOR)
+
+        rotation = self.slider_rotate.value()
+        self.label_rotate.setText('{}° rotation'.format(rotation))
+        self.images['merged_images'] = self.images['left.png'].merge(self.images['right.png'].rotate(rotation))
+        self.slider_angle_changed()
+
+    @pyqtSlot()
+    def slider_cardinal_changed(self):
         cardinal = self.slider_cardinal.value()
+        self.label_cardinal.setText('{} angle'.format(cardinal))
 
         # This part draws the directions on the images
         # The directions are only the ones with positive values on the histogram
         for (hname, canvas) in self.histograms_canvas.items():
 
-            histogram = self.histograms[hname]
-
-            histogram \
+            self.histograms[hname] \
                 .set_cardinal(cardinal) \
                 .compute(relations.angle)
 
-            # Reset to avoid older rays to still appear
-            histogram.image_a \
-                .reset() \
-                .resize(self.IMAGE_RESIZE_FACTOR)
-
-            histogram.image_b \
-                .reset() \
-                .resize(self.IMAGE_RESIZE_FACTOR)
-
-            for direction in histogram.directions:
-                ray = histogram.image_a.ray(direction)
-                if histogram[direction] > 0:
-                    histogram.image_a.draw(ray)
-                    histogram.image_b.draw(ray)
-                    self.images_canvas[histogram.image_a.fname].plot(self.images[histogram.image_a.fname])
-                    self.images_canvas[histogram.image_a.fname].draw()
-                    self.images_canvas[histogram.image_b.fname].plot(self.images[histogram.image_b.fname])
-                    self.images_canvas[histogram.image_b.fname].draw()
-
-            self.histograms_canvas[hname].plot(histogram)
+            self.histograms_canvas[hname].plot(self.histograms[hname])
         
-    
+
     @pyqtSlot()
     def slider_angle_changed(self):
         self.images['merged_images'].reset()
