@@ -36,9 +36,9 @@ class Histogram(object):
 
         self.image_a = image_a
         self.image_b = image_b
-        #self.relation = relation
 
     def set_cardinal(self, cardinal):
+        self.values = dict()
         self.cardinal = cardinal
         return self
 
@@ -51,5 +51,4 @@ class Histogram(object):
             parallels = self.image_a.parallels(angle) # Optimized (0.0003 sec)
             self.values[str(int(angle))] = relation(parallels, self.image_a, self.image_b) # Optimized (0.00001 sec)
 
-    def get_values(self):
-        return self.values
+        return self
