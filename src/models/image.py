@@ -5,17 +5,25 @@ from functions import *
 
 from math import sin, cos, tan, pi, sqrt
 
+import os, cv2 as cv
+
 '''
     Represents an image in our application. It's created with an OpenCV::imread image
     but it adds project oriented features
 '''
 class Image(object):
 
+    IMAGES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'misc')
+
+    fname = None
+
     base = None # We keep the original one to be able to reset
     image = None # Underlying OpenCV image that we can manipulate
 
-    def __init__(self, cv_image):
-        self.base = cv_image
+    def __init__(self, fname):
+        self.fname = fname
+
+        self.base = cv.imread(os.path.join(self.IMAGES_DIR, fname), cv.IMREAD_COLOR)
         self.image = self.base.copy()
 
     @property
@@ -135,7 +143,7 @@ class Image(object):
                 and color[1] == max(0, segment.color[1] - 2) \
                 and color[2] == max(0, segment.color[2] - 2):
                 
-                raise Exception('The {} is already colored !!!'.format(point))
+                raise Exception('The {} is already colored in image {} !!!'.format(point, self.fname))
 
             self.image[point.x, point.y] = [
                 max(0, segment.color[0] - 2),

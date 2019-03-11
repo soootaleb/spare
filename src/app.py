@@ -35,8 +35,6 @@ class App(QMainWindow):
 
     TITLE = 'SpaRe'
 
-    IMAGES_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'misc')
-
     def __init__(self):
         super().__init__()        
 
@@ -96,9 +94,9 @@ class App(QMainWindow):
         self.show()
 
     def load_image(self, fname):
-        self.images[fname] = Image(cv.imread(os.path.join(self.IMAGES_DIR, fname), cv.IMREAD_COLOR))
+        self.images[fname] = Image(fname)
         self.images_canvas[fname] = ImageCanvas(self, width = 1, height = 1)
-        self.images_canvas[fname].move(self.MARGIN_LEFT + 256 * list(self.images_canvas.keys()).index(fname), 0)
+        self.images_canvas[fname].move(self.MARGIN_LEFT + 150 * list(self.images_canvas.keys()).index(fname), 0)
 
 
     @pyqtSlot()
