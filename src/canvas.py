@@ -67,5 +67,6 @@ class HistogramCanvas(FigureCanvas):
 
     def plot(self, histogram):
         self.axes.clear()
+        self.axes.xaxis.set_major_locator(plt.MaxNLocator(min(histogram.cardinal, 16)))
         self.axes.plot(list(histogram.values.keys()), list(histogram.values.values()))
         self.draw()
