@@ -70,8 +70,8 @@ class Image(object):
 
         max_lenght = self.max_dimension
         
-        x2 = round(math.sqrt(2) * max_lenght * math.cos(direction))
-        y2 = round(math.sqrt(2) * max_lenght * math.sin(direction))
+        x2 = round(math.sqrt(2) * max_lenght * math.sin(direction))
+        y2 = round(math.sqrt(2) * max_lenght * math.cos(direction))
         
         # At this moment, 4 possibilities
         if x2 >= 0 and y2 >= 0: # Starting top left
