@@ -65,7 +65,7 @@ class HistogramCanvas(FigureCanvas):
             self.r.append(float(key) / 180 * np.pi) #Converting to radians
             self.theta.append(float(value))
         
-        self.axes = fig.add_subplot(111, projection='polar')
+        self.axes = fig.add_subplot(111)
         #self.axes.set_rmax(2)
         #self.axes.set_rlabel_position(-22.5)  # get radial labels away from plotted line
         self.axes.grid(True)
