@@ -117,7 +117,8 @@ class App(QMainWindow):
     @pyqtSlot()
     def slider_angle_changed(self):
         self.images["black_50_50.png"].reset()
-        degree = self.slider.value()
+        
+        degree = self.slider_angle.value()
        
         self.label_angle.setText('{} °'.format(degree))
       
