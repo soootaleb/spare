@@ -101,23 +101,6 @@ class App(QMainWindow):
         values = self.hist_obj.get_values()
         self.hist = HistogramCanvas(values, self)
         self.hist.move(0, 400)
-
-    # '''
-    # Loads & display image "black_50_50.png"
-    # '''
-    # @pyqtSlot()
-    # def load_clicked(self):
-    #     '''
-    #     Reads and image with OpenCV & displays it with self.display_image()
-    #     '''
-    #     base_path= os.path.dirname(os.path.dirname(__file__))
-    #     fname = 'black_50_50.png'
-    #     if fname:
-    #         self.image = Image(cv.imread(os.path.join(base_path, 'misc', fname), cv.IMREAD_COLOR))
-    #         self.image_canvas = ImageCanvas(self, width = 3, height = 3)
-    #         self.image_canvas.move(0, 0)
-    #     else:
-    #         raise FileNotFoundError('The image ' + image + ' does not exist')
         
     def merge_images(self, img_a, img_b):
         height = max(img_a.height, img_b.height)
@@ -127,6 +110,7 @@ class App(QMainWindow):
 
         self.image[:][0] = img_a[:][0]
         self.image[:][1] = img_b[:][0]
+    
     @pyqtSlot()
     def draw_bresenham(self):
         self.images["black_50_50.png"].reset()
@@ -139,10 +123,9 @@ class App(QMainWindow):
             parallels = self.images["black_50_50.png"].parallels(degree)
             for segment in parallels:
                 self.images["black_50_50.png"].draw(segment)
-            if not test_segments(parallels, self.images["black_50_50.png"].max_dimension):
-                raise Exception('Some pixels are visited twice !!')
         else:
             segment = self.images["black_50_50.png"].ray(degree)
             self.images["black_50_50.png"].draw(segment)
+        
         self.images_canvas["black_50_50.png"].plot(self.images["black_50_50.png"])
         self.images_canvas["black_50_50.png"].draw()
