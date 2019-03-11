@@ -33,7 +33,7 @@ class App(QMainWindow):
         self.load_image('left.png')
         self.load_image('right.png')
 
-        self.images['merged_images'] = self.images['left.png'].merge(self.images['right.png'])
+        self.images['merged_images'] = self.images['left.png'].merge(self.images['right.png'].rotate(90))
         self.images_canvas['merged_images'] = ImageCanvas(self, width = 1, height = 1)
         self.images_canvas['merged_images'].move(self.MARGIN_LEFT + 150 * list(self.images_canvas.keys()).index('merged_images'), 10)
 
