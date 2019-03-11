@@ -14,6 +14,8 @@ def angle(parallels, image_a, image_b) -> float:
         Latest measures are between 0.4 and 0.5 seconds of processing
     '''
 
+    list(parallels) # Force the map to compute for optimization
+
     def reduce_parallels_to_score(acc_total_score, curr_segment):
 
         def reduce_segment_scores(acc_segment_score, curr_point):
