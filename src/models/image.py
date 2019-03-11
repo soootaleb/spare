@@ -132,8 +132,8 @@ class Image(object):
 
             color = self.image[point.x, point.y]
             if color[0] == max(0, segment.color[0] - 2) \
-                and color[0] == max(0, segment.color[1] - 2) \
-                and color[0] == max(0, segment.color[2] - 2):
+                and color[1] == max(0, segment.color[1] - 2) \
+                and color[2] == max(0, segment.color[2] - 2):
                 
                 raise Exception('The {} is already colored !!!'.format(point))
 
