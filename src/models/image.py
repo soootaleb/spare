@@ -50,6 +50,10 @@ class Image(object):
         '''
         return point.x < self.width and point.y < self.height
 
+    def resize(self, factor):
+        self.image = cv.resize(self.image, (round(factor * self.width), round(factor * self.height)))
+        return self
+
     def ray(self, angle):
         """
         Determinate starting point and destination point depending of the angle given as parameter
