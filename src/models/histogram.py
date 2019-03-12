@@ -28,14 +28,14 @@ class Histogram(object):
 
     values = dict()
 
-    def __getitem__(self, direction):
+    def __getitem__(self, direction: int):
         return self.values[str(direction)]
 
-    def __setitem__(self, direction, value):
+    def __setitem__(self, direction: int, value: float):
         self.values[str(direction)] = value
         return self
 
-    def __init__(self, image_a, image_b):
+    def __init__(self, image_a: Image, image_b: Image):
         if not isinstance(image_a, Image) \
             or not isinstance(image_b, Image):
             
@@ -44,7 +44,7 @@ class Histogram(object):
         self.image_a = image_a
         self.image_b = image_b
 
-    def set_cardinal(self, cardinal):
+    def set_cardinal(self, cardinal: int):
         self.values = dict()
         self.cardinal = cardinal
         return self
@@ -52,14 +52,3 @@ class Histogram(object):
     @property
     def directions(self):
         return linspace(0, 360, self.cardinal, dtype=int)
-
-    def compute(self, relation):
-        '''
-            Computes the histogram of the relation depending on the cardinal (default is 16)
-        '''
-
-        for angle in self.directions:
-            parallels = self.image_a.parallels(angle) # Optimized (0.0003 sec)
-            self.values[str(int(angle))] = relation(parallels, self.image_a, self.image_b) # Optimized (0.00001 sec)
-
-        return self

@@ -21,19 +21,22 @@ class Descriptor(object):
         self.histogram = Histogram(reference, relative) \
             .set_cardinal(cardinal)
 
-    def set_cardinal(self, cardinal):
-        self.histogram.set_cardinal(cardinal)
-        return self
+        self.scanning = {
+            str(direction): self.reference.parallels(direction) \
+                for direction in self.histogram.directions
+        }
 
-    def scan(self):
-        self.scanning = { str(direction): self.reference.parallels(direction) for direction in self.histogram.directions }
+    def set_cardinal(self, cardinal):
+        self.scanning = {
+            str(direction): self.reference.parallels(direction) \
+                for direction in self.histogram.set_cardinal(cardinal).directions
+        }
+
         return self
 
     def compute_histogram(self):
-        if self.scanning is None:
-            self.scan()
         for (direction, parallels) in self.scanning.items():
-            self.histogram[direction] = self.compute_direction(list(parallels))
+            self.histogram[direction] = self.compute_direction(parallels)
         
         return self
         

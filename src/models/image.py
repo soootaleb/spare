@@ -20,6 +20,8 @@ class Image(object):
     base = None # We keep the original one to be able to reset
     image = None # Underlying OpenCV image that we can manipulate
 
+    _parallels = dict()
+
     def __init__(self, fname):
 
         if isinstance(fname, str):
@@ -144,22 +146,23 @@ class Image(object):
         the parallels returned
         """
 
-        ray = self.ray(angle)
+        if str(angle) not in self._parallels.keys():
+            ray = self.ray(angle)
+            max_length = self.max_dimension
+            angle = 1 if ray.vertical else abs(ray.slope)
 
-        max_length = self.max_dimension
+            def map_offset_to_parallels(offset):
+                def duplicate_points(point):
+                    if angle >= 1 and 0 <= point.x + offset < max_length:
+                        return Point(point.x + offset, point.y)
+                    elif angle < 1 and 0 <= point.y + offset < max_length:
+                        return Point(point.x, point.y + offset)
+                
+                return Segment([o for o in map(duplicate_points, ray) if o is not None])
 
-        angle = 1 if ray.vertical else abs(ray.slope)
+            self._parallels[str(angle)] = map(map_offset_to_parallels, range(-max_length, max_length))
 
-        def map_offset_to_parallels(offset):
-            def duplicate_points(point):
-                if angle >= 1 and 0 <= point.x + offset < max_length:
-                    return Point(point.x + offset, point.y)
-                elif angle < 1 and 0 <= point.y + offset < max_length:
-                    return Point(point.x, point.y + offset)
-            
-            return Segment([o for o in map(duplicate_points, ray) if o is not None])
-
-        return map(map_offset_to_parallels, range(-max_length, max_length))
+        return self._parallels[str(angle)]
 
 
     def draw(self, segment):
@@ -178,14 +181,14 @@ class Image(object):
         for point in segment:
 
             color = self.image[point.x, point.y]
-            if color[0] == max(0, segment.color[0] - 2) \
-                and color[1] == max(0, segment.color[1] - 2) \
-                and color[2] == max(0, segment.color[2] - 2):
+            if color[0] == max(0, segment.color[0]) \
+                and color[1] == max(0, segment.color[1]) \
+                and color[2] == max(0, segment.color[2]):
                 
                 raise Exception('The {} is already colored in image {} !!!'.format(point, self.fname))
 
             self.image[point.x, point.y] = [
-                max(0, segment.color[0] - 2),
-                max(0, segment.color[1] - 2),
-                max(0, segment.color[2] - 2)
+                max(0, segment.color[0]),
+                max(0, segment.color[1]),
+                max(0, segment.color[2])
             ]

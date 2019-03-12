@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 from tests.main import *
 from models.image import Image
 from models.histogram import Histogram
+from descriptors import *
 import relations
 from canvas import *
 
@@ -14,18 +15,17 @@ class App(QMainWindow):
 
     TITLE = 'SpaRe'
     MARGIN_LEFT = 30
-    IMAGE_RESIZE_FACTOR = 1/8
+    IMAGE_RESIZE_FACTOR = 1/4
     CARDINAL_MAXIMUM = 32
 
     images = dict()
     images_canvas = dict()
 
-    histograms = dict()
+    descriptors = dict()
     histograms_canvas = dict()
 
     size = { 'WIDTH': 640, 'HEIGHT': 400 }
     position = { 'TOP': 100, 'LEFT': 100 }
-
 
     def __init__(self):
         super().__init__()        
@@ -37,12 +37,11 @@ class App(QMainWindow):
         self.images_canvas['merged_images'] = ImageCanvas(self, width = 1, height = 1)
         self.images_canvas['merged_images'].move(self.MARGIN_LEFT + 150 * list(self.images_canvas.keys()).index('merged_images'), 10)
 
-        self.load_hist('left.png', 'right.png')
+        self.load_descriptor('left.png', 'right.png')
+        self.load_descriptor('right.png', 'left.png')
         
         self.init_ui()
 
-        # TODO : merge the two images into one, using a RGB image with A in R and B in G, so we can differentiate them and see if they overlap
-        
         for (fname, image) in self.images_canvas.items():
             image.plot(self.images[fname])
 
@@ -93,16 +92,16 @@ class App(QMainWindow):
 
         self.show()
 
+    def load_descriptor(self, reference, relative):
+        desc = reference + relative
+        self.descriptors[desc] = AngularPresenceDescriptor(self.images[reference], self.images[relative])
+        self.histograms_canvas[desc] = HistogramCanvas(self, height = 2, width = 6)
+        self.histograms_canvas[desc].move(self.MARGIN_LEFT, 220 + 220 * list(self.histograms_canvas.keys()).index(desc))
+
     def load_image(self, fname):
         self.images[fname] = Image(fname).resize(self.IMAGE_RESIZE_FACTOR)
         self.images_canvas[fname] = ImageCanvas(self, width = 1, height = 1)
         self.images_canvas[fname].move(self.MARGIN_LEFT + 150 * list(self.images_canvas.keys()).index(fname), 10)
-
-    def load_hist(self, fname_a, fname_b):
-        hist = fname_a + fname_b
-        self.histograms[hist] = Histogram(self.images["left.png"], self.images["right.png"])        
-        self.histograms_canvas[hist] = HistogramCanvas(self)
-        self.histograms_canvas[hist].move(self.MARGIN_LEFT, 220)
 
     @pyqtSlot()
     def slider_rotate_changed(self):
@@ -117,22 +116,21 @@ class App(QMainWindow):
         rotation = self.slider_rotate.value()
         self.label_rotate.setText('{}° rotation'.format(rotation))
         self.images['merged_images'] = self.images['left.png'].merge(self.images['right.png'].rotate(rotation))
-        self.slider_angle_changed()
+        
+        self.images_canvas['merged_images'].plot(self.images['merged_images'])
+        self.images_canvas['merged_images'].draw()
 
     @pyqtSlot()
     def slider_cardinal_changed(self):
         cardinal = self.slider_cardinal.value()
         self.label_cardinal.setText('{} angle'.format(cardinal))
 
-        # This part draws the directions on the images
-        # The directions are only the ones with positive values on the histogram
-        for (hname, canvas) in self.histograms_canvas.items():
+        for (dname, descriptor) in self.descriptors.items():
+            descriptor.set_cardinal(cardinal) \
+                .compute_histogram() \
+                .describe() # Useless for now
 
-            self.histograms[hname] \
-                .set_cardinal(cardinal) \
-                .compute(relations.angle)
-
-            self.histograms_canvas[hname].plot(self.histograms[hname])
+            self.histograms_canvas[dname].plot(descriptor.histogram)
         
 
     @pyqtSlot()
