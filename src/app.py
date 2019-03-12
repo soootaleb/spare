@@ -2,7 +2,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-from tests.main import *
 from models.image import Image
 from models.histogram import Histogram
 from descriptors import *

@@ -132,7 +132,7 @@ class Image(object):
 
         return Segment([point for point in bresenham(x1, y1, x2, y2) if point in self])
 
-    def __getitem__(self, point):
+    def __getitem__(self, key):
         '''
             I removed the verification of "point in self" to gain around 10% performances.
             I consider the point to be in the image since the produced data structures
@@ -145,25 +145,25 @@ class Image(object):
 
     def parallels(self, angle):
         """
-        This function get all the parrallels parallels in an image from a single segment
-        the parallels returned
+        This function get all the parrallels  in an image from a single segment
+        The original segment
         """
 
         if str(angle) not in self._parallels.keys():
             ray = self.ray(angle)
             max_length = self.max_dimension
-            angle = 1 if ray.vertical else abs(ray.slope)
 
             def map_offset_to_parallels(offset):
                 def duplicate_points(point):
-                    if angle >= 1 and 0 <= point.x + offset < max_length:
+                    if abs(ray.slope) >= 1 and 0 <= point.x + offset < max_length:
                         return Point(point.x + offset, point.y)
-                    elif angle < 1 and 0 <= point.y + offset < max_length:
+                    elif abs(ray.slope) < 1 and 0 <= point.y + offset < max_length:
                         return Point(point.x, point.y + offset)
                 
-                return Segment([o for o in map(duplicate_points, ray) if o is not None])
+                segment = [o for o in map(duplicate_points, ray) if o is not None]
+                return Segment(segment) if len(segment) > 0 else None
 
-            self._parallels[str(angle)] = map(map_offset_to_parallels, range(-max_length, max_length))
+            self._parallels[str(angle)] = [o for o in map(map_offset_to_parallels, range(-max_length, max_length)) if o is not None]
 
         return self._parallels[str(angle)]
 
