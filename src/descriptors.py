@@ -1,12 +1,15 @@
+from models.descriptor import Descriptor
+
+from functools import reduce
 
 class AngularPresenceDescriptor(Descriptor):
 
-    relations = [
-        { "0": "on the right of" },
-        { "90": "above" },
-        { "180": "on the left of" },
-        { "360": "under" },
-    ]
+    relations = {
+        "0": "on the right of",
+        "90": "above",
+        "180": "on the left of",
+        "360": "under",
+    } 
 
     def compute_direction(self, parallels) -> float:
         def reduce_parallels_to_score(acc_total_score, curr_segment):

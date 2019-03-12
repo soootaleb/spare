@@ -3,8 +3,6 @@ from models.point import Point
 from models.image import Image
 from models.histogram import Histogram
 
-from functools import reduce
-
 class Descriptor(object):
 
     relative = None
@@ -16,18 +14,28 @@ class Descriptor(object):
     relations = []
 
     def __init__(self, reference: Image, relative: Image, cardinal = 16):
+
+        self.relative = relative
+        self.reference = reference
+
         self.histogram = Histogram(reference, relative) \
             .set_cardinal(cardinal)
+
+    def set_cardinal(self, cardinal):
+        self.histogram.set_cardinal(cardinal)
+        return self
 
     def scan(self):
         self.scanning = { str(direction): self.reference.parallels(direction) for direction in self.histogram.directions }
         return self
 
-    def compute_histogram(self) -> Histogram:
-        for (direction, parallels) in self.scanning:
+    def compute_histogram(self):
+        if self.scanning is None:
+            self.scan()
+        for (direction, parallels) in self.scanning.items():
             self.histogram[direction] = self.compute_direction(list(parallels))
         
-        return self.histogram
+        return self
         
     def compute_direction(self, parallels) -> float:
         '''
@@ -46,4 +54,4 @@ class Descriptor(object):
         if len(self.relations) == 0:
             raise Warning('You did not aspecify any relation so describing won\'t give any result')
                 
-        return { str(self.relations[direction]): self.mask(direction) for direction in self.histogram.directions }
+        return { label: self.mask(int(direction)) for (direction, label) in self.relations.items() }
