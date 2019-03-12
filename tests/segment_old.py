@@ -8,4 +8,3 @@ def test_segments(segments, height, affiche = False):
     if affiche:
         print(result)
     return np.array_equal(np.ones((height, height)), result)
-
