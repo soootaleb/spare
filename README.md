@@ -28,20 +28,20 @@ create histogram based on 180 degrees
 
   * ~~Implement the `bresenham` function~~
   * ~~Implement the `scan_linear` function to execute Bresenham on all parallels~~
-  * Implement the `scan_polar` function to execute Bresenham on all angles
+  * ~~Implement the `scan_polar` function to execute Bresenham on all angles~~
 
 ## Process functions
 
   * Move image to binary
-  * Mount a data structure that represents the object after a full scan
-  * Implement a function to compute a histogram value given an angle and a relatio
-  * Mount a data structure that represents the full histogram on 360°
+  * ~~Mount a data structure that represents the object after a full scan~~
+  * ~~Implement a function to compute a histogram value given an angle and a relation~~
+  * ~~Mount a data structure that represents the full histogram on 360°~~
 
 ## GUI functions
 
   * ~~Implement the image loading from a button~~ (may be twice for two images)
-  * Implement the images display
-  * Implement the histogram display - classic
+  * ~~Implement the images display~~
+  * ~~Implement the histogram display - classic~~
   * Implement the histogram display - radial
 
 # Progress
