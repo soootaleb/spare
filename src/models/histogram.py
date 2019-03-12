@@ -31,6 +31,10 @@ class Histogram(object):
     def __getitem__(self, direction):
         return self.values[str(direction)]
 
+    def __setitem__(self, direction, value):
+        self.values[str(direction)] = value
+        return self
+
     def __init__(self, image_a, image_b):
         if not isinstance(image_a, Image) \
             or not isinstance(image_b, Image):
