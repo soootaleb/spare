@@ -15,3 +15,8 @@ class Point(object):
     def __str__(self):
         return str([self.x, self.y])
 
+    def __eq__(self, other):
+        if other is None:
+            return False
+        return self.x == other.x \
+            and self.y == other.y
