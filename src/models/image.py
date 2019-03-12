@@ -138,7 +138,10 @@ class Image(object):
             I consider the point to be in the image since the produced data structures
             for rays and parallels are existing points in our images
         '''
-        return self.image[point.x, point.y]
+        if isinstance(key, Point):
+            return self[key.x, key.y]
+        else:
+            return self.image[key[0], key[1]]
 
     def parallels(self, angle):
         """
