@@ -81,6 +81,7 @@ class Image(object):
         '''
         mat = cv.getRotationMatrix2D((self.center.x, self.center.y), angle, 1.0)
         self.image = cv.warpAffine(self.image, mat, self.image.shape[1::-1], flags=cv.INTER_LINEAR)
+
         return self
 
     def merge(self, image):

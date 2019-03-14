@@ -34,11 +34,12 @@ def angle(parallels, image_a, image_b) -> float:
 def before(parallels, image_a, image_b) -> float:
 
     parallels = list(parallels) # Force the map to compute for optimization
-
+    seen_a = False
     def reduce_segment_scores(acc_segment_score, curr_point):
         if image_a[curr_point].any() != 0 :
+            seen_a = True
             acc_segment_score[0] += 1
-        if image_b[curr_point].any() != 0 :
+        if seen_a and image_b[curr_point].any() != 0 :
             acc_segment_score[1] += 1
         
         return acc_segment_score

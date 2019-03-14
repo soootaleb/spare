@@ -23,21 +23,21 @@ class App(QMainWindow):
     descriptors = dict()
     histograms_canvas = dict()
 
-    size = { 'WIDTH': 640, 'HEIGHT': 400 }
+    size = { 'WIDTH': 680, 'HEIGHT': 420 }
     position = { 'TOP': 100, 'LEFT': 100 }
 
     def __init__(self):
         super().__init__()        
 
-        self.load_image('left.png')
-        self.load_image('right.png')
+        self.load_image('middle.png')
+        self.load_image('other.png')
 
-        self.images['merged_images'] = self.images['left.png'].merge(self.images['right.png'])
+        self.images['merged_images'] = self.images['middle.png'].merge(self.images['other.png'])
         self.images_canvas['merged_images'] = ImageCanvas(self, width = 1, height = 1)
         self.images_canvas['merged_images'].move(self.MARGIN_LEFT + 150 * list(self.images_canvas.keys()).index('merged_images'), 10)
 
-        self.load_descriptor('left.png', 'right.png')
-        self.load_descriptor('right.png', 'left.png')
+        self.load_descriptor('middle.png', 'other.png')
+        #self.load_descriptor('right.png', 'left.png')
         
         self.init_ui()
 
@@ -58,11 +58,13 @@ class App(QMainWindow):
         self.slider_cardinal = QSlider(Qt.Horizontal, self)
         self.slider_cardinal.setMinimum(1)
         self.slider_cardinal.setMaximum(self.CARDINAL_MAXIMUM)
+        self.slider_cardinal.setValue(16)
         self.slider_cardinal.setSingleStep(1)
         self.slider_cardinal.move(self.MARGIN_LEFT, 180)
         self.slider_cardinal.resize(300, 20)
 
         self.slider_angle = QSlider(Qt.Horizontal, self)
+        self.slider_angle.setValue(16)
         self.slider_angle.setMinimum(0)
         self.slider_angle.setMaximum(360)
         self.slider_angle.setSingleStep(1)
@@ -70,8 +72,8 @@ class App(QMainWindow):
         self.slider_angle.resize(300, 20)
 
         self.slider_rotate = QSlider(Qt.Horizontal, self)
-        self.slider_rotate.setMinimum(-90)
-        self.slider_rotate.setMaximum(90)
+        self.slider_rotate.setMinimum(-180)
+        self.slider_rotate.setMaximum(180)
         self.slider_rotate.setSingleStep(10)
         self.slider_rotate.move(self.MARGIN_LEFT + 150 * len(self.images_canvas.keys()), 50)
         self.slider_rotate.resize(200, 20)
@@ -104,7 +106,7 @@ class App(QMainWindow):
 
     @pyqtSlot()
     def slider_rotate_changed(self):
-        self.images['right.png'] \
+        self.images['other.png'] \
             .reset() \
             .resize(self.IMAGE_RESIZE_FACTOR)
 
@@ -114,10 +116,11 @@ class App(QMainWindow):
 
         rotation = self.slider_rotate.value()
         self.label_rotate.setText('{}° rotation'.format(rotation))
-        self.images['merged_images'] = self.images['left.png'].merge(self.images['right.png'].rotate(rotation))
+        self.images['merged_images'] = self.images['middle.png'].merge(self.images['other.png'].rotate(rotation))
         
         self.images_canvas['merged_images'].plot(self.images['merged_images'])
         self.images_canvas['merged_images'].draw()
+        self.slider_cardinal_changed()
 
     @pyqtSlot()
     def slider_cardinal_changed(self):

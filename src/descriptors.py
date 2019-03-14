@@ -14,9 +14,10 @@ class AngularPresenceDescriptor(Descriptor):
     def compute_direction(self, parallels) -> float:
         def reduce_parallels_to_score(acc_total_score, curr_segment):
             def reduce_segment_scores(acc_segment_score, curr_point):
+                
                 if self.reference[curr_point].any() != 0 :
                     acc_segment_score[0] += 1
-                if self.relative[curr_point].any() != 0 :
+                if acc_segment_score[0] != 0 and self.relative[curr_point].any() != 0 :
                     acc_segment_score[1] +=1
                 
                 return acc_segment_score
