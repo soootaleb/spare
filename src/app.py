@@ -163,8 +163,6 @@ class App(QMainWindow):
     @pyqtSlot()
     def change_hist_type(self):
         is_checked =self.check_hist_type.isChecked()
-        print(is_checked)
-
         for (dname, descriptor) in self.descriptors.items():
             self.histograms_canvas[dname].lin_or_polar(is_checked)
             self.histograms_canvas[dname].plot(descriptor.histogram)
