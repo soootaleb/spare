@@ -14,7 +14,7 @@ class App(QMainWindow):
 
     TITLE = 'SpaRe'
     MARGIN_LEFT = 30
-    IMAGE_RESIZE_FACTOR = 1/4
+    IMAGE_RESIZE_FACTOR = 1/8
     CARDINAL_MAXIMUM = 32
 
     images = dict()
@@ -55,6 +55,11 @@ class App(QMainWindow):
         self.radio_scan_lin = QRadioButton("parralleles", self)
         self.radio_scan_lin.move(250, 140)
 
+        self.check_hist_type = QCheckBox("Polar histogram", self)
+        self.check_hist_type.move(self.MARGIN_LEFT + 420, 180)
+        self.check_hist_type.setChecked(True)
+        self.check_hist_type.resize(150, 20)
+
         self.slider_cardinal = QSlider(Qt.Horizontal, self)
         self.slider_cardinal.setMinimum(1)
         self.slider_cardinal.setMaximum(self.CARDINAL_MAXIMUM)
@@ -81,7 +86,8 @@ class App(QMainWindow):
         self.slider_angle.valueChanged.connect(self.slider_angle_changed)
         self.slider_rotate.valueChanged.connect(self.slider_rotate_changed)
         self.slider_cardinal.valueChanged.connect(self.slider_cardinal_changed)
-        
+        self.check_hist_type.toggled.connect(self.change_hist_type)
+
         self.label_angle = QLabel("0 ° rays", self)
         self.label_angle.move(350, 120)
         
@@ -96,7 +102,7 @@ class App(QMainWindow):
     def load_descriptor(self, reference, relative):
         desc = reference + relative
         self.descriptors[desc] = AngularPresenceDescriptor(self.images[reference], self.images[relative])
-        self.histograms_canvas[desc] = HistogramCanvas(self, height = 2, width = 6)
+        self.histograms_canvas[desc] = HistogramCanvas(self, height = 3, width = 6)
         self.histograms_canvas[desc].move(self.MARGIN_LEFT, 220 + 220 * list(self.histograms_canvas.keys()).index(desc))
 
     def load_image(self, fname):
@@ -153,3 +159,13 @@ class App(QMainWindow):
         
         self.images_canvas['merged_images'].plot(self.images['merged_images'])
         self.images_canvas['merged_images'].draw()
+
+    @pyqtSlot()
+    def change_hist_type(self):
+        is_checked =self.check_hist_type.isChecked()
+        print(is_checked)
+
+        for (dname, descriptor) in self.descriptors.items():
+            self.histograms_canvas[dname].lin_or_polar(is_checked)
+            self.histograms_canvas[dname].plot(descriptor.histogram)
+        

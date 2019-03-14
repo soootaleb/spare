@@ -99,7 +99,7 @@ class Image(object):
 
         The starting point is a corner of the image, depending on the provided angle.
 
-        TODO: Automate the destination point depending on the image shape (remove max_length)
+        DONE: Automate the destination point depending on the image shape (remove max_length)
         TODO: Add the possibility to start from a specific position
         """
         direction = angle * pi / 180
