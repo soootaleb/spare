@@ -56,7 +56,7 @@ class Descriptor(object):
     
     def gaussian_density_comparison(self,angles, angle_to_compare, variance=10):
         '''
-        Gaussian density function tweaked up with our parameters
+            Gaussian density function tweaked up with our parameters
         '''
         return [exp(- ( (( (int(angle)- angle_to_compare) / variance)**2) /2) ) / (variance * sqrt(2 * np.pi)) * variance for angle in angles]
 
@@ -72,5 +72,8 @@ class Descriptor(object):
         return values
 
     def interpret(self):
+        '''
+            textual interpretation of the description given by the describe function
+        '''
         #Actually should be a function used on ALL the descriptors using all the description.
         raise NotImplementedError('You must override the Descriptor::interpret function')

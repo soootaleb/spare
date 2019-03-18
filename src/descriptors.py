@@ -12,14 +12,15 @@ class AngularPresenceDescriptor(Descriptor):
         "0": "on the left of ",
         "180": "on the right of "
     } 
-    # +-10%
+
     combination = {
-        # < 10 -> not at all
-        "0.2":"a bit ", #10 -> 30
-        "0.4":"partially ", #30 -> 50
-        "0.6":"sort of ", #50 -> 70 
-        "0.8":"strongly ", #70 -> 90
-        "1.0":"totally " #90-> 100+
+        # +-10%
+        # < 5 -> not at all
+        "0.15":"a bit ", #5 -> 25
+        "0.35":"partially ", #25 -> 45
+        "0.55":"sort of ", #45 -> 65
+        "0.75":"strongly ", #65 -> 85
+        "0.95":"totally " #85-> 100+
     }
 
     def compute_direction(self, parallels) -> float:
@@ -41,6 +42,10 @@ class AngularPresenceDescriptor(Descriptor):
         return reduce(reduce_parallels_to_score, parallels, 0)
 
     def mask(self, direction):
+        '''
+        Use a gaussian like density function to compare with the computed score
+        and get a match score between the description and the direction
+        '''
         gaussian_at_angles = self.gaussian_density_comparison(self.histogram.directions, int(direction))
         gaussian_at_angles = [round(val,9) for val in gaussian_at_angles]
         values =  list(self.histogram.values.values())
@@ -57,22 +62,34 @@ class AngularPresenceDescriptor(Descriptor):
         return maximum # Percentage of match between the mask and the description in the given direction
 
     def interpret(self):
+        '''
+        Generate the pseudo-natural langage of the description in the descriptor
+        TODO : have only ONE function that does this for ALL the descriptors we have
+        and combine them (like : replace "is" by "touch" or "contains" depending of the descriptor)
+        TODO : add the names of the object (like their path name or something) for better text generation
+        '''
         interpretation = "A is "
+
+        #for better language generation
         add_and = False
+
+        #test all the directions
         for direction, value in self.description.items():
             temporary = ""
+
+            #test all the quantities
             for key_comb, quantity in self.combination.items():
                
-                if float(key_comb)-0.1 <= value < float(key_comb)+0.1:
+                #if it match
+                if float(key_comb)-0.1 < value <= float(key_comb)+0.1:
                     temporary+= quantity + direction
                     if add_and:
                         interpretation += "and "
                     add_and = True
-
+            #adding the textual information to the result
             interpretation += temporary
             
         interpretation +="B"
-        print(interpretation)
 
         return interpretation
 
