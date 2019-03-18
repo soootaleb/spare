@@ -5,7 +5,7 @@ from functools import reduce
 class AngularPresenceDescriptor(Descriptor):
 
     relations = {
-        #This order for text generation, as "A is above and on the left of B"
+        #This order is for text generation, as "A is above and on the left of B"
         #and not "A is on the left of and above B"
         "90": "above ",
         "270": "under ",
@@ -16,11 +16,11 @@ class AngularPresenceDescriptor(Descriptor):
     combination = {
         # +-10%
         # < 5 -> not at all
-        "0.15":"a bit ", #5 -> 25
-        "0.35":"partially ", #25 -> 45
-        "0.55":"sort of ", #45 -> 65
-        "0.75":"strongly ", #65 -> 85
-        "0.95":"totally " #85-> 100+
+        "0.20":"a bit ", #5 -> 25
+        "0.40":"slightly ", #25 -> 45
+        "0.60":"partially ", #45 -> 65
+        "0.80":"strongly ", #65 -> 85
+        "1.0":"totally " #85-> 100+
     }
 
     def compute_direction(self, parallels) -> float:

@@ -8,12 +8,14 @@ This project aims to work on the fuzzy spacial relations.
 
 # To Do
 
-Those lists are the atomic steps to accomplish in order to produce a graphical application
-that allows the user to load two binary images with objects and display the associated F-histogram
+  * Those lists are the atomic steps to accomplish in order to produce a graphical application
+  * that allows the user to load two binary images with objects and display the associated F-histogram
 
-change line generation order according to angle in bresenham_angle (in image.py)
+  * ~~change line generation order according to angle in bresenham_angle (in image.py)~~
+  * use pythagore theorem to get the lenght of the rays
 
-merge two images into one for GUI
+  * ~~merge two images into one for GUI~~
+  * merge the images into 2 differents color channels
 
 test if it's working on rectangular images
 
@@ -21,8 +23,12 @@ test if it's working on rectangular images
 
 keep an image in RGB only for visual, have a grayscale / boolean matrix for interating on it
 resize images to have less empty border in each image
-reshape image in order to iterate on smaller images depending on size
-create histogram based on 180 degrees
+
+check if the 2 images are the same size, and if not, resize according to an option (add on top left ? right ?... etc)
+~~reshape image in order to iterate on smaller images~~
+reshape images depending on their initial size
+
+~~create histogram based on 180 degrees~~(actually a really bad idea)
 
 ## Basic functions
 
@@ -32,17 +38,20 @@ create histogram based on 180 degrees
 
 ## Process functions
 
-  * Move image to binary
+  * Move image to binary (kind of useless to do so)
   * ~~Mount a data structure that represents the object after a full scan~~
   * ~~Implement a function to compute a histogram value given an angle and a relation~~
   * ~~Mount a data structure that represents the full histogram on 360°~~
 
 ## GUI functions
 
-  * ~~Implement the image loading from a button~~ (may be twice for two images)
+  * Implement the image loading from a button (may be twice for two images)
   * ~~Implement the images display~~
   * ~~Implement the histogram display - classic~~
-  * Implement the histogram display - radial
+  * ~~Implement the histogram display - radial~~
+
+  * Create a debug mode, which can show the inner functions, and in exploit mode, only show : merged images, description
+  * Add more functions that move the objects, for testing purpose
 
 # Progress
 
@@ -61,12 +70,13 @@ As a first implementation, we decided to implement a simple window that allow us
 
 We want to show our result in differents ways :
   * using histogram, representing polar result for each relation :
-      * Showing histogram
-      * histogram contain one relation
-      * further relations added to the histogram
+      * ~~Showing histogram~~
+      * ~~histogram contain one relation~~
+      * histogram contains several relation, with colors to differentiate them
+      * add a color-based legend of the differents relations
   
-  * using natural langage
+  * ~~using natural langage~~
 
 ## Histogram generation
 
-Angular histogram
+~~Angular histogram~~

@@ -99,13 +99,17 @@ class Image(object):
 
         The starting point is a corner of the image, depending on the provided angle.
 
-        DONE: Automate the destination point depending on the image shape (remove max_length)
+        TODO: Automate the destination point depending on the image shape (remove max_length)
         TODO: Add the possibility to start from a specific position
         """
+
+        #radians
         direction = angle * pi / 180
 
+        #should be deleted
         max_lenght = self.max_dimension
         
+        #should be calculated using pythagore theorem so rectangles can be used.
         x2 = round(math.sqrt(2) * max_lenght * math.sin(direction))
         y2 = round(math.sqrt(2) * max_lenght * math.cos(direction))
         

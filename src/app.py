@@ -37,7 +37,6 @@ class App(QMainWindow):
         self.images_canvas['merged_images'].move(self.MARGIN_LEFT + 150 * list(self.images_canvas.keys()).index('merged_images'), 10)
 
         self.load_descriptor('middle.png', 'other.png')
-        #self.load_descriptor('right.png', 'left.png')
         
         self.init_ui()
 
@@ -141,8 +140,12 @@ class App(QMainWindow):
             descriptor.set_cardinal(cardinal) \
                 .compute_histogram() \
                 .describe()
-            label = descriptor.interpret()# Useless for now
-            self.label_interpretation.setText(label)
+            texual_interpretation = descriptor.interpret()
+
+            #update textual interpretation
+            self.label_interpretation.setText(texual_interpretation)
+
+            #update the histograms values
             self.histograms_canvas[dname].plot(descriptor.histogram)
         
 
@@ -167,6 +170,9 @@ class App(QMainWindow):
 
     @pyqtSlot()
     def change_hist_type(self):
+        '''
+            Change the histogram type : polar or linear.
+        '''
         is_checked =self.check_hist_type.isChecked()
         for (dname, descriptor) in self.descriptors.items():
             self.histograms_canvas[dname].lin_or_polar(is_checked)

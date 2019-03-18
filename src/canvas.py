@@ -80,7 +80,7 @@ class HistogramCanvas(FigureCanvas):
         if self.is_polar:
             self.axes.set_rlim(0,1)
             theta = [float(k)/ 180 * np.pi for k in histogram.values.keys()]
-            #Sorry for that but it works
+            #TODO  : refractor this ugly-but-working code
             if len(theta) > 16:
                 i = 0
                 theta_major_name = []
@@ -101,6 +101,9 @@ class HistogramCanvas(FigureCanvas):
         self.draw()
     
     def lin_or_polar(self, new_value : bool):
+        '''
+        set the type of the histogram to be polar or linear.
+        '''
         self.is_polar = new_value
         self.fig.clear()
         if self.is_polar:
