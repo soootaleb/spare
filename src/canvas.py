@@ -78,7 +78,7 @@ class HistogramCanvas(FigureCanvas):
         self.axes.clear()
 
         if self.is_polar:
-            self.axes.set_rlim(0,500)
+            self.axes.set_rlim(0,1)
             theta = [float(k)/ 180 * np.pi for k in histogram.values.keys()]
             #Sorry for that but it works
             if len(theta) > 16:

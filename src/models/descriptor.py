@@ -2,7 +2,8 @@
 from models.point import Point
 from models.image import Image
 from models.histogram import Histogram
-
+from math import cos, sqrt, exp
+import numpy as np
 class Descriptor(object):
 
     relative = None
@@ -36,8 +37,9 @@ class Descriptor(object):
 
     def compute_histogram(self):
         for (direction, parallels) in self.scanning.items():
-            self.histogram[direction] = self.compute_direction(parallels)
-        
+            self.histogram[direction] = self.compute_direction(parallels) # * ( 
+                #(1 -cos( (2* (np.radians(float(direction)) % (2*np.pi))) )
+            #)  /2 )
         return self
         
     def compute_direction(self, parallels) -> float:
@@ -49,12 +51,20 @@ class Descriptor(object):
             describes "how much" the relative image is positioned in this direction
         '''
         raise NotImplementedError('You must override the Descriptor::compute_direction function')
+    
+    def gaussian_density_comparison(self,angles, angle_to_compare, variance=10):
+        '''
+        Gaussian density function tweaked up with our parameters
+        '''
+        return [exp(- ( (( (int(angle)- angle_to_compare) / variance)**2) /2) ) / (variance * sqrt(2 * np.pi)) * variance for angle in angles]
 
     def describe(self):
         '''
             Returns the final maps of [relation, proportion]
+            Actually, not yet a proportion
         '''
         if len(self.relations) == 0:
             raise Warning('You did not aspecify any relation so describing won\'t give any result')
-                
-        return { label: self.mask(int(direction)) for (direction, label) in self.relations.items() }
+        values = { label: self.mask(int(direction)) for (direction, label) in self.relations.items() }
+        print(values)
+        return values

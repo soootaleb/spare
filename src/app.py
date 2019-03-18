@@ -23,7 +23,7 @@ class App(QMainWindow):
     descriptors = dict()
     histograms_canvas = dict()
 
-    size = { 'WIDTH': 680, 'HEIGHT': 420 }
+    size = { 'WIDTH': 680, 'HEIGHT': 540 }
     position = { 'TOP': 100, 'LEFT': 100 }
 
     def __init__(self):
@@ -91,7 +91,7 @@ class App(QMainWindow):
         self.label_angle = QLabel("0 ° rays", self)
         self.label_angle.move(350, 120)
         
-        self.label_cardinal = QLabel("1 angle", self)
+        self.label_cardinal = QLabel("16 angle", self)
         self.label_cardinal.move(350, 180)
         
         self.label_rotate = QLabel("0° rotation", self)
@@ -103,7 +103,7 @@ class App(QMainWindow):
         desc = reference + relative
         self.descriptors[desc] = AngularPresenceDescriptor(self.images[reference], self.images[relative])
         self.histograms_canvas[desc] = HistogramCanvas(self, height = 3, width = 6)
-        self.histograms_canvas[desc].move(self.MARGIN_LEFT, 220 + 220 * list(self.histograms_canvas.keys()).index(desc))
+        self.histograms_canvas[desc].move(self.MARGIN_LEFT, 250 + 220 * list(self.histograms_canvas.keys()).index(desc))
 
     def load_image(self, fname):
         self.images[fname] = Image(fname).resize(self.IMAGE_RESIZE_FACTOR)

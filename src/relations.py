@@ -22,7 +22,6 @@ def angle(parallels, image_a, image_b) -> float:
                 acc_segment_score[0] += 1
             if image_b[curr_point].any() != 0 :
                 acc_segment_score[1] +=1
-            
             return acc_segment_score
 
         pixels_a, pixels_b = reduce(reduce_segment_scores, curr_segment, [0, 0])
