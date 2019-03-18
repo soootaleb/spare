@@ -23,7 +23,7 @@ class App(QMainWindow):
     descriptors = dict()
     histograms_canvas = dict()
 
-    size = { 'WIDTH': 680, 'HEIGHT': 540 }
+    size = { 'WIDTH': 800, 'HEIGHT': 600 }
     position = { 'TOP': 100, 'LEFT': 100 }
 
     def __init__(self):
@@ -47,6 +47,10 @@ class App(QMainWindow):
     def init_ui(self):
         self.setWindowTitle(self.TITLE)
         self.setGeometry(self.position['LEFT'], self.position['TOP'], self.size['WIDTH'], self.size['HEIGHT'])
+
+        self.label_interpretation = QLabel(self)
+        self.label_interpretation.resize(300, 50)
+        self.label_interpretation.move(self.MARGIN_LEFT, 200)
 
         self.radio_segment = QRadioButton("segment",self)
         self.radio_segment.setChecked(True)
@@ -136,8 +140,9 @@ class App(QMainWindow):
         for (dname, descriptor) in self.descriptors.items():
             descriptor.set_cardinal(cardinal) \
                 .compute_histogram() \
-                .describe() # Useless for now
-
+                .describe()
+            label = descriptor.interpret()# Useless for now
+            self.label_interpretation.setText(label)
             self.histograms_canvas[dname].plot(descriptor.histogram)
         
 

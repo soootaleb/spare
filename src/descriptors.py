@@ -5,11 +5,22 @@ from functools import reduce
 class AngularPresenceDescriptor(Descriptor):
 
     relations = {
-        "0": "on the left of",
-        "90": "above",
-        "180": "on the right of",
-        "270": "under",
+        #This order for text generation, as "A is above and on the left of B"
+        #and not "A is on the left of and above B"
+        "90": "above ",
+        "270": "under ",
+        "0": "on the left of ",
+        "180": "on the right of "
     } 
+    # +-10%
+    combination = {
+        # < 10 -> not at all
+        "0.2":"a bit ", #10 -> 30
+        "0.4":"partially ", #30 -> 50
+        "0.6":"sort of ", #50 -> 70 
+        "0.8":"strongly ", #70 -> 90
+        "1.0":"totally " #90-> 100+
+    }
 
     def compute_direction(self, parallels) -> float:
         def reduce_parallels_to_score(acc_total_score, curr_segment):
@@ -44,3 +55,24 @@ class AngularPresenceDescriptor(Descriptor):
         maximum = maximum / max(gaussian_at_angles)
 
         return maximum # Percentage of match between the mask and the description in the given direction
+
+    def interpret(self):
+        interpretation = "A is "
+        add_and = False
+        for direction, value in self.description.items():
+            temporary = ""
+            for key_comb, quantity in self.combination.items():
+               
+                if float(key_comb)-0.1 <= value < float(key_comb)+0.1:
+                    temporary+= quantity + direction
+                    if add_and:
+                        interpretation += "and "
+                    add_and = True
+
+            interpretation += temporary
+            
+        interpretation +="B"
+        print(interpretation)
+
+        return interpretation
+

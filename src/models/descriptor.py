@@ -9,6 +9,8 @@ class Descriptor(object):
     relative = None
     reference = None
 
+    description = None
+
     scanning = None
     histogram = None
 
@@ -66,5 +68,9 @@ class Descriptor(object):
         if len(self.relations) == 0:
             raise Warning('You did not aspecify any relation so describing won\'t give any result')
         values = { label: self.mask(int(direction)) for (direction, label) in self.relations.items() }
-        print(values)
+        self.description = values
         return values
+
+    def interpret(self):
+        #Actually should be a function used on ALL the descriptors using all the description.
+        raise NotImplementedError('You must override the Descriptor::interpret function')
