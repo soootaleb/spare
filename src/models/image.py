@@ -160,9 +160,9 @@ class Image(object):
 
             def map_offset_to_parallels(offset):
                 def duplicate_points(point):
-                    if abs(ray.angle()) >= 45 and 0 <= point.x + offset < max_length:
+                    if (abs(ray.angle()) % 90) <= 45 and 0 <= point.x + offset < max_length:
                         return Point(point.x + offset, point.y)
-                    elif abs(ray.angle()) < 45 and 0 <= point.y + offset < max_length:
+                    elif (abs(ray.angle()) % 90) > 45 and 0 <= point.y + offset < max_length:
                         return Point(point.x, point.y + offset)
                 
                 segment = [o for o in map(duplicate_points, ray) if o is not None]
