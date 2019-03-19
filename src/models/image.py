@@ -168,7 +168,7 @@ class Image(object):
                             return Point(point.x, point.y + offset)
                         elif ray.horizontal and 0 <= point.x + offset < max_length:
                             return Point(point.x + offset, point.y)
-                        elif 0 < ray.angle() % 90 < 45 and 0 <= point.x + offset < max_length:
+                        elif 0 < ray.angle() % 90 <= 45 and 0 <= point.x + offset < max_length:
                             return Point(point.x + offset, point.y)
                         elif 90 > ray.angle() % 90 > 45 and 0 <= point.y + offset < max_length:
                             return Point(point.x, point.y + offset)

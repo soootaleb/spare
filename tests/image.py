@@ -77,5 +77,5 @@ class TestImageMethods(unittest.TestCase):
         for direction in angles:
             parallels = image.parallels(direction)
             found = reduce(lambda acc, curr: acc + len(curr), parallels, 0)
-            self.assertEqual(count, self.WIDTH * self.HEIGHT)
+            self.assertEqual(found, self.WIDTH * self.HEIGHT)
             
