@@ -3,6 +3,8 @@ import unittest, random
 from models.point import Point
 from models.segment import Segment
 
+import numpy as np
+
 class TestSegmentMethods(unittest.TestCase):
 
     def test_new(self):
@@ -62,3 +64,20 @@ class TestSegmentMethods(unittest.TestCase):
         self.assertEqual(slope_half.slope, 0.5)
         self.assertEqual(slope_horizontal.slope, 0)
         self.assertEqual(slope_vertical.slope, 1)
+
+    def test_angle(self):
+        angle_1 = Segment([Point(0, 0), Point(10, 10)]) # Angle is 45°
+        angle_2 = Segment([Point(0, 0), Point(10, 20)]) # Angle is arctan(20/10)
+        angle_half = Segment([Point(0, 0), Point(20, 10)]) # Angle is arctan(10/20)
+        angle_horizontal = Segment([Point(0, 0), Point(10, 0)]) # Angle is 0°
+        angle_vertical = Segment([Point(0, 0), Point(0, 10)]) # Angle is 90°
+
+        self.assertAlmostEqual(angle_1.angle(radians = True), np.pi / 4)
+        self.assertAlmostEqual(angle_half.angle(radians = True), np.arctan(2))
+        self.assertAlmostEqual(angle_horizontal.angle(radians = True), 0)
+        self.assertAlmostEqual(angle_vertical.angle(radians = True), np.pi / 2)
+
+        self.assertAlmostEqual(angle_1.angle(radians = False), 45)
+        self.assertAlmostEqual(angle_half.angle(radians = False), 63, places = 0)
+        self.assertAlmostEqual(angle_horizontal.angle(radians = False), 0)
+        self.assertAlmostEqual(angle_vertical.angle(radians = False), 90)
