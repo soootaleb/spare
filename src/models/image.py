@@ -5,7 +5,7 @@ from functions import *
 
 from math import sin, cos, tan, pi, sqrt
 
-import os, cv2 as cv
+import os, cv2 as cv, numpy as np
 
 '''
     Represents an image in our application. It's created with an OpenCV::imread image
@@ -104,7 +104,7 @@ class Image(object):
         """
 
         #radians
-        direction = angle * pi / 180
+        direction = np.radians(angle)
 
         #should be deleted
         max_lenght = self.max_dimension
