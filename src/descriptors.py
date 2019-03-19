@@ -1,5 +1,5 @@
 from models.descriptor import Descriptor
-from math import sin
+from math import sin, cos, pi
 from functools import reduce
 
 class AngularPresenceDescriptor(Descriptor):
@@ -24,6 +24,10 @@ class AngularPresenceDescriptor(Descriptor):
     }
 
     def compute_direction(self, parallels) -> float:
+
+        angle = parallels[0].angle(radians = True)
+        sin_cos = sin(angle) if angle > pi / 4 else cos(angle)
+
         def reduce_parallels_to_score(acc_total_score, curr_segment):
             def reduce_segment_scores(acc_segment_score, curr_point):
                 
@@ -36,9 +40,8 @@ class AngularPresenceDescriptor(Descriptor):
 
             pixels_a, pixels_b = reduce(reduce_segment_scores, curr_segment, [0, 0])
 
-            #TODO : get a real normalisation
             return acc_total_score + pixels_a * pixels_b
-        return reduce(reduce_parallels_to_score, parallels, 0)
+        return reduce(reduce_parallels_to_score, parallels, 0) / sin_cos
 
     def mask(self, direction):
         '''
