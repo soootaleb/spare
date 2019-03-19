@@ -53,18 +53,6 @@ class TestSegmentMethods(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             segment.append(Point(31, 40))
 
-    def test_slope(self):
-        slope_1 = Segment([Point(0, 0), Point(10, 10)]) # Slope is 1
-        slope_2 = Segment([Point(0, 0), Point(10, 20)]) # Slope is 2
-        slope_half = Segment([Point(0, 0), Point(20, 10)]) # Slope is 1/2
-        slope_horizontal = Segment([Point(0, 0), Point(10, 0)]) # Slope is 0
-        slope_vertical = Segment([Point(0, 0), Point(0, 10)]) # Slope is 0
-
-        self.assertEqual(slope_1.slope, 1)
-        self.assertEqual(slope_half.slope, 0.5)
-        self.assertEqual(slope_horizontal.slope, 0)
-        self.assertEqual(slope_vertical.slope, 1)
-
     def test_angle(self):
         angle_1 = Segment([Point(0, 0), Point(10, 10)]) # Angle is 45°
         angle_2 = Segment([Point(0, 0), Point(10, 20)]) # Angle is arctan(20/10)

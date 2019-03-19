@@ -50,18 +50,6 @@ class Segment(list):
     def horizontal(self) -> bool:
         return self.start.y == self.end.y
 
-    @property
-    def slope(self) -> float:
-
-        if self.vertical:
-            return 1 # TODO: Fix this ugly value (a vertical slope is not 1 of coef but Infinity instead)
-        else:
-
-            delta_y = self.start.y - self.end.y
-            delta_x = self.start.x - self.end.x
-        
-            return delta_y / delta_x
-
     def angle(self, radians = False):
         if self.vertical:
             angle = np.pi / 2
