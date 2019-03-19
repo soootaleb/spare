@@ -25,7 +25,7 @@ class AngularPresenceDescriptor(Descriptor):
 
     def compute_direction(self, parallels) -> float:
 
-        angle = parallels[0].angle(radians = True)
+        angle = parallels[0].angle(radians = True) % pi / 2
         sin_cos = sin(angle) if angle > pi / 4 else cos(angle)
 
         def reduce_parallels_to_score(acc_total_score, curr_segment):
