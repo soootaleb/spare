@@ -4,6 +4,8 @@ from models.point import Point
 from models.image import Image
 from models.segment import Segment
 
+from functools import reduce
+
 class TestImageMethods(unittest.TestCase):
 
     WIDTH = 50
@@ -52,10 +54,7 @@ class TestImageMethods(unittest.TestCase):
         with self.assertRaises(Exception) as context:
             image.resize(0)
 
-    def test_parallels(self):
-        '''
-            For the moment, this tests only if a point is already visited
-        '''
+    def test_parallels_unicity(self):
         image = Image(np.zeros((self.WIDTH, self.HEIGHT, 3), np.uint8))
 
         angles = [0, 10, 45, 90, 100, 270, 320]
@@ -69,3 +68,14 @@ class TestImageMethods(unittest.TestCase):
                 for point in segment:
                     if index(point) in visited:
                         self.fail('The point {} is already visited'.format(point))
+
+    def test_parallels_coverage(self):
+        image = Image(np.zeros((self.WIDTH, self.HEIGHT, 1), np.uint8))
+
+        angles = [0, 10, 45, 90, 100, 270, 320]
+
+        for direction in angles:
+            parallels = image.parallels(direction)
+            found = reduce(lambda acc, curr: acc + len(curr), parallels, 0)
+            self.assertEqual(count, self.WIDTH * self.HEIGHT)
+            
