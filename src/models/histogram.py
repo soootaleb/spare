@@ -49,6 +49,11 @@ class Histogram(object):
         self.cardinal = cardinal
         return self
 
+    def normalize(self):
+        score_max = max(self.values.values())
+        self.values = { direction: val / score_max for (direction, val) in self.values.items() }
+        return self
+
     @property
     def directions(self):
         return linspace(0, 360, self.cardinal, dtype=int)
