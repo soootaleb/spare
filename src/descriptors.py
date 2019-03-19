@@ -37,8 +37,7 @@ class AngularPresenceDescriptor(Descriptor):
             pixels_a, pixels_b = reduce(reduce_segment_scores, curr_segment, [0, 0])
 
             #TODO : get a real normalisation
-            return acc_total_score + (pixels_a * pixels_b / (10*(len(curr_segment)+ pixels_a + pixels_b)))
-
+            return acc_total_score + pixels_a * pixels_b
         return reduce(reduce_parallels_to_score, parallels, 0)
 
     def mask(self, direction):
