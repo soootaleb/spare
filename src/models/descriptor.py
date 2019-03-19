@@ -54,12 +54,16 @@ class Descriptor(object):
         '''
         raise NotImplementedError('You must override the Descriptor::compute_direction function')
     
-    def gaussian_density_comparison(self,angles, angle_to_compare, variance=10):
+    def gaussian_density_comparison(self,angles, angle_to_compare, variance=10, normalisation = True):
         '''
             Gaussian density function tweaked up with our parameters
         '''
-        return [exp(- ( (( (int(angle)- angle_to_compare) / variance)**2) /2) ) / (variance * sqrt(2 * np.pi)) * variance for angle in angles]
-
+        density = [exp(- ( (( (int(angle)- angle_to_compare) / variance)**2) /2) ) / (variance * sqrt(2 * np.pi)) * variance for angle in angles]
+        if normalisation : 
+            maximum = max(density)
+            density = [value / maximum for value in density]
+        print(density)
+        return density
     def describe(self):
         '''
             Returns the final maps of [relation, proportion]
