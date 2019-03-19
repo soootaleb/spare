@@ -44,11 +44,11 @@ class Segment(list):
 
     @property
     def vertical(self) -> bool:
-        return self.start.x == self.end.x
+        return self.start.y == self.end.y
 
     @property
     def horizontal(self) -> bool:
-        return self.start.y == self.end.y
+        return self.start.x == self.end.x
 
     def angle(self, radians = False):
         if self.vertical:

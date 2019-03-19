@@ -57,8 +57,8 @@ class TestSegmentMethods(unittest.TestCase):
         angle_1 = Segment([Point(0, 0), Point(10, 10)]) # Angle is 45°
         angle_2 = Segment([Point(0, 0), Point(10, 20)]) # Angle is arctan(20/10)
         angle_half = Segment([Point(0, 0), Point(20, 10)]) # Angle is arctan(10/20)
-        angle_horizontal = Segment([Point(0, 0), Point(10, 0)]) # Angle is 0°
-        angle_vertical = Segment([Point(0, 0), Point(0, 10)]) # Angle is 90°
+        angle_vertical = Segment([Point(0, 0), Point(10, 0)]) # Angle is 0°
+        angle_horizontal = Segment([Point(0, 0), Point(0, 10)]) # Angle is 90°
 
         self.assertAlmostEqual(angle_1.angle(radians = True), np.pi / 4)
         self.assertAlmostEqual(angle_half.angle(radians = True), np.arctan(2))
