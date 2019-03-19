@@ -42,6 +42,9 @@ class Descriptor(object):
             self.histogram[direction] = self.compute_direction(parallels) # * ( 
                 #(1 -cos( (2* (np.radians(float(direction)) % (2*np.pi))) )
             #)  /2 )
+
+        self.histogram.normalize()
+
         return self
         
     def compute_direction(self, parallels) -> float:
@@ -62,7 +65,7 @@ class Descriptor(object):
         if normalisation : 
             maximum = max(density)
             density = [value / maximum for value in density]
-        print(density)
+
         return density
     def describe(self):
         '''
