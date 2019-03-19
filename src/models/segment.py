@@ -1,7 +1,7 @@
 
 from models.point import Point
 
-import math, random
+import math, random, numpy as np
 
 class Segment(list):
 
@@ -61,3 +61,15 @@ class Segment(list):
             delta_x = self.start.x - self.end.x
         
             return delta_y / delta_x
+
+    def angle(self, radians = False):
+        if self.vertical:
+            angle = np.pi / 2
+        elif self.horizontal:
+            angle = 0
+        else:
+            BC = abs(self.start.x - self.end.x)
+            AC = abs(self.start.y - self.end.y)
+            angle = math.atan(BC / AC)
+
+        return angle if radians else np.degrees(angle)
