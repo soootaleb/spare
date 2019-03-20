@@ -9,6 +9,8 @@ class Descriptor(object):
     relative = None
     reference = None
 
+    variance = None
+
     description = None
 
     scanning = None
@@ -16,10 +18,12 @@ class Descriptor(object):
 
     relations = []
 
-    def __init__(self, reference: Image, relative: Image, cardinal = 16):
+    def __init__(self, reference: Image, relative: Image, cardinal = 16, variance = 30):
 
         self.relative = relative
         self.reference = reference
+
+        self.variance = variance
 
         self.histogram = Histogram(reference, relative) \
             .set_cardinal(cardinal)
@@ -35,6 +39,9 @@ class Descriptor(object):
                 for direction in self.histogram.set_cardinal(cardinal).directions
         }
 
+        return self
+    def set_variance(self, variance):
+        self.variance = variance
         return self
 
     def compute_histogram(self):
@@ -57,10 +64,12 @@ class Descriptor(object):
         '''
         raise NotImplementedError('You must override the Descriptor::compute_direction function')
     
-    def gaussian_density_comparison(self,angles, angle_to_compare, variance=10, normalisation = True):
+    def gaussian_density_comparison(self,angles, angle_to_compare, normalisation = True):
         '''
             Gaussian density function tweaked up with our parameters
         '''
+
+        variance = self.variance
         density = [exp(- ( (( (int(angle)- angle_to_compare) / variance)**2) /2) ) / (variance * sqrt(2 * np.pi)) * variance for angle in angles]
         if normalisation : 
             maximum = max(density)

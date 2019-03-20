@@ -16,7 +16,8 @@ class App(QMainWindow):
     MARGIN_LEFT = 30
     IMAGE_RESIZE_FACTOR = 1/8
     CARDINAL_MAXIMUM = 32
-
+    VARIANCE_MAXIMUM = 50
+    variance = 30
     images = dict()
     images_canvas = dict()
 
@@ -47,10 +48,7 @@ class App(QMainWindow):
         self.setWindowTitle(self.TITLE)
         self.setGeometry(self.position['LEFT'], self.position['TOP'], self.size['WIDTH'], self.size['HEIGHT'])
 
-        self.label_interpretation = QLabel(self)
-        self.label_interpretation.resize(300, 50)
-        self.label_interpretation.move(self.MARGIN_LEFT, 200)
-
+        #DEBUG MODE
         self.radio_segment = QRadioButton("segment",self)
         self.radio_segment.setChecked(True)
         self.radio_segment.move(self.MARGIN_LEFT + 50, 140)
@@ -58,11 +56,15 @@ class App(QMainWindow):
         self.radio_scan_lin = QRadioButton("parralleles", self)
         self.radio_scan_lin.move(250, 140)
 
+        ##HITOGRAM TYPE
         self.check_hist_type = QCheckBox("Polar histogram", self)
         self.check_hist_type.move(self.MARGIN_LEFT + 420, 180)
         self.check_hist_type.setChecked(True)
         self.check_hist_type.resize(150, 20)
 
+        self.check_hist_type.toggled.connect(self.change_hist_type)
+
+        ##CARDINAL
         self.slider_cardinal = QSlider(Qt.Horizontal, self)
         self.slider_cardinal.setMinimum(1)
         self.slider_cardinal.setMaximum(self.CARDINAL_MAXIMUM)
@@ -71,6 +73,27 @@ class App(QMainWindow):
         self.slider_cardinal.move(self.MARGIN_LEFT, 180)
         self.slider_cardinal.resize(300, 20)
 
+        self.label_cardinal = QLabel("16 angle", self)
+        self.label_cardinal.move(350, 180)
+
+        self.slider_cardinal.valueChanged.connect(self.slider_cardinal_changed)
+
+
+        ##VARIANCE 
+        self.slider_variance = QSlider(Qt.Horizontal, self)
+        self.slider_variance.setMinimum(1)
+        self.slider_variance.setMaximum(self.VARIANCE_MAXIMUM)
+        self.slider_variance.setValue(self.variance)
+        self.slider_variance.setSingleStep(1)
+        self.slider_variance.move(self.MARGIN_LEFT, 220)
+        self.slider_variance.resize(300, 20)
+    
+        self.label_variance = QLabel("Variance :{}".format(30), self)
+        self.label_variance.move(self.MARGIN_LEFT + 300, 220)
+
+        self.slider_variance.valueChanged.connect(self.slider_variance_changed)        
+
+        ##ANGLE NUMBER : cardinal of the histogram (impacts performances)
         self.slider_angle = QSlider(Qt.Horizontal, self)
         self.slider_angle.setValue(16)
         self.slider_angle.setMinimum(0)
@@ -78,35 +101,39 @@ class App(QMainWindow):
         self.slider_angle.setSingleStep(1)
         self.slider_angle.move(self.MARGIN_LEFT, 120)
         self.slider_angle.resize(300, 20)
+        
+        self.label_angle = QLabel("0 ° rays", self)
+        self.label_angle.move(350, 120)
 
+        self.slider_angle.valueChanged.connect(self.slider_angle_changed)        
+
+
+        ##ROTATION : moving the reference image in a circle
         self.slider_rotate = QSlider(Qt.Horizontal, self)
         self.slider_rotate.setMinimum(-180)
         self.slider_rotate.setMaximum(180)
         self.slider_rotate.setSingleStep(10)
         self.slider_rotate.move(self.MARGIN_LEFT + 150 * len(self.images_canvas.keys()), 50)
         self.slider_rotate.resize(200, 20)
-
-        self.slider_angle.valueChanged.connect(self.slider_angle_changed)
-        self.slider_rotate.valueChanged.connect(self.slider_rotate_changed)
-        self.slider_cardinal.valueChanged.connect(self.slider_cardinal_changed)
-        self.check_hist_type.toggled.connect(self.change_hist_type)
-
-        self.label_angle = QLabel("0 ° rays", self)
-        self.label_angle.move(350, 120)
-        
-        self.label_cardinal = QLabel("16 angle", self)
-        self.label_cardinal.move(350, 180)
         
         self.label_rotate = QLabel("0° rotation", self)
         self.label_rotate.move(self.MARGIN_LEFT + 150 * len(self.images_canvas.keys()) + 100, 20)
+
+        self.slider_rotate.valueChanged.connect(self.slider_rotate_changed)
+
+        ##TEXT INTERPRETATION : A is reference, B is relative
+        self.label_interpretation = QLabel(self)
+        self.label_interpretation.resize(600, 50)
+        self.label_interpretation.move(self.MARGIN_LEFT, 240)
+
 
         self.show()
 
     def load_descriptor(self, reference, relative):
         desc = reference + relative
-        self.descriptors[desc] = AngularPresenceDescriptor(self.images[reference], self.images[relative])
+        self.descriptors[desc] = AngularPresenceDescriptor(self.images[reference], self.images[relative], variance= self.variance)
         self.histograms_canvas[desc] = HistogramCanvas(self, height = 3, width = 6)
-        self.histograms_canvas[desc].move(self.MARGIN_LEFT, 250 + 220 * list(self.histograms_canvas.keys()).index(desc))
+        self.histograms_canvas[desc].move(self.MARGIN_LEFT, 280 + 220 * list(self.histograms_canvas.keys()).index(desc))
 
     def load_image(self, fname):
         self.images[fname] = Image(fname).resize(self.IMAGE_RESIZE_FACTOR)
@@ -168,6 +195,16 @@ class App(QMainWindow):
         self.images_canvas['merged_images'].plot(self.images['merged_images'])
         self.images_canvas['merged_images'].draw()
 
+    @pyqtSlot()
+    def slider_variance_changed(self):
+        '''
+        change the variance in the interpretation of the descriptors (as we use gaussian density function)
+        '''
+        value = self.slider_variance.value()
+        self.label_variance.setText("Variance :{}".format(value))
+        for  desc in self.descriptors.values():
+            desc.set_variance(value) 
+        self.slider_cardinal_changed()
     @pyqtSlot()
     def change_hist_type(self):
         '''

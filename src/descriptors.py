@@ -48,10 +48,11 @@ class AngularPresenceDescriptor(Descriptor):
         Use a gaussian like density function to compare with the computed score
         and get a match score between the description and the direction
         '''
-        gaussian_at_angles = self.gaussian_density_comparison(self.histogram.directions, int(direction), variance = 30)
+        gaussian_at_angles = self.gaussian_density_comparison(self.histogram.directions, int(direction))
         gaussian_at_angles = [round(val,9) for val in gaussian_at_angles]
         values =  list(self.histogram.values.values())
-        print('direction {} : values {}'.format(direction, values))
+        
+        #print('direction {} : values {}'.format(direction, values))
 
 
         #we take the minimums of the calculated values and the associated values expected in the gaussian
@@ -80,7 +81,6 @@ class AngularPresenceDescriptor(Descriptor):
         #test all the directions
         for direction, value in self.description.items():
             temporary = ""
-            print('in direction {}, value {}'.format(direction, value))
             #test all the quantities
             for key_comb, quantity in self.combination.items():
 
