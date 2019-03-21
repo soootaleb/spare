@@ -46,9 +46,7 @@ class Descriptor(object):
 
     def compute_histogram(self):
         for (direction, parallels) in self.scanning.items():
-            self.histogram[direction] = self.compute_direction(parallels) # * ( 
-                #(1 -cos( (2* (np.radians(float(direction)) % (2*np.pi))) )
-            #)  /2 )
+            self.histogram[direction] = self.compute_direction(parallels)
 
         self.histogram.normalize()
 
