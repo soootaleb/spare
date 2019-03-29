@@ -42,28 +42,6 @@ class AngularPresenceDescriptor(Descriptor):
             return acc_total_score + pixels_a * pixels_b
         return reduce(reduce_parallels_to_score, parallels, 0) / sin_cos
 
-    def mask(self, direction):
-        '''
-        Use a gaussian like density function to compare with the computed score
-        and get a match score between the description and the direction
-        '''
-        gaussian_at_angles = self.gaussian_density_comparison(self.histogram.directions, int(direction))
-        gaussian_at_angles = [round(val,9) for val in gaussian_at_angles]
-        values =  list(self.histogram.values.values())
-        
-        #print('direction {} : values {}'.format(direction, values))
-
-
-        #we take the minimums of the calculated values and the associated values expected in the gaussian
-        minimums = [ min(gaussian, histogram_value) for gaussian, histogram_value in zip(gaussian_at_angles, values) ]
-
-        #We select the maximum
-        maximum = max(minimums)
-
-        #normalisation
-        maximum = maximum / max(gaussian_at_angles)
-
-        return maximum # Percentage of match between the mask and the description in the given direction
 
     def interpret(self):
         '''
