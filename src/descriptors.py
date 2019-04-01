@@ -9,7 +9,7 @@ class AngularPresenceDescriptor(Descriptor):
         #and not "A is on the left of and above B"
         "90": "above ",
         "270": "under ",
-        "0": "on the left of ",
+        "0": "on the left of ", 
         "180": "on the right of "
     } 
 
@@ -55,6 +55,8 @@ class AngularPresenceDescriptor(Descriptor):
         #for better language generation
         add_and = False
 
+        #measure of total score
+        total = 0.0
         #test all the directions
         for direction, value in self.description.items():
             temporary = ""
@@ -63,14 +65,17 @@ class AngularPresenceDescriptor(Descriptor):
 
                 #if it match
                 if float(key_comb)-0.1 < value <= float(key_comb)+0.1:
-                    temporary+= quantity + direction
                     if add_and:
-                        interpretation += "and "
+                        temporary += "and "
+                    temporary+= quantity + direction
                     add_and = True
-            #adding the textual information to the result
+                total += value
+                #adding the textual information to the result
             interpretation += temporary
             
         interpretation +="B"
+        
+        self.cumulative_score = total
+        #Total score between 5.7 and 7.7
 
         return interpretation
-

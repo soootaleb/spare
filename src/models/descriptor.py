@@ -13,6 +13,8 @@ class Descriptor(object):
 
     description = None
 
+    cumulative_score = None
+
     scanning = None
     histogram = None
 
@@ -66,14 +68,19 @@ class Descriptor(object):
         '''
             Gaussian density function tweaked up with our parameters
         '''
-
         variance = self.variance
-        density = [exp(- ( (( (int(angle)- angle_to_compare) / variance)**2) /2) ) / (variance * sqrt(2 * np.pi)) * variance for angle in angles]
+        # divided by two and reversed to act like a modulo
+        if angle_to_compare == 0:
+            density = [(exp(- ( (( (int(angle)- angle_to_compare) / variance)**2) /2) ) / (variance * sqrt(2 * np.pi)) * variance) /2 for angle in angles]
+            density = np.add(density, np.flip(density))
+        else :
+            density = [(exp(- ( (( (int(angle)- angle_to_compare) / variance)**2) /2) ) / (variance * sqrt(2 * np.pi)) * variance) for angle in angles]
         if normalisation : 
             maximum = max(density)
             density = [value / maximum for value in density]
-
         return density
+
+
     def describe(self):
         '''
             Returns the final maps of [relation, proportion]
@@ -81,7 +88,7 @@ class Descriptor(object):
         '''
         if len(self.relations) == 0:
             raise Warning('You did not aspecify any relation so describing won\'t give any result')
-        values = { label: self.mask(int(direction)) for (direction, label) in self.relations.items() }
+        values = { label: self.mask(int(direction)) for (direction,label) in self.relations.items() }
         self.description = values
         return values
 
@@ -94,9 +101,6 @@ class Descriptor(object):
         gaussian_at_angles = [round(val,9) for val in gaussian_at_angles]
         values =  list(self.histogram.values.values())
         
-        #print('direction {} : values {}'.format(direction, values))
-
-
         #we take the minimums of the calculated values and the associated values expected in the gaussian
         minimums = [ min(gaussian, histogram_value) for gaussian, histogram_value in zip(gaussian_at_angles, values) ]
 
