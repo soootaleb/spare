@@ -26,7 +26,7 @@ class Image(object):
 
         if isinstance(fname, str):
             self.fname = fname
-            self.base = cv.imread(os.path.join(self.IMAGES_DIR, fname), cv.IMREAD_COLOR)
+            self.base = cv.imread(os.path.join(self.IMAGES_DIR, fname), cv.COLOR_RGB2GRAY)
             self.image = self.base.copy()
         else:
             self.fname = 'IN_MEMORY_IMG'
