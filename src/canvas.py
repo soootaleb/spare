@@ -48,7 +48,10 @@ class ImageCanvas(FigureCanvas):
     
     def plot(self, image):
         self.axes.axis('off')
-        self.axes.imshow(image.image)
+        if image.color:
+            self.axes.imshow(image.image)
+        else :
+            self.axes.imshow(image.image, cmap = "gray")
         self.show()
 
 

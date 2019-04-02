@@ -131,25 +131,30 @@ class OverlappingDescriptor(Descriptor):
 
         #for better language generation
         add_and = False
+        if self.description.values().any() >= 0.95:
+            interpretation += "totally overlapping "
+        elif sum(self.description.values()) < 0.1:
+            interpretation += "not overlapping "
+        else:
+            #measure of total score
+            total = 0.0
+            #test all the directions
+            for direction, value in self.description.items():
+                temporary = ""
+                #test all the quantities
+                for key_comb, quantity in self.combination.items():
 
-        #measure of total score
-        total = 0.0
-        #test all the directions
-        for direction, value in self.description.items():
-            temporary = ""
-            #test all the quantities
-            for key_comb, quantity in self.combination.items():
-
-                #if it match
-                if float(key_comb)-0.1 < value <= float(key_comb)+0.1:
-                    if add_and:
-                        temporary += "and "
-                    temporary+= quantity + direction
-                    add_and = True
-                total += value
-                #adding the textual information to the result
-            interpretation += temporary
-            
+                    #if it match
+                    if float(key_comb)-0.1 < value <= float(key_comb)+0.1:
+                        if add_and:
+                            temporary += "and "
+                        temporary+= quantity + direction
+                        add_and = True
+                    total += value
+                    #adding the textual information to the result
+                interpretation += temporary
+        #end else
+        #         
         interpretation +="B"
         
         self.cumulative_score = total

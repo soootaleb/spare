@@ -20,13 +20,20 @@ class Image(object):
     base = None # We keep the original one to be able to reset
     image = None # Underlying OpenCV image that we can manipulate
 
+    color = None
+
     _parallels = dict()
 
-    def __init__(self, fname):
+    def __init__(self, fname, color = False):
 
         if isinstance(fname, str):
             self.fname = fname
-            self.base = cv.imread(os.path.join(self.IMAGES_DIR, fname), cv.COLOR_RGB2GRAY)
+            if color :
+                self.base = cv.imread(os.path.join(self.IMAGES_DIR, fname), cv.IMREAD_COLOR)  
+                self.color = True              
+            else :
+                self.base = cv.imread(os.path.join(self.IMAGES_DIR, fname), cv.IMREAD_GRAYSCALE) #cv.COLOR_RGB2GRAY)
+                self.color = False
             self.image = self.base.copy()
         else:
             self.fname = 'IN_MEMORY_IMG'
@@ -90,7 +97,9 @@ class Image(object):
 
             Returns a new instance of Image, and the original images are not affected
         '''
-        return Image(cv.add(self.image, image.image))
+
+        result = cv.merge( [self.image, image.image, np.zeros( (self.width, self.height, 1), dtype = "uint8") ] )
+        return Image( result, color = True)
 
     def ray(self, angle):
         """
@@ -106,7 +115,7 @@ class Image(object):
         #radians
         direction = np.radians(angle)
 
-        #should be deleted
+        #should be deleted and use pythagore to be able to use rectangular images
         max_lenght = self.max_dimension
         
         #should be calculated using pythagore theorem so rectangles can be used.

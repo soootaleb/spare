@@ -24,7 +24,7 @@ class Histogram(object):
     image_a = None
     image_b = None
 
-    relation = None
+    relations = None
 
     values = dict()
 
