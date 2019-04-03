@@ -21,8 +21,8 @@ test if it's working on rectangular images
 
 ## Improvement idea
 
-keep an image in RGB only for visual, have a grayscale / boolean matrix for interating on it
-resize images to have less empty border in each image
+~~keep an image in RGB only for visual, have a grayscale / boolean matrix for interating on it
+resize images to have less empty border in each image~~
 
 check if the 2 images are the same size, and if not, resize according to an option (add on top left ? right ?... etc)
 ~~reshape image in order to iterate on smaller images~~
@@ -71,9 +71,9 @@ As a first implementation, we decided to implement a simple window that allow us
 We want to show our result in differents ways :
   * using histogram, representing polar result for each relation :
       * ~~Showing histogram~~
-      * ~~histogram contain one relation~~
-      * histogram contains several relation, with colors to differentiate them
-      * add a color-based legend of the differents relations
+      * ~~Histogram contains one relation~~
+      * ~~Histogram contains several relation, with colors to differentiate them~~
+      * add a color-based legend of the different relations
   
   * ~~using natural langage~~
 
