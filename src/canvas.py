@@ -73,12 +73,12 @@ class HistogramCanvas(FigureCanvas):
  
         self.axes.grid(True)
         #TODO : Add the names of the objects (fname - extention ?)
-        self.axes.set_title("Spatial relations between A and B", va='bottom')
                 
         FigureCanvas.updateGeometry(self)
 
-    def plot(self, histogram):
-        self.axes.clear()
+    def plot(self, histogram, color = None):
+
+        self.axes.set_title("Spatial relations between A and B", va='bottom')
 
         if self.is_polar:
             self.axes.set_rlim(0,1)
@@ -102,7 +102,10 @@ class HistogramCanvas(FigureCanvas):
         else:
             self.axes.plot(list(histogram.values.keys()), list(histogram.values.values()))
         self.draw()
-    
+
+    def clear(self):
+        self.axes.clear()
+
     def lin_or_polar(self, new_value : bool):
         '''
         set the type of the histogram to be polar or linear.

@@ -91,6 +91,33 @@ class Image(object):
 
         return self
 
+    def translate_horizontal(self, dir_x):
+        """
+        function that recalculate the new position of the image depending of its precedent position
+        """
+        x_del = dir_x
+        if dir_x >= 0:
+            angle = 0
+            x_incr = 1
+        else :
+            angle = 180
+            x_incr = -1
+        segments = parallels(angle)
+        for segment in segments :
+            seen = False
+            for point in segment:
+                if not seen and self.image[point] != 0:
+                    seen = True
+                    self.image[point] = 0
+                    x_del -= x_incr
+                if seen and self.image[point] !=0 and x_del != 0:
+                    self.image[point] = 0
+                    x_del -= x_incr
+                if seen and self.image[point] == 0 and dir_x != 0:
+                    dir_x -= x_incr
+                    self.image[point] = 255
+
+
     def merge(self, image):
         '''
             Uses OpenCV::add to merge the given image to the original instance.

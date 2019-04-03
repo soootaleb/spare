@@ -16,7 +16,7 @@ class AngularPresenceDescriptor(Descriptor):
     combination = {
         # +-10%
         # < 5 -> not at all
-        "0.20":"a bit ", #5 -> 25
+        #"0.20":"a bit ", #5 -> 25
         "0.40":"slightly ", #25 -> 45
         "0.60":"partially ", #45 -> 65
         "0.80":"strongly ", #65 -> 85
@@ -131,28 +131,28 @@ class OverlappingDescriptor(Descriptor):
 
         #for better language generation
         add_and = False
-        if self.description.values().any() >= 0.95:
-            interpretation += "totally overlapping "
-        elif sum(self.description.values()) < 0.1:
-            interpretation += "not overlapping "
-        else:
-            #measure of total score
-            total = 0.0
-            #test all the directions
-            for direction, value in self.description.items():
-                temporary = ""
-                #test all the quantities
-                for key_comb, quantity in self.combination.items():
+        #if self.description.values() >= 0.95:
+        #    interpretation += "totally overlapping "
+        #elif sum(self.description.values()) < 0.1:
+        #    interpretation += "not overlapping "
+        #else:
+        #measure of total score
+        total = 0.0
+        #test all the directions
+        for direction, value in self.description.items():
+            temporary = ""
+            #test all the quantities
+            for key_comb, quantity in self.combination.items():
 
-                    #if it match
-                    if float(key_comb)-0.1 < value <= float(key_comb)+0.1:
-                        if add_and:
-                            temporary += "and "
-                        temporary+= quantity + direction
-                        add_and = True
-                    total += value
-                    #adding the textual information to the result
-                interpretation += temporary
+                #if it match
+                if float(key_comb)-0.1 < value <= float(key_comb)+0.1:
+                    if add_and:
+                        temporary += "and "
+                    temporary+= quantity + direction
+                    add_and = True
+                total += value
+                #adding the textual information to the result
+            interpretation += temporary
         #end else
         #         
         interpretation +="B"

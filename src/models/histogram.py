@@ -51,7 +51,10 @@ class Histogram(object):
 
     def normalize(self):
         score_max = max(self.values.values())
-        self.values = { direction: val / score_max for (direction, val) in self.values.items() }
+        if score_max != 0:
+            self.values = { direction: val / score_max for (direction, val) in self.values.items() }
+        else:
+            self.values = { direction: 0 for direction in self.values.keys() }
         return self
 
     @property
