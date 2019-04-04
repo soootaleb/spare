@@ -245,7 +245,7 @@ class App(QMainWindow):
         '''
             Change the histogram type : polar or linear.
         '''
-        is_checked =self.check_hist_type.isChecked()
+        is_checked = self.check_hist_type.isChecked()
         
         for (dname, descriptor) in self.descriptors.items():
             self.histograms_canvas.lin_or_polar(is_checked)
