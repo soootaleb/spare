@@ -1,6 +1,8 @@
 from models.descriptor import Descriptor
 from math import sin, cos, pi
 from functools import reduce
+import numpy as np
+from decorators import timeit
 
 class AngularPresenceDescriptor(Descriptor):
 
@@ -23,23 +25,39 @@ class AngularPresenceDescriptor(Descriptor):
         "1.0":"totally " #85-> 100+
     }
 
+    @timeit
+    # NEW METHOD
+    # 2.5ms to compute_direction for a 1/8 resize factor
+    # 12ms to compute_direction for a 1/3 resize factor
+    # 
+    # OLD METHOD
+    # 7ms for 1/8
+    # 45ms for 1/3
+    # 
+    # Keeping the old code since the new one may be buggy (and relies on grayscale)
     def compute_direction(self, parallels) -> float:
-        angle = abs(parallels[int(len(parallels)/2)].angle(radians = True)) % (pi / 2)
+        angle = abs(parallels[int(len(parallels)/2)].angle(radians = True)) % (pi / 2) # Why the fuck not use the Segment::angle ?
         sin_cos = sin(angle) if angle > pi / 4 else cos(angle)
 
         def reduce_parallels_to_score(acc_total_score, curr_segment):
-            def reduce_segment_scores(acc_segment_score, curr_point):
-                
-                if self.reference[curr_point].any() != 0 :
-                    acc_segment_score[0] += 1
-                if acc_segment_score[0] != 0 and self.relative[curr_point].any() != 0 :
-                    acc_segment_score[1] +=1
-                
-                return acc_segment_score
 
-            pixels_a, pixels_b = reduce(reduce_segment_scores, curr_segment, [0, 0])
+            if True: # This way, the method seems
+                reference = list(map(lambda o: self.reference.image[o.x][o.y], curr_segment))
+                relative = list(map(lambda o: self.relative.image[o.x][o.y], curr_segment))
+                return acc_total_score + np.sum(np.array(reference)) * np.sum(np.array(reference) & (relative))
+            else: # This is the old way to do it
+                def reduce_segment_scores(acc_segment_score, curr_point):
+                    
+                    if self.reference[curr_point].any() != 0 :
+                        acc_segment_score[0] += 1
+                    if acc_segment_score[0] != 0 and self.relative[curr_point].any() != 0 :
+                        acc_segment_score[1] +=1
+                    
+                    return acc_segment_score
 
-            return acc_total_score + pixels_a * pixels_b
+                pixels_a, pixels_b = reduce(reduce_segment_scores, curr_segment, [0, 0])
+                return acc_total_score + pixels_a * pixels_b
+
         return reduce(reduce_parallels_to_score, parallels, 0) / sin_cos
 
 
