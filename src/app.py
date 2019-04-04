@@ -14,12 +14,13 @@ class App(QMainWindow):
 
     TITLE = 'SpaRe'
     MARGIN_LEFT = 30
-    image_resize_factor = 1/8
     CARDINAL_MAXIMUM = 32
     VARIANCE_MAXIMUM = 50
-    variance = 30
+    
     images = dict()
+    variance = 30
     images_canvas = dict()
+    image_resize_factor = 1/8
 
     descriptors = dict()
     histograms_canvas = dict()
@@ -118,7 +119,7 @@ class App(QMainWindow):
         self.slider_resize_factor.resize(100, 20)
         
         
-        self.label_resize_factor = QLabel("resize factor 1/"+ str(self.image_resize_factor), self)
+        self.label_resize_factor = QLabel('Resize factor {}'.format(str(self.image_resize_factor)), self)
         self.label_resize_factor.move(650, 120)
         self.label_resize_factor.resize(150, 20)
 
@@ -161,16 +162,17 @@ class App(QMainWindow):
 
     @pyqtSlot()
     def slider_resize_changed(self):
-        self.image_resize_factor = 1.0 / self.slider_resize_factor.value()
-        tmp = "resize factor 1 / " + str(self.slider_resize_factor.value())
-        self.label_resize_factor.setText( tmp )
+        
+        self.image_resize_factor = 1 / self.slider_resize_factor.value()
+
+        self.label_resize_factor.setText('Resize factor 1/{}'.format(str(self.slider_resize_factor.value())))
         
         
         self.images['middle.png'] \
             .reset() \
             .resize(self.image_resize_factor)
 
-        self.slider_rotate_changed
+        self.slider_rotate_changed()
 
     @pyqtSlot()
     def slider_rotate_changed(self):

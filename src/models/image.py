@@ -62,6 +62,7 @@ class Image(object):
             /!\ Every change is reset so the use of Image::resize or Image::rotate
         '''
         self.image = self.base.copy()
+        self._parallels = dict()
 
         return self
 
