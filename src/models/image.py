@@ -33,6 +33,7 @@ class Image(object):
                 self.color = True              
             else :
                 self.base = cv.imread(os.path.join(self.IMAGES_DIR, fname), cv.IMREAD_GRAYSCALE) #cv.COLOR_RGB2GRAY)
+                self.base[self.base == 255] = 1 # Passing white value as ones for easy computing
                 self.color = False
             self.image = self.base.copy()
         else:

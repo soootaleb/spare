@@ -48,10 +48,12 @@ class ImageCanvas(FigureCanvas):
     
     def plot(self, image):
         self.axes.axis('off')
+        display = image.image
+        display[display == 1] = 255
         if image.color:
             self.axes.imshow(image.image)
         else :
-            self.axes.imshow(image.image, cmap = "gray")
+            self.axes.imshow(display, cmap = "gray")
         self.show()
 
 
