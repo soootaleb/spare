@@ -240,6 +240,7 @@ class App(QMainWindow):
         for  desc in self.descriptors.values():
             desc.set_variance(value) 
         self.slider_cardinal_changed()
+    
     @pyqtSlot()
     def change_hist_type(self):
         '''
