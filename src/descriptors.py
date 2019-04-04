@@ -25,7 +25,6 @@ class AngularPresenceDescriptor(Descriptor):
         "1.0":"totally " #85-> 100+
     }
 
-    @timeit
     # NEW METHOD
     # 2.5ms to compute_direction for a 1/8 resize factor
     # 12ms to compute_direction for a 1/3 resize factor
