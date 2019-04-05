@@ -15,7 +15,9 @@ This project aims to work on the fuzzy spacial relations.
   * use pythagore theorem to get the lenght of the rays
 
   * ~~merge two images into one for GUI~~
-  * merge the images into 2 differents color channels
+  * ~~merge the images into 2 differents color channels~~
+
+  * Get rid of resizing images each time, and reload image in case of resizing factor changing using openCV enumeration of resizing on load.
 
 test if it's working on rectangular images
 
