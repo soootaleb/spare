@@ -13,10 +13,11 @@ class Descriptor(object):
 
     description = None
 
-    cumulative_score = None
-
     scanning = None
     histogram = None
+
+    estimated_bias = None
+    annulative = None
 
     relations = []
 
@@ -24,7 +25,6 @@ class Descriptor(object):
 
         self.relative = relative
         self.reference = reference
-
         self.variance = variance
 
         self.histogram = Histogram(reference, relative) \
@@ -47,11 +47,12 @@ class Descriptor(object):
         return self
 
     def compute_histogram(self):
+
         for (direction, parallels) in self.scanning.items():
-            self.histogram[direction] = self.compute_direction(parallels)
-
+            test = self.compute_direction(parallels)
+            self.histogram[direction] = test
         self.histogram.normalize()
-
+        self.estimated_bias = self.histogram.substract_minimum(self.annulative)
         return self
         
     def compute_direction(self, parallels) -> float:
@@ -100,7 +101,6 @@ class Descriptor(object):
         gaussian_at_angles = self.gaussian_density_comparison(self.histogram.directions, int(direction))
         gaussian_at_angles = [round(val,9) for val in gaussian_at_angles]
         values =  list(self.histogram.values.values())
-        
         #we take the minimums of the calculated values and the associated values expected in the gaussian
         minimums = [ min(gaussian, histogram_value) for gaussian, histogram_value in zip(gaussian_at_angles, values) ]
 

@@ -57,6 +57,12 @@ class Histogram(object):
             self.values = { direction: 0 for direction in self.values.keys() }
         return self
 
+    def substract_minimum(self, annulative):
+        minimum = min(self.values.values())
+        if annulative:
+            self.values = { direction: value - minimum for direction, value in self.values.items() }
+        return minimum
+
     @property
     def directions(self):
         return linspace(0, 360, self.cardinal, dtype=int)

@@ -117,7 +117,7 @@ class Image(object):
                     x_del -= x_incr
                 if seen and self.image[point] == 0 and dir_x != 0:
                     dir_x -= x_incr
-                    self.image[point] = 255
+                    self.image[point] = 1
 
 
     def merge(self, image):
