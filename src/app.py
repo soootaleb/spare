@@ -18,7 +18,7 @@ class App(QMainWindow):
     VARIANCE_MAXIMUM = 50
     
     images = dict()
-    variance = 30
+    variance = 20
     images_canvas = dict()
     image_resize_factor = 1/8
 
@@ -31,14 +31,14 @@ class App(QMainWindow):
     def __init__(self):
         super().__init__()        
 
-        self.load_image('middle.png')
-        self.load_image('other.png')
+        self.load_image('reference.png')
+        self.load_image('relative.png')
 
-        self.images['merged_images'] = self.images['middle.png'].merge(self.images['other.png'])
+        self.images['merged_images'] = self.images['reference.png'].merge(self.images['relative.png'])
         self.images_canvas['merged_images'] = ImageCanvas(self, width = 1, height = 1)
         self.images_canvas['merged_images'].move(self.MARGIN_LEFT + 150 * list(self.images_canvas.keys()).index('merged_images'), 10)
 
-        self.load_descriptors('middle.png', 'other.png')
+        self.load_descriptors('reference.png', 'relative.png')
         
         self.init_ui()
         
@@ -89,7 +89,7 @@ class App(QMainWindow):
         self.slider_variance.move(self.MARGIN_LEFT, 220)
         self.slider_variance.resize(300, 20)
     
-        self.label_variance = QLabel("Variance :{}".format(30), self)
+        self.label_variance = QLabel("Variance :{}".format(self.variance), self)
         self.label_variance.move(self.MARGIN_LEFT + 300, 220)
 
         self.slider_variance.valueChanged.connect(self.slider_variance_changed)        
@@ -119,7 +119,7 @@ class App(QMainWindow):
         self.slider_resize_factor.resize(100, 20)
         
         
-        self.label_resize_factor = QLabel('Resize factor {}'.format(str(self.image_resize_factor)), self)
+        self.label_resize_factor = QLabel('Resize factor 1/8', self)
         self.label_resize_factor.move(650, 120)
         self.label_resize_factor.resize(150, 20)
 
@@ -141,19 +141,18 @@ class App(QMainWindow):
 
         ##TEXT INTERPRETATION : A is reference, B is relative
         self.label_interpretation = QLabel(self)
-        self.label_interpretation.resize(600, 50)
+        self.label_interpretation.resize(self.size["WIDTH"], 50)
         self.label_interpretation.move(self.MARGIN_LEFT, 240)
-
 
         self.show()
 
     def load_descriptors(self, reference, relative):
         desc = reference + relative
-        self.descriptors[desc+"1"] = AngularPresenceDescriptor(self.images[reference], self.images[relative], variance= self.variance)
-        self.descriptors[desc+"2"] = OverlappingDescriptor(self.images[reference], self.images[relative], variance= self.variance)
+        self.descriptors[str(AngularPresenceDescriptor.__name__+desc) ] = AngularPresenceDescriptor(self.images[reference], self.images[relative], variance= self.variance)
+        self.descriptors[str(OverlappingDescriptor.__name__+desc)] = OverlappingDescriptor(self.images[reference], self.images[relative], variance= self.variance)
 
         self.histograms_canvas = HistogramCanvas(self, height = 3, width = 6)
-        self.histograms_canvas.move(self.MARGIN_LEFT, 280) #+ 220 )* list(self.histograms_canvas.keys()).index("desc"))
+        self.histograms_canvas.move(self.MARGIN_LEFT, 290) #+ 220 )* list(self.histograms_canvas.keys()).index("desc"))
 
     def load_image(self, fname):
         self.images[fname] = Image(fname).resize(self.image_resize_factor)
@@ -168,7 +167,7 @@ class App(QMainWindow):
         self.label_resize_factor.setText('Resize factor 1/{}'.format(str(self.slider_resize_factor.value())))
         
         
-        self.images['middle.png'] \
+        self.images['reference.png'] \
             .reset() \
             .resize(self.image_resize_factor)
 
@@ -176,7 +175,7 @@ class App(QMainWindow):
 
     @pyqtSlot()
     def slider_rotate_changed(self):
-        self.images['other.png'] \
+        self.images['relative.png'] \
             .reset() \
             .resize(self.image_resize_factor)
 
@@ -186,7 +185,7 @@ class App(QMainWindow):
 
         rotation = self.slider_rotate.value()
         self.label_rotate.setText('{}° rotation'.format(rotation))
-        self.images['merged_images'] = self.images['middle.png'].merge(self.images['other.png'].rotate(rotation))
+        self.images['merged_images'] = self.images['reference.png'].merge(self.images['relative.png'].rotate(rotation))
         
         self.images_canvas['merged_images'].plot(self.images['merged_images'])
         self.images_canvas['merged_images'].draw()
@@ -197,19 +196,22 @@ class App(QMainWindow):
         self.histograms_canvas.clear()
         cardinal = self.slider_cardinal.value()
         self.label_cardinal.setText('{} angle'.format(cardinal))
-
+        textual_interpretation = "A is "
         for (dname, descriptor) in self.descriptors.items():
             descriptor.set_cardinal(cardinal) \
                 .compute_histogram() \
                 .describe()
-            texual_interpretation = descriptor.interpret()
-
-            #update textual interpretation
-            self.label_interpretation.setText(texual_interpretation)
-
-            #update the histograms values
             self.histograms_canvas.plot(descriptor.histogram)
-        
+            temporary = descriptor.interpret()
+            if temporary != "":
+                temporary += "and "
+            textual_interpretation += temporary
+            
+            #update the histograms values
+        #update textual interpretation
+        textual_interpretation +="B"
+        self.label_interpretation.setText(textual_interpretation)
+        self.change_font()
 
     @pyqtSlot()
     def slider_angle_changed(self):
@@ -237,7 +239,7 @@ class App(QMainWindow):
         '''
         value = self.slider_variance.value()
         self.label_variance.setText("Variance :{}".format(value))
-        for  desc in self.descriptors.values():
+        for desc in self.descriptors.values():
             desc.set_variance(value) 
         self.slider_cardinal_changed()
     
@@ -251,4 +253,18 @@ class App(QMainWindow):
         for (dname, descriptor) in self.descriptors.items():
             self.histograms_canvas.lin_or_polar(is_checked)
             self.histograms_canvas.plot(descriptor.histogram)
-        
+    @pyqtSlot()    
+    def change_font(self):
+        accuracy = self.calculate_accuracy()
+        if accuracy < 0.6:
+            color ="red"
+        elif accuracy < 0.8:
+            color = "orange"
+        else : 
+            color = "green"
+        self.label_interpretation.setStyleSheet("font-size : 20px; color: {}".format(color))
+    def calculate_accuracy(self):
+        accuracy = 0.0
+        for (dname, descriptor) in self.descriptors.items():
+            accuracy += descriptor.safety()
+        return accuracy
