@@ -17,6 +17,9 @@ class App(QMainWindow):
     CARDINAL_MAXIMUM = 32
     VARIANCE_MAXIMUM = 50
     
+    reference = None
+    relative = None
+    
     images = dict()
     variance = 20
     images_canvas = dict()
@@ -31,14 +34,14 @@ class App(QMainWindow):
     def __init__(self):
         super().__init__()        
 
-        self.load_image('reference.png')
-        self.load_image('relative.png')
+        self.load_image('reference.png', True) 
+        self.load_image('relative.png', False)
 
-        self.images['merged_images'] = self.images['reference.png'].merge(self.images['relative.png'])
+        self.images['merged_images'] = self.images[self.reference].merge(self.images[self.relative])
         self.images_canvas['merged_images'] = ImageCanvas(self, width = 1, height = 1)
         self.images_canvas['merged_images'].move(self.MARGIN_LEFT + 150 * list(self.images_canvas.keys()).index('merged_images'), 10)
 
-        self.load_descriptors('reference.png', 'relative.png')
+        self.load_descriptors()
         
         self.init_ui()
         
@@ -146,18 +149,25 @@ class App(QMainWindow):
 
         self.show()
 
-    def load_descriptors(self, reference, relative):
-        desc = reference + relative
-        self.descriptors[str(AngularPresenceDescriptor.__name__+desc) ] = AngularPresenceDescriptor(self.images[reference], self.images[relative], variance= self.variance)
-        self.descriptors[str(OverlappingDescriptor.__name__+desc)] = OverlappingDescriptor(self.images[reference], self.images[relative], variance= self.variance)
+    def load_descriptors(self):
+        desc = self.reference + self.relative
+        self.descriptors[str(OverlappingDescriptor.__name__+desc)] = OverlappingDescriptor(self.images[self.reference], self.images[self.relative], variance= self.variance)
+        self.descriptors[str(AngularPresenceDescriptor.__name__+desc) ] = AngularPresenceDescriptor(self.images[self.reference], self.images[self.relative], variance= self.variance)
 
         self.histograms_canvas = HistogramCanvas(self, height = 3, width = 6)
         self.histograms_canvas.move(self.MARGIN_LEFT, 290) #+ 220 )* list(self.histograms_canvas.keys()).index("desc"))
 
-    def load_image(self, fname):
-        self.images[fname] = Image(fname).resize(self.image_resize_factor)
-        self.images_canvas[fname] = ImageCanvas(self, width = 1, height = 1)
-        self.images_canvas[fname].move(self.MARGIN_LEFT + 150 * list(self.images_canvas.keys()).index(fname), 10)
+    def load_image(self, fname, reference = True, length = 3):
+        if reference :
+            self.reference = fname[0:length]
+            self.images[self.reference] = Image(fname).resize(self.image_resize_factor)
+            self.images_canvas[self.reference] = ImageCanvas(self, width = 1, height = 1)
+            self.images_canvas[self.reference].move(self.MARGIN_LEFT + 150 * list(self.images_canvas.keys()).index(self.reference), 10)
+        else:
+            self.relative = fname[0:length]
+            self.images[self.relative] = Image(fname).resize(self.image_resize_factor)
+            self.images_canvas[self.relative] = ImageCanvas(self, width = 1, height = 1)
+            self.images_canvas[self.relative].move(self.MARGIN_LEFT + 150 * list(self.images_canvas.keys()).index(self.relative), 10)
 
     @pyqtSlot()
     def slider_resize_changed(self):
@@ -167,25 +177,30 @@ class App(QMainWindow):
         self.label_resize_factor.setText('Resize factor 1/{}'.format(str(self.slider_resize_factor.value())))
         
         
-        self.images['reference.png'] \
+        self.images[self.reference] \
             .reset() \
             .resize(self.image_resize_factor)
+        self.images_canvas[self.reference].plot(self.images[self.reference])
+        self.images_canvas[self.reference].draw()
 
         self.slider_rotate_changed()
 
     @pyqtSlot()
     def slider_rotate_changed(self):
-        self.images['relative.png'] \
+        rotation = self.slider_rotate.value()
+        self.images[self.relative] \
             .reset() \
-            .resize(self.image_resize_factor)
+            .resize(self.image_resize_factor) \
+            .rotate(rotation)
+        self.images_canvas[self.relative].plot(self.images[self.relative])
+        self.images_canvas[self.relative].draw()
 
         self.images['merged_images'] \
             .reset() \
             .resize(self.image_resize_factor)
 
-        rotation = self.slider_rotate.value()
         self.label_rotate.setText('{}° rotation'.format(rotation))
-        self.images['merged_images'] = self.images['reference.png'].merge(self.images['relative.png'].rotate(rotation))
+        self.images['merged_images'] = self.images[self.reference].merge(self.images[self.relative])
         
         self.images_canvas['merged_images'].plot(self.images['merged_images'])
         self.images_canvas['merged_images'].draw()
@@ -196,7 +211,7 @@ class App(QMainWindow):
         self.histograms_canvas.clear()
         cardinal = self.slider_cardinal.value()
         self.label_cardinal.setText('{} angle'.format(cardinal))
-        textual_interpretation = "A is "
+        textual_interpretation = self.reference+" is "
         add_and = False
         for (dname, descriptor) in self.descriptors.items():
             descriptor.set_cardinal(cardinal) \
@@ -214,7 +229,7 @@ class App(QMainWindow):
 
             #update the histograms values
         #update textual interpretation
-        textual_interpretation +="B"
+        textual_interpretation +=self.relative
         self.label_interpretation.setText(textual_interpretation)
         self.change_font()
 

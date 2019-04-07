@@ -13,8 +13,8 @@ class AngularPresenceDescriptor(Descriptor):
         #and not "A is on the left of and above B"
         "90": "above ",
         "270": "under ",
-        "0": "on the left ", 
-        "180": "on the right "
+        "0": "on the left of ", 
+        "180": "on the right of "
     } 
 
     combination = {
