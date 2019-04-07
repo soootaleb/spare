@@ -197,16 +197,21 @@ class App(QMainWindow):
         cardinal = self.slider_cardinal.value()
         self.label_cardinal.setText('{} angle'.format(cardinal))
         textual_interpretation = "A is "
+        add_and = False
         for (dname, descriptor) in self.descriptors.items():
             descriptor.set_cardinal(cardinal) \
                 .compute_histogram() \
                 .describe()
             self.histograms_canvas.plot(descriptor.histogram)
             temporary = descriptor.interpret()
+            if add_and and temporary != "":
+                temporary ="and "+temporary
+                add_and = False
             if temporary != "":
-                temporary += "and "
+                add_and = True
+
             textual_interpretation += temporary
-            
+
             #update the histograms values
         #update textual interpretation
         textual_interpretation +="B"
