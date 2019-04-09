@@ -246,3 +246,6 @@ class Image(object):
                 max(0, segment.color[1]),
                 max(0, segment.color[2])
             ]
+
+    def __str__(self):
+        return self.fname

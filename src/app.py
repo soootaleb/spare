@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 from models.image import Image
 from models.histogram import Histogram
 from descriptors import *
+from serializers import *
 import relations
 from canvas import *
 
@@ -65,12 +66,16 @@ class App(QMainWindow):
         self.setGeometry(self.position['LEFT'], self.position['TOP'], self.size['WIDTH'], self.size['HEIGHT'])
 
         #DEBUG MODE
-        self.radio_segment = QRadioButton("segment",self)
+        self.radio_segment = QRadioButton('Segment',self)
         self.radio_segment.setChecked(True)
         self.radio_segment.move(self.MARGIN_LEFT + 50, 140)
 
-        self.radio_scan_lin = QRadioButton("parralleles", self)
+        self.radio_scan_lin = QRadioButton('Parralleles', self)
         self.radio_scan_lin.move(250, 140)
+
+        parallels_group = QButtonGroup(self)
+        parallels_group.addButton(self.radio_segment)
+        parallels_group.addButton(self.radio_scan_lin)
 
         ##HITOGRAM TYPE
         self.check_hist_type = QCheckBox("Polar histogram", self)
@@ -159,7 +164,33 @@ class App(QMainWindow):
         self.label_interpretation.resize(self.size["WIDTH"], 50)
         self.label_interpretation.move(self.MARGIN_LEFT, 240)
 
+
+        # Save button
+        self.save_button = QPushButton('Save histogram', self)
+        self.save_button.clicked.connect(self.save_button_clicked)
+        self.save_button.resize(130, 40)
+        self.save_button.move(600, 180)
+
+        # Serializer selector
+        self.serializer_json = QRadioButton('json', self)
+        self.serializer_json.setChecked(True)
+        self.serializer_json.move(600, 230)
+        self.serializer_csv = QRadioButton('csv', self)
+        self.serializer_csv.move(700, 230)
+
+        formats_group = QButtonGroup(self)
+        formats_group.addButton(self.serializer_json)
+        formats_group.addButton(self.serializer_csv)
+
         self.show()
+
+    @pyqtSlot()
+    def save_button_clicked(self):
+        for desc in self.descriptors.values():
+            if self.serializer_json.isChecked():
+                desc.histogram.save(json_serializer)
+            else:
+                desc.histogram.save(csv_serializer)
 
     @pyqtSlot()
     def slider_resize_changed(self):

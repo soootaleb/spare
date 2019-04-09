@@ -28,7 +28,8 @@ class Descriptor(object):
         self.variance = variance
 
         self.histogram = Histogram(reference, relative) \
-            .set_cardinal(cardinal)
+            .set_cardinal(cardinal) \
+            .set_descriptor(self)
 
         self.scanning = {
             str(direction): self.reference.parallels(direction) \

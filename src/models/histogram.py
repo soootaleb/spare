@@ -19,6 +19,8 @@ class Histogram(object):
         
     '''
 
+    descriptor = None
+
     cardinal = 16
 
     image_a = None
@@ -49,6 +51,10 @@ class Histogram(object):
         self.cardinal = cardinal
         return self
 
+    def set_descriptor(self, descriptor):
+        self.descriptor = descriptor
+        return self
+
     def normalize(self):
         score_max = max(self.values.values())
         if score_max != 0:
@@ -66,3 +72,9 @@ class Histogram(object):
     @property
     def directions(self):
         return linspace(0, 360, self.cardinal, dtype=int)
+
+    def __str__(self):
+        return '{}Histogram'.format(self.descriptor.__class__.__name__)
+
+    def save(self, serializer):
+        serializer(self)
