@@ -13,7 +13,7 @@ import os, cv2 as cv, numpy as np
 '''
 class Image(object):
 
-    IMAGES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'misc')
+    IMAGES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'images')
 
     fname = None
 
@@ -32,7 +32,7 @@ class Image(object):
                 self.base = cv.imread(os.path.join(self.IMAGES_DIR, fname), cv.IMREAD_COLOR)  
                 self.color = True              
             else :
-                self.base = cv.imread(os.path.join(self.IMAGES_DIR, fname), cv.IMREAD_GRAYSCALE) #cv.COLOR_RGB2GRAY)
+                self.base = cv.imread(os.path.join(self.IMAGES_DIR, fname), cv.IMREAD_GRAYSCALE)
                 self.base[self.base > 0] = 1 # Passing white value as ones for easy computing
                 self.color = False
             self.image = self.base.copy()
@@ -127,8 +127,8 @@ class Image(object):
             Returns a new instance of Image, and the original images are not affected
         '''
 
-        result = cv.merge( [self.image, image.image, np.zeros( (self.width, self.height, 1), dtype = "uint8") ] )
-        return Image( result, color = True)
+        result = cv.merge([self.image, image.image, np.zeros((self.width, self.height, 1), dtype = 'uint8')])
+        return Image(result, color = True)
 
     def ray(self, angle):
         """
@@ -246,3 +246,6 @@ class Image(object):
                 max(0, segment.color[1]),
                 max(0, segment.color[2])
             ]
+
+    def __str__(self):
+        return self.fname
