@@ -109,9 +109,34 @@ Finaly an `Image` overloads classical python methods like
   - Index access like lists, you can access points with `Image[Point]` or `Image[x, y]` or `Image[(x, y)]`
   - String representation
 
+### Histogram
+
+The `Histogram` is a data structure representing a classical histogram in the case of our application. Thus, we added several elements like the two images associated with the histogram, the cardinal which represents the number of angles, and the associated descriptor.
+
+  - `Histogram::set_cardinal` defines the number of angles in the histogram
+  - `Histogram::set_descriptor` set the associated descriptor
+  - `Histogram::normalize` will set all the values between 0 and 1
+  - `Histogram::substract_minimum` will substract the minimum value of the histogram to all the values
+  - `Histogram::save` will save the histogram using the serializer given in parameters
+
+Here are th available properties
+
+  - `Histogram::directions` will return a linear list of directions depending on the hisotgram cardinal
+
+Some python methods are overloaded to allow
+
+  - `Histogram[direction]` returns the value of the given direction
+  - `Histogram[direction] = 26` sets the value of the given direction
+
 ### Descriptor
 
-### Histogram
+The `Descriptor` model is to be extended. The inheriting descriptors must implement three methods in order to be used. A descriptor is linked as 1-1 with a `Histogram`. The histogram is the data structure that allows the descriptor to evaluate the spacial relation.
+
+Here are the base class methods.
+
+  - `Descriptor::set_cardinal` will define the number of angle computed
+  - `Descriptor::set_variance` will define the variance of the gaussian mask applied on the associated histogram.
+
 
 ## Computing
 
