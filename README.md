@@ -137,6 +137,7 @@ Here are the base class methods.
   - `Descriptor::set_cardinal` will define the number of angle computed
   - `Descriptor::set_variance` will define the variance of the gaussian mask applied on the associated histogram.
 
+//TODO: Complete
 
 ## Computing
 
