@@ -4,20 +4,40 @@ from models.point import Point
 import math, random, numpy as np
 
 class Segment(list):
+    '''
+    The Segment class extends the python list in order
+    to add applicatio specific functions.
+
+    Note that segments are lists of points with restrictions
+    - Added points must be following the last one
+    - The segment has a sens (a beginning and an end)
+
+    /!\ The X and Y axis are inverted (X is vertical and Y horizontal)
+    '''
 
     color = None
 
     def __init__(self, points):
+        '''
+        The given points are passed to the list constructor.
+        TODO: Verify that the points defined a segment (continuous and straight)
+        '''
         if len(points) == 0: raise ValueError('[WARNING] Instanciated an empty segment')
         self.color = [random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)]
         super().__init__(points)
 
     @property
     def start(self) -> Point:
+        '''
+        The first point of the segment
+        '''
         return self[0]
 
     @property
     def end(self) -> Point:
+        '''
+        The last point of the segment
+        '''
         return self[-1]
         
     def __getitem__(self, key) -> Point:
@@ -51,6 +71,11 @@ class Segment(list):
         return self.start.x == self.end.x
 
     def angle(self, radians = False):
+        '''
+        Returns the direction of the segment.
+        By default, the angle is expressed as degrees
+        but specifying radians=True will return the result as radians.
+        '''
         if self.vertical:
             angle = np.pi / 2
         elif self.horizontal:
