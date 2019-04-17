@@ -106,6 +106,7 @@ class AngularPresenceDescriptor(Descriptor):
             return self.used_values / self.value_number
         else :
             return 0
+
 class OverlappingDescriptor(Descriptor):
     annulative = False
     relations = {
@@ -134,7 +135,7 @@ class OverlappingDescriptor(Descriptor):
         def reduce_parallels_to_score(acc_total_score, curr_segment):
             def reduce_segment_scores(acc_segment_score, curr_point):
                 
-                if self.reference[curr_point].any() != 0 and self.relative[curr_point].any():
+                if self.reference[curr_point] != 0 and self.relative[curr_point]:
                     acc_segment_score += 1
                 return acc_segment_score
 
