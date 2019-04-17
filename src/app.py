@@ -57,6 +57,7 @@ class App(QMainWindow):
     def load_descriptors(self):
         self.descriptors[OverlappingDescriptor.__name__] = OverlappingDescriptor(self.images[self.IMG_REF_NAME], self.images[self.IMG_REL_NAME], variance= self.variance)
         self.descriptors[AngularPresenceDescriptor.__name__] = AngularPresenceDescriptor(self.images[self.IMG_REF_NAME], self.images[self.IMG_REL_NAME], variance= self.variance)
+        self.descriptors[AngularDistanceDescriptor.__name__] = AngularDistanceDescriptor(self.images[self.IMG_REF_NAME], self.images[self.IMG_REL_NAME], variance= self.variance)
 
         self.histograms_canvas = HistogramCanvas(self, height = 3, width = 6)
         self.histograms_canvas.move(self.MARGIN_LEFT, 290)
@@ -235,6 +236,8 @@ class App(QMainWindow):
         self.label_cardinal.setText('{} angle'.format(cardinal))
         textual_interpretation = self.IMG_REF_NAME[0:self.IMG_REF_NAME.index('.')] + ' is '
         add_and = False
+        descriptions = []
+        accuracies = []
         for (dname, descriptor) in self.descriptors.items():
             descriptor.set_cardinal(cardinal) \
                 .compute_histogram() \
@@ -246,8 +249,8 @@ class App(QMainWindow):
                 add_and = False
             if temporary != "":
                 add_and = True
-
-            textual_interpretation += temporary
+            accuracies.append(descriptor.safety())
+            descriptions.append(temporary)
 
             #update the histograms values
         #update textual interpretation
