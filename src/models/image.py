@@ -7,11 +7,12 @@ from math import sin, cos, tan, pi, sqrt
 
 import os, cv2 as cv, numpy as np
 
-'''
+
+class Image(object):
+    '''
     Represents an image in our application. It's created with an OpenCV::imread image
     but it adds project oriented features
-'''
-class Image(object):
+    '''
 
     IMAGES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'images')
 

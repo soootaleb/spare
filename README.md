@@ -63,6 +63,52 @@ A `Segment` inherits from the python `list`.
 
 ### Image
 
+The `Image` class is used to add features on the classical `cv.Image`. This class implements _method chaining_ which allows one to chain methods in order to apply multiple modifications like
+
+```python
+img = Image('my_image.png') \
+    .resize(1/6) \
+    .rotate(90)
+```
+
+#### Loading
+
+You can load an image (in memory) by passing a file name in the constructor. The file must be in the `Image::IMAGES_DIR` directory, which defaults to the `images` folder at the root of this project.
+
+Additionaly, you can choose to load the image in binary or in color with the associated parameter.
+
+> Images are classical `cv.Mat` objects. When loading a binary image, the constructor will transform all positive values (like 255) to 1. This allows potential bitwise operations and potential optimisations.
+
+You can also load an image which is already in memory (like a `cv.Mat`). When the first parameter `fname` is recognized as is, the matrix is loaded instead of the file.
+
+#### Manipulating
+
+First, it's important to note that manipulations are not done on the original image. In order to allow a `Image::reset` function or simply to allow lazy modification, the constructor creates a copy of the original image with `self.image.copy()`. This allows to not load the image each time we want it fresh, what is often necessary with the graphical rendering.
+
+#### Operations
+
+Here are the operations available on the `Image` class.
+
+  - `Image::resize` using `cv.resize`, the factor must be < 1 if you want to make it smaller
+  - `Image::rotate` you must pass angle by degrees
+  - `Image::merge` merges the given image with the current instance and **returns a new Image instance**
+  - `Image::ray` returns a `Segment` corresponding to the image points in a given direction. All points are existing in the image.
+  - `Image::parallels` returns the parallel `Segment`s in a given direction. All points are in the image.
+  - `Image::draw` will set the points of the `Segment` in color in the corresponding image. The color is defined randomly by the segment.
+  - `Image::reset` will reset the image as it was loaded from the original file
+
+You also can access some properties on the image
+
+  - `Image::max_dimension` returns an int giving the max dimension (with or hight)
+  - `Image::with` and `Image::height` return an int giving the value of the corresponding dimension
+  - `Image::center` returns a `Point` which represents the central point of the image.
+
+Finaly an `Image` overloads classical python methods like
+
+  - `in` operator, you can check if a given `Point` is in an image with `Point in Image`
+  - Index access like lists, you can access points with `Image[Point]` or `Image[x, y]` or `Image[(x, y)]`
+  - String representation
+
 ### Descriptor
 
 ### Histogram
