@@ -108,3 +108,6 @@ venv.bak/
 # Perso
 .vscode
 .pylintrc
+histograms/OverlappingDescriptorHistogram.json
+histograms/AngularDistanceDescriptorHistogram.json
+histograms/AngularPresenceDescriptorHistogram.json
