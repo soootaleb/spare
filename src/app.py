@@ -29,7 +29,7 @@ class App(QMainWindow):
     descriptors = dict()
     histograms_canvas = dict()
 
-    size = { 'WIDTH': 800, 'HEIGHT': 600 }
+    size = { 'WIDTH': 800, 'HEIGHT': 700 }
     position = { 'TOP': 100, 'LEFT': 100 }
 
     def __init__(self):
@@ -60,7 +60,7 @@ class App(QMainWindow):
         self.descriptors[AngularDistanceDescriptor.__name__] = AngularDistanceDescriptor(self.images[self.IMG_REF_NAME], self.images[self.IMG_REL_NAME], variance= self.variance)
 
         self.histograms_canvas = HistogramCanvas(self, height = 3, width = 6)
-        self.histograms_canvas.move(self.MARGIN_LEFT, 290)
+        self.histograms_canvas.move(self.MARGIN_LEFT, 400)
 
     def init_ui(self):
         self.setWindowTitle(self.TITLE)
@@ -162,8 +162,8 @@ class App(QMainWindow):
 
         ##TEXT INTERPRETATION : A is reference, B is relative
         self.label_interpretation = QLabel(self)
-        self.label_interpretation.resize(self.size["WIDTH"], 50)
-        self.label_interpretation.move(self.MARGIN_LEFT, 240)
+        self.label_interpretation.resize(self.size["WIDTH"], 150)
+        self.label_interpretation.move(self.MARGIN_LEFT, 230)
 
 
         # Save button
@@ -234,7 +234,7 @@ class App(QMainWindow):
         self.histograms_canvas.clear()
         cardinal = self.slider_cardinal.value()
         self.label_cardinal.setText('{} angle'.format(cardinal))
-        textual_interpretation = self.IMG_REF_NAME[0:self.IMG_REF_NAME.index('.')] + ' is '
+        textual_interpretation = self.IMG_REF_NAME[0:self.IMG_REF_NAME.index('.')] + ' is \n'
         add_and = False
         descriptions = []
         accuracies = []
@@ -244,14 +244,10 @@ class App(QMainWindow):
                 .describe()
             self.histograms_canvas.plot(descriptor.histogram)
             temporary = descriptor.interpret()
-            if add_and and temporary != "":
-                temporary ="and "+temporary
-                add_and = False
             if temporary != "":
-                add_and = True
+                temporary ="(" +dname+ ") "+temporary + "\n"
             accuracies.append(descriptor.safety())
-            descriptions.append(temporary)
-
+            textual_interpretation += temporary
             #update the histograms values
         #update textual interpretation
         textual_interpretation += self.IMG_REL_NAME[0:self.IMG_REL_NAME.index('.')]
