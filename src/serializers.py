@@ -1,6 +1,10 @@
 import csv, json, os
 
+
 HIST_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'histograms')
+if not os.path.exists(HIST_DIR):
+        os.makedirs(HIST_DIR)
+
 
 def json_serializer(histogram):
     fname = str(histogram) + '.json'
