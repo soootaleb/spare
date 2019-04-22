@@ -26,8 +26,6 @@ class Histogram(object):
     image_a = None
     image_b = None
 
-    relations = None
-
     values = dict()
 
     def __getitem__(self, direction: int):
@@ -77,4 +75,10 @@ class Histogram(object):
         return '{}Histogram'.format(self.descriptor.__class__.__name__)
 
     def save(self, serializer):
+        '''
+            Saves the histogram as a file using the serializer
+            passed by parameter
+
+            A serializer is a function taking a Histogram as a parameter
+        '''
         serializer(self)
