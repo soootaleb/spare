@@ -299,10 +299,10 @@ class App(QMainWindow):
     def change_font(self):
         
         # Computing accuracy
-        accuracy = 0.0
+        accuracies = []
         for (dname, descriptor) in self.descriptors.items():
-            accuracy += descriptor.safety()
-
+            accuracies.append(descriptor.safety())
+        accuracy = max ( accuracies )
         if accuracy < 0.6:
             color ="red"
         elif accuracy < 0.8:
