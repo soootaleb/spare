@@ -109,25 +109,7 @@ class AngularPresenceDescriptor(Descriptor):
 
 class OverlappingDescriptor(Descriptor):
     annulative = False
-    relations = {
-        #This order is for text generation, as "A is above and on the left of B"
-        #and not "A is on the left of and above B"
-        "90": "a",
-        "270": "b",
-        "0": "c", 
-        "180": "d"
-    } 
-
-    combination = {
-        # +-10%
-        # < 5 -> not at all
-        "0.20":"a bit ", #5 -> 25
-        "0.40":"slightly ", #25 -> 45
-        "0.60":"partially ", #45 -> 65
-        "0.80":"strongly ", #65 -> 85
-        "1.0":"totally " #85-> 100+
-    }
-
+   
     def compute_direction(self, parallels) -> float:
         angle = abs(parallels[int(len(parallels)/2)].angle(radians = True)) % (pi / 2)
         sin_cos = sin(angle) if angle > pi / 4 else cos(angle)
@@ -163,7 +145,8 @@ class OverlappingDescriptor(Descriptor):
             interpretation += "slightly overlapping " 
         elif self.estimated_bias > 0.10:
             interpretation += "a bit overlapping "
-        
+        else : 
+            interpretation += "not overlapping"
         #measure of total score
         #test all the directions
         return interpretation

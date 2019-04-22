@@ -5,7 +5,7 @@ from models.histogram import Histogram
 from math import cos, sqrt, exp
 import numpy as np
 class Descriptor(object):
-
+    
     relative = None
     reference = None
 
@@ -16,9 +16,12 @@ class Descriptor(object):
     scanning = None
     histogram = None
 
-    estimated_bias = None
+
+    # if annulative : substract minimum value in all the values of the histogram 
     annulative = None
 
+    #If annulative : the minimum value found in the histogram prior to substract it
+    estimated_bias = None
     relations = []
 
     def __init__(self, reference: Image, relative: Image, cardinal = 16, variance = 30):
@@ -53,6 +56,7 @@ class Descriptor(object):
             test = self.compute_direction(parallels)
             self.histogram[direction] = test
         self.histogram.normalize()
+        #If the histogram is annulative (IE having 0 everywhere is not impossible)
         self.estimated_bias = self.histogram.substract_minimum(self.annulative)
         return self
         
@@ -73,8 +77,8 @@ class Descriptor(object):
         variance = self.variance
         # divided by two and reversed to act like a modulo
         if angle_to_compare == 0:
-            density = [(exp(- ( (( (int(angle)- angle_to_compare) / variance)**2) /2) ) / (variance * sqrt(2 * np.pi)) * variance) /2 for angle in angles]
-            density = np.add(density, np.flip(density))
+            density = [(exp(- ( (( (int(angle)- angle_to_compare) / variance)**2) /2) ) / (variance * sqrt(2 * np.pi)) * variance) for angle in angles]
+            density = (np.add(density, np.flip(density))).tolist()
         else :
             density = [(exp(- ( (( (int(angle)- angle_to_compare) / variance)**2) /2) ) / (variance * sqrt(2 * np.pi)) * variance) for angle in angles]
         if normalisation : 
@@ -117,5 +121,4 @@ class Descriptor(object):
         '''
             textual interpretation of the description given by the describe function
         '''
-        #Actually should be a function used on ALL the descriptors using all the description.
         raise NotImplementedError('You must override the Descriptor::interpret function')

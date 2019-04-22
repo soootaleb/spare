@@ -297,7 +297,9 @@ class App(QMainWindow):
     
     @pyqtSlot()    
     def change_font(self):
-        
+        """
+            take the max of all accuracies to know the quantity of information displayed
+        """
         # Computing accuracy
         accuracies = []
         for (dname, descriptor) in self.descriptors.items():

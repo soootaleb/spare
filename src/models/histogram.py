@@ -62,6 +62,10 @@ class Histogram(object):
         return self
 
     def substract_minimum(self, annulative):
+        '''
+            substract minimum value in the histogram, 
+            used by AngularPresenceDescriptor in the case of overlapping, so that it does not deduce that the two object are similar in all the directions
+        '''
         minimum = min(self.values.values())
         if annulative:
             self.values = { direction: value - minimum for direction, value in self.values.items() }
