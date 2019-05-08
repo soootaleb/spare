@@ -22,7 +22,7 @@ class App(QMainWindow):
     IMG_REL_NAME = 'relative.png'
 
     images = dict()
-    variance = 20
+    variance = 30
     images_canvas = dict()
     image_resize_factor = 1/8
 
@@ -131,6 +131,11 @@ class App(QMainWindow):
         self.slider_angle.valueChanged.connect(self.slider_angle_changed)        
 
         ##RESIZE FACTOR : cardinal of the histogram (greatly impacts performances)
+        self.label_message = QLabel('too little for resize', self)
+        self.check_size()
+        self.label_message.move(450+self.MARGIN_LEFT, 80)
+        self.label_message.resize(150, 20)
+       
         self.slider_resize_factor = QSlider(Qt.Horizontal, self)
         self.slider_resize_factor.setValue(8)
         self.slider_resize_factor.setMinimum(1)
@@ -197,15 +202,16 @@ class App(QMainWindow):
     def slider_resize_changed(self):
         
         self.image_resize_factor = 1 / self.slider_resize_factor.value()
-
-        self.label_resize_factor.setText('Resize factor 1/{}'.format(str(self.slider_resize_factor.value())))
+        resize_factor = self.slider_resize_factor.value()
+        self.label_resize_factor.setText('Resize factor 1/{}'.format(str(resize_factor)))
         
         self.images[self.IMG_REF_NAME] \
             .reset() \
             .resize(self.image_resize_factor)
+
         self.images_canvas[self.IMG_REF_NAME].plot(self.images[self.IMG_REF_NAME])
         self.images_canvas[self.IMG_REF_NAME].draw()
-
+        self.check_size()
         self.slider_rotate_changed()
 
     @pyqtSlot()
@@ -312,3 +318,13 @@ class App(QMainWindow):
         else : 
             color = "green"
         self.label_interpretation.setStyleSheet("font-size : 20px; color: {}".format(color))
+
+    def check_size(self):
+        """
+        Resize factor is checked when the function resize is called.
+        if the resize factor would make the image to be less than 16 * 16 it does not resize the image.
+        """
+        if self.images[self.IMG_REF_NAME].size_warning:
+            self.label_message.show()
+        else :
+            self.label_message.hide()

@@ -108,6 +108,12 @@ class AngularPresenceDescriptor(Descriptor):
             return 0
 
 class OverlappingDescriptor(Descriptor):
+    relations = {
+        #This order is for text generation, as "A is above and on the left of B"
+        #and not "A is on the left of and above B"
+        
+        "0": "overlapping "
+    }
     annulative = False
    
     def compute_direction(self, parallels) -> float:

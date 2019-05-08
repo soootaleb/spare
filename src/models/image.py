@@ -22,13 +22,14 @@ class Image(object):
     image = None # Underlying OpenCV image that we can manipulate
 
     color = None
-
+    size_warning = None
     _parallels = dict()
 
     def __init__(self, fname, color = False):
 
         if isinstance(fname, str):
             self.fname = fname
+            self.size_warning = False
             if color :
                 self.base = cv.imread(os.path.join(self.IMAGES_DIR, fname), cv.IMREAD_COLOR)  
                 self.color = True              
@@ -65,7 +66,7 @@ class Image(object):
         '''
         self.image = self.base.copy()
         self._parallels = dict()
-
+        self.size_warning = False  
         return self
 
     def __contains__(self, point) -> bool:
@@ -81,7 +82,11 @@ class Image(object):
         '''
             Uses OpenCV::resize to resize the image by the given factor
         '''
-        self.image = cv.resize(self.image, (round(factor * self.width), round(factor * self.height)))
+        if (not self.fname == "IN_MEMORY_IMG"):
+            if self.width * factor >= 16:
+                self.image = cv.resize(self.image, (round(factor * self.width), round(factor * self.height)))
+            else :
+                self.size_warning = True
         return self
 
     def rotate(self, angle):
