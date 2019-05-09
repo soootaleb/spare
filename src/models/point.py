@@ -8,8 +8,8 @@ class Point(object):
     tuple = tuple()
 
     def __init__(self, x, y):
-        if x < 0: raise ValueError('Point::new - X must be positive instead of {}'.format(self.x))
-        if y < 0: raise ValueError('Point::new - Y must be positive instead of {}'.format(self.y))
+        if x < 0: raise ValueError('Point::new - X must be positive instead of {}'.format(x))
+        if y < 0: raise ValueError('Point::new - Y must be positive instead of {}'.format(y))
         
         self.x = x
         self.y = y
