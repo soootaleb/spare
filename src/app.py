@@ -6,7 +6,6 @@ from models.image import Image
 from models.histogram import Histogram
 from descriptors import *
 from serializers import *
-import relations
 from canvas import *
 
 import math, functions, os, sys, cv2 as cv, numpy as np, random
