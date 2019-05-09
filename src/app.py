@@ -166,6 +166,7 @@ class App(QMainWindow):
 
         ##TEXT INTERPRETATION : A is reference, B is relative
         self.label_interpretation = QLabel(self)
+        self.label_interpretation.setTextInteractionFlags(Qt.TextSelectableByMouse)
         self.label_interpretation.resize(self.size["WIDTH"], 150)
         self.label_interpretation.move(self.MARGIN_LEFT, 230)
 
