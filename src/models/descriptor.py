@@ -4,6 +4,7 @@ from models.image import Image
 from models.histogram import Histogram
 from math import cos, sqrt, exp
 import numpy as np
+
 class Descriptor(object):
     
     relative = None
@@ -50,11 +51,11 @@ class Descriptor(object):
         self.variance = variance
         return self
 
+    @timeit
     def compute_histogram(self):
-
         for (direction, parallels) in self.scanning.items():
-            test = self.compute_direction(parallels)
-            self.histogram[direction] = test
+            self.histogram[direction] = self.compute_direction(parallels)
+        
         self.histogram.normalize()
         #If the histogram is annulative (IE having 0 everywhere is not impossible)
         self.estimated_bias = self.histogram.substract_minimum(self.annulative)
