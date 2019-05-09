@@ -1,6 +1,5 @@
 from models.point import Point
 from models.segment import Segment
-
 from functions import *
 
 from math import sin, cos, tan, pi, sqrt
@@ -203,19 +202,21 @@ class Image(object):
             ray = self.ray(angle)
             max_length = self.max_dimension
 
+            under_pi_4 = ray.angle() == 0 or (0 < ray.angle() % 90 <= 45)
+            above_pi_4 = ray.angle() == 90 or (45 < ray.angle() % 90 < 90)
+
             def map_offset_to_parallels(offset):
                 def duplicate_points(point):
                     if offset == 0:
                         return point
-                    else:
-                        if ray.vertical and 0 <= point.y + offset < max_length:
-                            return Point(point.x, point.y + offset)
-                        elif ray.horizontal and 0 <= point.x + offset < max_length:
-                            return Point(point.x + offset, point.y)
-                        elif 0 < ray.angle() % 90 <= 45 and 0 <= point.x + offset < max_length:
-                            return Point(point.x + offset, point.y)
-                        elif 90 > ray.angle() % 90 > 45 and 0 <= point.y + offset < max_length:
-                            return Point(point.x, point.y + offset)
+
+                    pyin = 0 <= point.y + offset < max_length
+                    pxin = 0 <= point.x + offset < max_length
+
+                    if under_pi_4 and pxin:
+                        return Point(point.x + offset, point.y) 
+                    elif above_pi_4 and pyin:
+                        return Point(point.x, point.y + offset)
                 
                 segment = [o for o in map(duplicate_points, ray) if o is not None]
                 return Segment(segment) if len(segment) > 0 else None

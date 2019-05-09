@@ -51,7 +51,6 @@ class Descriptor(object):
         self.variance = variance
         return self
 
-    @timeit
     def compute_histogram(self):
         for (direction, parallels) in self.scanning.items():
             self.histogram[direction] = self.compute_direction(parallels)

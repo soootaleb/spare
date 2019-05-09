@@ -2,7 +2,6 @@ from models.descriptor import Descriptor
 from math import sin, cos, pi, log
 from functools import reduce
 import numpy as np
-from decorators import timeit
 
 class AngularPresenceDescriptor(Descriptor):
     annulative = True
