@@ -2,6 +2,16 @@
 
 This project aims to work on the fuzzy spacial relations
 
+# Quickstart
+
+Use python pipenv tool (install it with `pip install pipenv`) to install the dependencies.
+
+```
+$ pipenv shell
+$ pipenv install
+$ python src/main.py
+```
+
 # Features
 
 The project is composed of a graphical user interface that allows one to interact with the application. It allows you to change the parameters and easily observe the impact on the histograms, used by the descriptors to describe the scene.
