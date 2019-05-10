@@ -1,7 +1,6 @@
 from models.point import Point
 from models.segment import Segment
 from functions import *
-
 from math import sin, cos, tan, pi, sqrt
 
 import os, cv2 as cv, numpy as np
@@ -81,12 +80,13 @@ class Image(object):
         '''
             Uses OpenCV::resize to resize the image by the given factor
         '''
-        if (not self.fname == "IN_MEMORY_IMG"):
+        if not self.fname == "IN_MEMORY_IMG" and factor != 1.0:
             if self.width * factor >= 16:
-                self.image = cv.resize(self.image, (round(factor * self.width), round(factor * self.height)))
+                self.image = cv.resize(self.image, (round(factor * self.width), round(factor * self.height)),cv.INTER_LINEAR_EXACT)
             else :
                 self.size_warning = True
         return self
+
 
     def rotate(self, angle):
         '''

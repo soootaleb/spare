@@ -61,7 +61,6 @@ class HistogramCanvas(FigureCanvas):
     '''
     This class is used to plt the histogram of the two objects in the main module.
     the values are computed in one of the descriptors.
-    #TODO : add the possibility to plot multiple relations in one histogram (changing line type and / or color)
     '''
     def __init__(self, parent = None, is_polar = True, width = 8, height = 5, dpi = 100):
         self.fig = Figure(figsize=(width, height), dpi=dpi)
@@ -77,7 +76,6 @@ class HistogramCanvas(FigureCanvas):
         #TODO : Add the names of the objects (fname - extention ?)
                 
         FigureCanvas.updateGeometry(self)
-
     def plot(self, histogram, color = None):
 
         self.axes.set_title("Spatial relations between A and B", va='bottom')
@@ -103,6 +101,7 @@ class HistogramCanvas(FigureCanvas):
             self.axes.plot(theta, list(histogram.values.values()))
         else:
             self.axes.plot(list(histogram.values.keys()), list(histogram.values.values()))
+            self.axes.plot(list(histogram.values.keys()), list(histogram.gaussian), color="red", ls='--')
         self.draw()
 
     def clear(self):
@@ -118,5 +117,4 @@ class HistogramCanvas(FigureCanvas):
             self.axes = self.fig.add_subplot(111, projection='polar')
         else :
             self.axes = self.fig.add_subplot(111)
- 
         FigureCanvas.updateGeometry(self)

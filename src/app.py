@@ -70,6 +70,8 @@ class App(QMainWindow):
         self.radio_segment.setChecked(True)
         self.radio_segment.move(self.MARGIN_LEFT + 50, 140)
 
+
+
         self.radio_scan_lin = QRadioButton('Parralleles', self)
         self.radio_scan_lin.move(250, 140)
 
@@ -77,7 +79,12 @@ class App(QMainWindow):
         parallels_group.addButton(self.radio_segment)
         parallels_group.addButton(self.radio_scan_lin)
 
-        ##HITOGRAM TYPE
+        ##HITOGRAM
+        self.check_histogram = QCheckBox('Histogram', self)
+        self.check_histogram.move(self.MARGIN_LEFT + 420, 200)
+        self.check_histogram.setChecked(True)
+        self.check_histogram.resize(150, 20)
+
         self.check_hist_type = QCheckBox("Polar histogram", self)
         self.check_hist_type.move(self.MARGIN_LEFT + 420, 180)
         self.check_hist_type.setChecked(True)
@@ -300,7 +307,8 @@ class App(QMainWindow):
         for (dname, descriptor) in self.descriptors.items():
             self.histograms_canvas.lin_or_polar(is_checked)
             self.histograms_canvas.plot(descriptor.histogram)
-    
+
+
     @pyqtSlot()    
     def change_font(self):
         """

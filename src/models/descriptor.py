@@ -84,6 +84,7 @@ class Descriptor(object):
         if normalisation : 
             maximum = max(density)
             density = [value / maximum for value in density]
+        self.histogram.set_gaussian(density)
         return density
 
 
@@ -111,9 +112,6 @@ class Descriptor(object):
 
         #We select the maximum
         maximum = max(minimums)
-
-        #normalisation
-        maximum = maximum / max(gaussian_at_angles)
 
         return maximum # Percentage of match between the mask and the description in the given direction
 

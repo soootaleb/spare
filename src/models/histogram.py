@@ -26,6 +26,7 @@ class Histogram(object):
     image_a = None
     image_b = None
 
+    gaussian = None
     values = dict()
 
     def __getitem__(self, direction: int):
@@ -86,3 +87,6 @@ class Histogram(object):
             A serializer is a function taking a Histogram as a parameter
         '''
         serializer(self)
+    
+    def set_gaussian(self, gaussian):
+        self.gaussian = gaussian
