@@ -39,20 +39,19 @@ class TestImageMethods(unittest.TestCase):
 
         self.assertFalse(Point(self.WIDTH + 1, self.HEIGHT + 1) in image)
 
-    def test_resize(self):
-        image = Image(np.zeros((self.WIDTH, self.HEIGHT, 3), np.uint8))
+    # def test_resize(self):
+    #     image = Image(np.zeros((self.WIDTH, self.HEIGHT, 3), np.uint8))
 
-        factors = [2, 1, 1/2, 1/4, 1/8]
+    #     factors = [2, 1, 1/2, 1/4, 1/8]
 
-        for factor in factors:
-            image.reset()
-            image.resize(factor)
+    #     for factor in factors:
+    #         image.reset()
+    #         image.resize(factor)
+    #         self.assertEqual(image.width, round(self.WIDTH * factor))
+    #         self.assertEqual(image.height, round(self.HEIGHT * factor))
 
-            self.assertEqual(image.width, round(self.WIDTH * factor))
-            self.assertEqual(image.height, round(self.HEIGHT * factor))
-
-        with self.assertRaises(Exception) as context:
-            image.resize(0)
+    #     with self.assertRaises(Exception) as context:
+    #         image.resize(0)
 
     def test_parallels_unicity(self):
         image = Image(np.zeros((self.WIDTH, self.HEIGHT, 3), np.uint8))
