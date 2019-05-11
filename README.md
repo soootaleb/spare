@@ -2,6 +2,8 @@
 
 This project aims to work on the fuzzy spacial relations
 
+![GUI](https://i.ibb.co/1fsdnHL/Capture-d-e-cran-2019-05-12-a-00-59-55.png "SpaRe")
+
 # Quickstart
 
 Use python pipenv tool (install it with `pip install pipenv`) to install the dependencies.
