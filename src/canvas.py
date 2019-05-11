@@ -101,7 +101,7 @@ class HistogramCanvas(FigureCanvas):
             self.axes.plot(theta, list(histogram.values.values()))
         else:
             self.axes.plot(list(histogram.values.keys()), list(histogram.values.values()))
-            self.axes.plot(list(histogram.values.keys()), list(histogram.gaussian), color="red", ls='--')
+            # self.axes.plot(list(histogram.values.keys()), list(histogram.gaussian), color="red", ls='--')
         self.draw()
 
     def clear(self):
