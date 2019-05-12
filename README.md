@@ -144,12 +144,17 @@ Some python methods are overloaded to allow
 
 The `Descriptor` model is to be extended. The inheriting descriptors must implement three methods in order to be used. A descriptor is linked as 1-1 with a `Histogram`. The histogram is the data structure that allows the descriptor to evaluate the spacial relation.
 
+`Descriptor::__init__` a descriptor can be constructed with two images call `reference` and `relative`. Each is a binary image that has only the reference object or the relative one.
+
 Here are the base class methods.
 
   - `Descriptor::set_cardinal` will define the number of angle computed
   - `Descriptor::set_variance` will define the variance of the gaussian mask applied on the associated histogram.
 
-//TODO: Complete
+Here are the methods to override when creating a descriptor.
+
+  - `Descriptor::compute_direction(parallels: Segment[])` This method is responsible for computing a float value of description depending on a particular direction, which is represented by the scanning parallels. The method must accept those scanning parallels and return a float which describes "how much" the relative image is positioned in this direction. In other words, this method is responsible of formalizing the mathematical computation for a given direction. In again other words, this method computes a `Histogram` value for a given direction (angle).
+  - `Descriptor::interpret` This method should generate the textual description of the descriptor. Using the `relations` property, and leverage some quantitative qualifer, the output should be a correctly syntaxed phrase describing the scene.
 
 ## Computing
 
