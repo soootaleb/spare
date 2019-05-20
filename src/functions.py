@@ -1,16 +1,4 @@
-"""
-This module is a first & naive approach for the program structure.
-
-Considering 
-
-1 - The programm is small for now
-2 - We don't have any idea of the program architecture
-
-We prefer to use module level functions, easier to use & call.
-We'll eventually refactor into potential classes later.
-"""
-import numpy as np
-import sys, math
+import sys, math, inspect, click, numpy as np
 
 from models.point import Point
 from models.segment import Segment
@@ -64,3 +52,9 @@ def bresenham(x, y, x_dst, y_dst):
                 error_y += delta_y
 
     return Segment(segment)
+
+def get_commands():
+    '''
+    Returns the available commands from the commands module
+    '''
+    return inspect.getmembers(sys.modules['commands'], lambda o: type(o) == click.core.Command)

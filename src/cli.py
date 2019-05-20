@@ -1,13 +1,17 @@
-import click
+from commands import *
+from functions import get_commands
 
-@click.command()
-@click.option("--count", default=1, help="Number of greetings.")
-@click.option("--name", prompt="Your name",
-              help="The person to greet.")
-def hello(count, name):
-    """Simple program that greets NAME for a total of COUNT times."""
-    for _ in range(count):
-        click.echo("Hello, %s!" % name)
+import sys
 
 if __name__ == '__main__':
-    hello()
+    if len(sys.argv) == 1:
+        help()
+    else:
+
+        cmds = get_commands()
+        user_cmd = sys.argv[1]
+
+        for cmd in cmds:
+            if cmd[0] == user_cmd:
+                cmd[1](sys.argv[2:])
+        help()
