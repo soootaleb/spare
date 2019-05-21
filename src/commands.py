@@ -15,6 +15,49 @@ def cli():
     Allows you to call the application features using a shell interface
     '''
 
+@cli.command('ray', short_help='Computes a ray in a given direction in an image')
+@click.option('--image', default='reference.png', help='Image on which to compute a ray')
+@click.option('--direction', default=0, help='Direction in degrees to trace the ray')
+@click.option('--resize', default=1.0, help='Resizes the image before tracing the ray')
+@click.option('--rotate', default=0, help='Rotate the image in degrees before tracing the ray')
+@click.option('--output', default=None, help='Writes result in a file')
+def ray(image, direction, resize, rotate, output):
+    try:
+        logger.debug('Loading image {}..'.format(image))
+        image = Image(image)
+        logger.info('OK')
+
+        logger.debug('Resizing image by factor {}'.format(resize))
+        image.resize(resize)
+        logger.info('OK')
+
+        logger.debug('Resizing image by angle {} degrees'.format(rotate))
+        image.rotate(rotate)
+        logger.info('OK')
+
+        logger.debug('Tracing the ray...')
+        ray = image.ray(direction)
+        logger.info('OK')
+
+        logger.success(json.dumps(ray, default=lambda o: o.tuple, indent=4))
+        
+        if output is not None:
+                logger.debug('Opening file {}'.format(output))
+                with open(output, 'w+') as f:
+                    logger.debug('Writting results...')
+                    f.write(json.dumps({
+                        'ray': ray,
+                        'parameters': {
+                            'image': str(image),
+                            'resize': resize,
+                            'rotate': rotate,
+                            'direction': direction
+                        }
+                    }, default=lambda o: o.tuple, indent=4))
+                    logger.info('OK')
+    except Exception as e:
+        logger.critical('ERROR: {}'.format(str(e)))
+
 @cli.command('describe', short_help='Describe the scene based on two images')
 @click.option('--reference', default='reference.png', help='Image containing only the reference object')
 @click.option('--relative', default='relative.png', help='Image containing only the relative object')
@@ -72,7 +115,9 @@ def describe(reference, relative, cardinal, variance, resize, descriptor, rotate
         logger.success('{} is {} {}'.format(refname, txt, relname))
 
         if output is not None:
+            logger.debug('Opening file {}'.format(output))
             with open(output, 'w+') as f:
+                logger.debug('Writting results...')
                 f.write(json.dumps({
                     'histogram': descriptor.histogram.values,
                     'description': desc,
@@ -87,5 +132,6 @@ def describe(reference, relative, cardinal, variance, resize, descriptor, rotate
                     },
                     'interpretation': '{} is {} {}'.format(refname, txt, relname)
                 }, indent=4))
+                logger.info('OK')
     except Exception as e:
         logger.critical('ERROR: {}'.format(str(e)))
