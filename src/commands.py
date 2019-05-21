@@ -22,6 +22,9 @@ def cli():
 @click.option('--rotate', default=0, help='Rotate the image in degrees before tracing the parallels')
 @click.option('--output', default=None, help='Writes result in a file')
 def parallels(image, direction, resize, rotate, output):
+    '''
+    Computes all the parallels segments in an image
+    '''
     try:
         logger.debug('Loading image {}..'.format(image))
         image = Image(image)
@@ -65,6 +68,9 @@ def parallels(image, direction, resize, rotate, output):
 @click.option('--rotate', default=0, help='Rotate the image in degrees before tracing the ray')
 @click.option('--output', default=None, help='Writes result in a file')
 def ray(image, direction, resize, rotate, output):
+    '''
+    Compute a ray in an image using the Bresenham algorithm
+    '''
     try:
         logger.debug('Loading image {}..'.format(image))
         image = Image(image)
