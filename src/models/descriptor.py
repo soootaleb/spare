@@ -120,3 +120,6 @@ class Descriptor(object):
             textual interpretation of the description given by the describe function
         '''
         raise NotImplementedError('You must override the Descriptor::interpret function')
+
+    def __str__(self):
+        return self.__class__.__name__

@@ -58,3 +58,6 @@ def get_commands():
     Returns the available commands from the commands module
     '''
     return inspect.getmembers(sys.modules['commands'], lambda o: type(o) == click.core.Command)
+
+def bold(string):
+    return '\033[1m' + str(string) + '\033[0m'

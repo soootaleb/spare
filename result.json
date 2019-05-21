@@ -1,0 +1,25 @@
+{
+    "histogram": {
+        "0": 1.0,
+        "90": 0.0,
+        "180": 0.0,
+        "270": 0.0,
+        "360": 1.0
+    },
+    "description": {
+        "above ": 0.011108997,
+        "under ": 0.011108997,
+        "on the left of ": 1.0,
+        "on the right of ": 1.5e-08
+    },
+    "parameters": {
+        "reference": "reference.png",
+        "relative": "relative.png",
+        "cardinal": 5,
+        "variance": 30,
+        "resize": 0.5,
+        "descriptor": "AngularPresenceDescriptor",
+        "rotate": 180
+    },
+    "interpretation": "reference.png is totally on the left of  relative.png"
+}
