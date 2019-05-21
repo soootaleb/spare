@@ -18,6 +18,10 @@ $ python src/main.py
 
 The CLI uses the `click` python package: https://github.com/pallets/click
 
+You can see the CLI commands using `src/cli.py --help`
+
+The `--help` flag is available on any command in order to find its usage
+
 # Features
 
 The project is composed of a graphical user interface that allows one to interact with the application. It allows you to change the parameters and easily observe the impact on the histograms, used by the descriptors to describe the scene.
