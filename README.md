@@ -1,4 +1,4 @@
-# School Spacial Relations [![Build Status](https://travis-ci.org/soootaleb/school-spacial-relations.svg?branch=master)](https://travis-ci.org/soootaleb/school-spacial-relations.svg?branch=master)
+# School Spacial Relations [![Build Status](https://travis-ci.com/soootaleb/spare.svg?branch=master)](https://travis-ci.com/soootaleb/spare)
 
 This project aims to work on the fuzzy spacial relations
 
