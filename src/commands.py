@@ -15,6 +15,49 @@ def cli():
     Allows you to call the application features using a shell interface
     '''
 
+@cli.command('parallels', short_help='Computes all parallels in a given direction in an image')
+@click.option('--image', default='reference.png', help='Image on which to compute the parallels')
+@click.option('--direction', default=0, help='Direction in degrees to trace the parallels')
+@click.option('--resize', default=1.0, help='Resizes the image before tracing the parallels')
+@click.option('--rotate', default=0, help='Rotate the image in degrees before tracing the parallels')
+@click.option('--output', default=None, help='Writes result in a file')
+def parallels(image, direction, resize, rotate, output):
+    try:
+        logger.debug('Loading image {}..'.format(image))
+        image = Image(image)
+        logger.info('OK')
+
+        logger.debug('Resizing image by factor {}'.format(resize))
+        image.resize(resize)
+        logger.info('OK')
+
+        logger.debug('Resizing image by angle {} degrees'.format(rotate))
+        image.rotate(rotate)
+        logger.info('OK')
+
+        logger.debug('Tracing the parallels...')
+        parallels = image.parallels(direction)
+        logger.info('OK')
+
+        logger.success(json.dumps(parallels, default=lambda o: o.tuple, indent=4))
+        
+        if output is not None:
+                logger.debug('Opening file {}'.format(output))
+                with open(output, 'w+') as f:
+                    logger.debug('Writting results...')
+                    f.write(json.dumps({
+                        'parallels': parallels,
+                        'parameters': {
+                            'image': str(image),
+                            'resize': resize,
+                            'rotate': rotate,
+                            'direction': direction
+                        }
+                    }, default=lambda o: o.tuple, indent=4))
+                    logger.info('OK')
+    except Exception as e:
+        logger.critical('ERROR: {}'.format(str(e)))
+
 @cli.command('ray', short_help='Computes a ray in a given direction in an image')
 @click.option('--image', default='reference.png', help='Image on which to compute a ray')
 @click.option('--direction', default=0, help='Direction in degrees to trace the ray')
